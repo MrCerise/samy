@@ -40,9 +40,9 @@ export default class Client extends Discord.Client {
 
     await LoadEvents(this);
 
-    await LoadCommands(this, "../commands/slash", this.slashCommands);
+    await LoadCommands(this, "../../commands/slash", this.slashCommands);
 
-    await LoadCommands(this, "../commands/message", this.messageCommands);
+    await LoadCommands(this, "../../commands/message", this.messageCommands);
 
     await this.login(process.env.DISCORD_TOKEN);
   }

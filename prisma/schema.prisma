@@ -5,3 +5,25 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id String @id
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lastfm LastFM?
+}
+
+model LastFM {
+  id String @id @default(cuid())
+
+  username   String
+  sessionKey String?
+
+  connectedAt DateTime @default(now())
+
+  userId String @unique
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

@@ -7,9 +7,9 @@ import {
 } from "discord.js";
 
 import Event from "@/classes/Event";
-import { Container, Text } from "@/ui/components";
 import { checkCooldown, setCooldown } from "@/utils/cooldown";
 import { checkPermissions } from "@/utils/permission";
+import errorUI from "@/ui/error";
 
 export default new Event({
   name: "interactionCreate",
@@ -34,11 +34,7 @@ export default new Event({
     ) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
-        components: [
-          new Container().text(
-            Text("You don't have permission to use this command."),
-          ),
-        ],
+        components: [errorUI("You don't have permission to use this command.")],
       });
 
       return;
@@ -49,11 +45,7 @@ export default new Event({
     ) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
-        components: [
-          new Container().text(
-            Text("I don't have permission to run this command."),
-          ),
-        ],
+        components: [errorUI("I don't have permission to run this command.")],
       });
 
       return;
@@ -77,13 +69,11 @@ export default new Event({
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
         components: [
-          new Container().text(
-            Text(
-              `You may use this command ${time(
-                retryAt,
-                TimestampStyles.RelativeTime,
-              )}`,
-            ),
+          errorUI(
+            `You may use this command ${time(
+              retryAt,
+              TimestampStyles.RelativeTime,
+            )}`,
           ),
         ],
       });
@@ -141,9 +131,7 @@ export default new Event({
       const reply: InteractionReplyOptions = {
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
         components: [
-          new Container().addTextDisplayComponents(
-            Text("Something went wrong while executing this command."),
-          ),
+          errorUI("Something went wrong while executing this command."),
         ],
       };
 

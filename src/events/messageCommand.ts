@@ -2,11 +2,13 @@ import { MessageFlags, time, TimestampStyles } from "discord.js";
 
 import Event from "@/classes/Event";
 import { MessageCommand, MessageSubcommand } from "@/classes/Command";
+import { buildHelp } from "@/utils/parser/HelpGenerator";
 
 import { checkCooldown, setCooldown } from "@/utils/cooldown";
 import { checkPermissions } from "@/utils/permission";
 
 import { Container, Text } from "@/ui/components";
+import errorUI from "@/ui/error";
 
 export default new Event({
   name: "messageCreate",
@@ -103,6 +105,26 @@ export default new Event({
         return;
       }
 
+      const usageName = [command.name, ...path].join(" ");
+      const parsed = await current.parse(client, message, args.join(" "));
+
+      if (!parsed.success) {
+        const errorList = parsed.errors
+          .map((error) => `• ${error.message}`)
+          .join("\n");
+
+        await message.reply({
+          flags: MessageFlags.IsComponentsV2,
+          components: [
+            errorUI(
+              `${errorList}\n\n${buildHelp({ prefix, name: usageName }, current.arguments)}`,
+            ),
+          ],
+        });
+
+        return;
+      }
+
       const cooldown = current.cooldown ?? client.config.defaults.cooldown;
 
       const remaining = checkCooldown(
@@ -148,7 +170,7 @@ export default new Event({
         channel: message.channel.id,
       });
 
-      await current.execute(client, message, args);
+      await current.execute(client, message, parsed.args);
 
       client.logger.info("Message command completed", {
         command: commandPath,
@@ -172,9 +194,7 @@ export default new Event({
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          new Container().text(
-            Text("Something went wrong while executing this command."),
-          ),
+          errorUI("Something went wrong while executing this command."),
         ],
       });
     }
