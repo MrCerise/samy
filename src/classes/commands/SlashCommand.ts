@@ -1,12 +1,12 @@
 import type {
   ChatInputCommandInteraction,
-  SlashCommandBuilder,
+  SharedSlashCommand,
 } from "discord.js";
 import type Client from "../Client";
 import type { BaseCommandOptions } from "./Shared";
 
 export interface SlashCommandOptions extends BaseCommandOptions {
-  data: SlashCommandBuilder;
+  data: SharedSlashCommand;
 
   execute: (
     client: Client,

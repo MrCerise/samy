@@ -1,12 +1,12 @@
 import {
   type GuildMember,
   type PermissionResolvable,
-  type GuildBasedChannel,
+  type GuildTextBasedChannel,
 } from "discord.js";
 
 export function checkPermissions(
   member: GuildMember,
-  channel: GuildBasedChannel,
+  channel: GuildTextBasedChannel,
   permissions?: PermissionResolvable[],
 ) {
   if (!permissions || permissions.length === 0) return true;
