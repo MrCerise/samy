@@ -26,3 +26,26 @@ model LastFM {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Guild {
+  id String @id
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  welcomes Welcome[]
+}
+
+model Welcome {
+  id String @id @default(cuid())
+
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id])
+
+  channelId String
+
+  message String @db.Text()
+
+  @@index([guildId])
+  @@index([channelId])
+}

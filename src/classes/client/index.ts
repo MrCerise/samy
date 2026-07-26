@@ -9,6 +9,7 @@ import {
 } from "../Command";
 import { config } from "@/config/config";
 import ClientLastFM from "./LastFm";
+import prisma from "@/libs/prisma";
 
 //@ts-ignore
 Discord.DefaultWebSocketManagerOptions.identifyProperties.browser =
@@ -21,7 +22,7 @@ export default class Client extends Discord.Client {
   public messageCommands = new Discord.Collection<string, MessageCommand>();
   public lastFm = new ClientLastFM();
   public prefix = config.defaultPrefix;
-
+  public prisma = prisma;
   constructor(public readonly logger = new Logger()) {
     super({
       intents: [

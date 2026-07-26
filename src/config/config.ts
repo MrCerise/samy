@@ -8,7 +8,7 @@ export const config: Config = {
   support: "https://discord.gg/mCaNMPkW8U",
 
   defaults: {
-    cooldown: 5,
+    cooldown: 3,
   },
 
   presence: {
