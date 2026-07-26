@@ -1,7 +1,5 @@
 import { MessageCommand, MessageSubcommand } from "@/classes/Command";
 import {
-  LastFMCommand,
-  LastFMProfile,
   LastFMLink,
   LastFMNow,
   LastFMNowUsername,
@@ -12,54 +10,42 @@ import LastFMNowUI from "@/ui/lastfm/now";
 import { MessageFlags } from "discord.js";
 
 export default new MessageCommand({
-  name: LastFMCommand.name,
-  description: LastFMCommand.description,
-  category: LastFMCommand.category,
-
+  name: "lastfm",
+  description:
+    "View your Last.fm profile, recent tracks, and overall statistics",
+  category: "Utility",
+  aliases: ["fm"],
   arguments: [
     {
-      name: "username",
+      name: "user",
       aliases: ["u"],
-      type: "string",
-      description:
-        "Last.fm username, or a Discord user (mention or ID) to view.",
+      type: "user",
+      description: "A Discord user (mention or ID) to view.",
       required: false,
     },
   ],
 
   async execute(client, message, args) {
     try {
-      const usernameArg = args.getString("username");
+      const userArg = args.getUser("user");
 
       let nowPlaying;
 
-      if (usernameArg) {
-        const mentionedUser = message.mentions.users.first();
-        const mentionMatch = usernameArg.match(/^<@!?(\d+)>$/);
-        const rawIdMatch = /^\d{17,20}$/.test(usernameArg) ? usernameArg : null;
+      if (userArg) {
+        const linkedUser = await client.lastFm.getUser(userArg.id);
 
-        const discordId = mentionedUser?.id ?? mentionMatch?.[1] ?? rawIdMatch;
+        if (!linkedUser) {
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [
+              errorUI("That user doesn't have a Last.fm account linked."),
+            ],
+          });
 
-        if (discordId) {
-          const linkedUser = await client.lastFm.getUser(discordId);
-
-          if (!linkedUser) {
-            await message.reply({
-              flags: MessageFlags.IsComponentsV2,
-              components: [
-                errorUI("That user doesn't have a Last.fm account linked."),
-              ],
-            });
-
-            return;
-          }
-
-          nowPlaying = await LastFMNowUsername(linkedUser.username);
-        } else {
-          const profile = await LastFMProfile(usernameArg);
-
-          nowPlaying = await LastFMNowUsername(profile.name);
+          return;
         }
+
+        nowPlaying = await LastFMNowUsername(linkedUser.username);
       } else {
         nowPlaying = await LastFMNow(client, message.author.id);
       }

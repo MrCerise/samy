@@ -31,7 +31,9 @@ export default new Event({
 
     if (!commandName) return;
 
-    const command = client.messageCommands.get(commandName);
+    const command =
+      client.messageCommands.get(commandName) ??
+      client.messageCommands.find((cmd) => cmd.aliases.includes(commandName));
 
     if (!command) return;
 

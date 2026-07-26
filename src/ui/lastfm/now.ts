@@ -23,7 +23,7 @@ export default function LastFMNowUI(data: LastFMNow) {
       Text(
         `${isPlaying ? "**Now Playing**" : "**Last Played**"} for **[${username}](${profile.url})**\n\n` +
           `**${track.name}**\n` +
-          `${track.artist["#text"]} • ${track.album?.["#text"] || "Unknown Album"}\n\n` +
+          `**${track.artist["#text"]}** • ${track.album?.["#text"] || "Unknown Album"}\n\n` +
           `-# ${artistScrobbles.toLocaleString()} artist scrobbles · ` +
           `${albumScrobbles.toLocaleString()} album scrobbles · ` +
           `${trackScrobbles.toLocaleString()} track scrobbles\n` +

@@ -3,13 +3,6 @@ import lastfm from "@/libs/lastfm";
 
 import type { LastFMNow as LastFMNowResponse } from "@/libs/lastfm/src/types/now";
 
-export const LastFMCommand = {
-  name: "lastfm",
-  description:
-    "View your Last.fm profile, recent tracks, and overall statistics",
-  category: "Utility",
-};
-
 export async function LastFMProfile(username: string) {
   const user = await lastfm.user.getInfo(username);
 

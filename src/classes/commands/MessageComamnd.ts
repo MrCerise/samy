@@ -11,6 +11,7 @@ import type { BaseCommandOptions } from "./Shared";
 
 export interface MessageSubcommandOptions extends BaseCommandOptions {
   name: string;
+  aliases?: string[];
   description?: string;
 
   arguments?: MessageArgument[];
@@ -45,6 +46,10 @@ export class MessageSubcommand {
     return this.options.name;
   }
 
+  get aliases() {
+    return (this.options.aliases ?? []).map((alias) => alias.toLowerCase());
+  }
+
   get description() {
     return this.options.description;
   }
@@ -78,7 +83,11 @@ export class MessageSubcommand {
   }
 
   find(name: string) {
-    return this.subcommands.find((sub) => sub.name === name);
+    const target = name.toLowerCase();
+
+    return this.subcommands.find(
+      (sub) => sub.name === target || sub.aliases.includes(target),
+    );
   }
 
   parse(
@@ -110,7 +119,7 @@ export class MessageCommand {
   }
 
   get aliases() {
-    return this.options.aliases ?? [];
+    return (this.options.aliases ?? []).map((alias) => alias.toLowerCase());
   }
 
   get description() {
@@ -146,7 +155,11 @@ export class MessageCommand {
   }
 
   find(name: string) {
-    return this.subcommands.find((sub) => sub.name === name);
+    const target = name.toLowerCase();
+
+    return this.subcommands.find(
+      (sub) => sub.name === target || sub.aliases.includes(target),
+    );
   }
 
   parse(
