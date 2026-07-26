@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("cv2")
-    .setDescription("Build and send a Components V2 message from a script.")
+    .setDescription("Build and send a Components V2 message.")
     .addStringOption((option) =>
       option
         .setName("script")

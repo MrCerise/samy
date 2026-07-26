@@ -7,8 +7,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "cv2",
-  description:
-    "Build and send a Components V2 message from a Bleed-inspired script.",
+  description: "Build and send a Components V2 message.",
   category: "Utility",
 
   arguments: [

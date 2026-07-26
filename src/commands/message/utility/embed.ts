@@ -6,7 +6,7 @@ import { MessageFlags } from "discord.js";
 
 export default new MessageCommand({
   name: "embed",
-  description: "Build and send a Discord embed from a Bleed-inspired script.",
+  description: "Build and send an embed.",
   category: "Utility",
 
   arguments: [

@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("embed")
-    .setDescription("Build and send a Discord embed from a script.")
+    .setDescription("Build and send a Discord embed.")
     .addStringOption((option) =>
       option
         .setName("script")
