@@ -152,7 +152,6 @@ A list of planned features and improvements for Samy.
 
 - [x] Prisma setup
 - [x] PostgreSQL support
-- [ ] Database migrations
 - [ ] User profiles
 - [ ] Guild configuration
 - [ ] Command settings
