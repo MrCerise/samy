@@ -141,7 +141,7 @@ A list of planned features and improvements for Samy.
 
 ## Last.fm
 
-- [ ] Last.fm integration
+- [x] Last.fm integration
 - [ ] Now playing
 - [ ] Listening statistics
 - [ ] Top tracks
