@@ -6,8 +6,6 @@ export interface LastFMTrack {
 
   artist: LastFMArtist;
 
-  // Last.fm sometimes omits album entirely on recent tracks (e.g. singles
-  // scrobbled without album tags), so this must be optional.
   album?: LastFMAlbum;
 
   url: string;
@@ -47,9 +45,6 @@ export interface LastFMTrackInfo {
   image: LastFMImage[];
 }
 
-// This is the shape of `response.recenttracks` AFTER UserMethods.getRecentTracks
-// unwraps the top-level Last.fm envelope — it does not have another
-// "recenttracks" key inside it.
 export interface LastFMRecentTracks {
   track: LastFMTrack[];
 

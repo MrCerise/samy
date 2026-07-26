@@ -74,6 +74,7 @@ A list of planned features and improvements for Samy.
 - [ ] Reminders
 - [ ] Polls
 - [ ] Embed builder
+- [ ] Cv2 builder
 - [ ] Color tools
 - [ ] Character information
 - [ ] Screenshot websites
