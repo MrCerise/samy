@@ -1,6 +1,6 @@
 import Event from "../classes/Event";
 import { REST, Routes } from "discord.js";
-import type Client from "@/classes/Client";
+import type Client from "@/classes/client";
 
 export default new Event({
   name: "clientReady",
@@ -13,29 +13,57 @@ export default new Event({
 });
 
 function normalizeCommand(command: any) {
-  const cleaned = structuredClone(command);
+  const ignoredKeys = new Set([
+    "id",
+    "application_id",
+    "version",
+    "guild_id",
+    "dm_permission",
+    "default_member_permissions",
+    "nsfw",
+  ]);
 
-  delete cleaned.id;
-  delete cleaned.application_id;
-  delete cleaned.version;
-  delete cleaned.default_member_permissions;
-  delete cleaned.dm_permission;
-  delete cleaned.nsfw;
+  function normalize(value: any): any {
+    if (Array.isArray(value)) {
+      return value.map(normalize).sort((a, b) => {
+        if (a?.name && b?.name) {
+          return a.name.localeCompare(b.name);
+        }
 
-  if (cleaned.options?.length === 0) {
-    delete cleaned.options;
+        return JSON.stringify(a).localeCompare(JSON.stringify(b));
+      });
+    }
+
+    if (value && typeof value === "object") {
+      return Object.keys(value)
+        .filter((key) => {
+          if (ignoredKeys.has(key)) return false;
+
+          const val = value[key];
+
+          return !(
+            val === false ||
+            val === null ||
+            val === undefined ||
+            (Array.isArray(val) && val.length === 0)
+          );
+        })
+        .sort()
+        .reduce(
+          (obj, key) => {
+            obj[key] = normalize(value[key]);
+            return obj;
+          },
+          {} as Record<string, any>,
+        );
+    }
+
+    return value;
   }
 
-  if (cleaned.contexts) {
-    cleaned.contexts.sort();
-  }
-
-  if (cleaned.options) {
-    cleaned.options.sort((a: any, b: any) => a.name.localeCompare(b.name));
-  }
-
-  return cleaned;
+  return normalize(command);
 }
+
 function getDifferences(oldCommand: any, newCommand: any) {
   const oldNormalized = normalizeCommand(oldCommand);
   const newNormalized = normalizeCommand(newCommand);

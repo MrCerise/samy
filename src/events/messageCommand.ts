@@ -170,6 +170,8 @@ export default new Event({
         channel: message.channel.id,
       });
 
+      await message.channel.sendTyping();
+
       await current.execute(client, message, parsed.args);
 
       client.logger.info("Message command completed", {

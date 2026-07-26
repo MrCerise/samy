@@ -1,7 +1,7 @@
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 import type { ClientEvents } from "discord.js";
-import type Client from "./Client";
+import type Client from "./client";
 
 export interface EventOptions<K extends keyof ClientEvents> {
   name: K;

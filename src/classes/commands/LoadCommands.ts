@@ -1,7 +1,7 @@
 import type { Collection } from "discord.js";
 import { readdir } from "fs/promises";
 import { join } from "path";
-import type Client from "../Client";
+import type Client from "../client";
 
 export async function LoadCommands<T extends { name: string }>(
   client: Client,

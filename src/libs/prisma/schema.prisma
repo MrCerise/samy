@@ -18,8 +18,7 @@ model User {
 model LastFM {
   id String @id @default(cuid())
 
-  username   String
-  sessionKey String?
+  username String
 
   connectedAt DateTime @default(now())
 

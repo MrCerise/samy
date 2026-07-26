@@ -1,5 +1,5 @@
 import type { Message } from "discord.js";
-import type Client from "../Client";
+import type Client from "../client";
 import type { MessageCommand } from "./MessageComamnd";
 
 export async function handleMessageCommand(

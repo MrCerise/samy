@@ -1,13 +1,14 @@
 import * as Discord from "discord.js";
 import { CheckEnvs } from "@/utils/env";
-import { LoadEvents } from "./Event";
-import Logger from "./Logger";
+import { LoadEvents } from "../Event";
+import Logger from "../Logger";
 import {
   LoadCommands,
   type MessageCommand,
   type SlashCommand,
-} from "./Command";
+} from "../Command";
 import { config } from "@/config/config";
+import ClientLastFM from "./LastFm";
 
 //@ts-ignore
 Discord.DefaultWebSocketManagerOptions.identifyProperties.browser =
@@ -18,7 +19,7 @@ export default class Client extends Discord.Client {
   public slashCommands = new Discord.Collection<string, SlashCommand>();
   public cooldowns = new Discord.Collection<string, number>(); // key is `CommandType:userid:commandName:subcommands`
   public messageCommands = new Discord.Collection<string, MessageCommand>();
-
+  public lastFm = new ClientLastFM();
   public prefix = config.defaultPrefix;
 
   constructor(public readonly logger = new Logger()) {

@@ -1,17 +1,18 @@
 import type { LastFM } from "../client";
 import { request } from "../request";
 
-import type { LastFMTrackInfo } from "../types/tracks";
+import type { LastFMAlbumInfo } from "../types/album";
 
-export class TrackMethods {
+export class AlbumMethods {
   constructor(private readonly client: LastFM) {}
 
-  async getInfo(options: { artist: string; track: string; username?: string }) {
+  async getInfo(options: { artist: string; album: string; username?: string }) {
     const response = await request<{
-      track: LastFMTrackInfo;
-    }>(this.client, "track.getInfo", {
+      album: LastFMAlbumInfo;
+    }>(this.client, "album.getInfo", {
       artist: options.artist,
-      track: options.track,
+      album: options.album,
+
       ...(options.username
         ? {
             username: options.username,
@@ -19,6 +20,6 @@ export class TrackMethods {
         : {}),
     });
 
-    return response.track;
+    return response.album;
   }
 }

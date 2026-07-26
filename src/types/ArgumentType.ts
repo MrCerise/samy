@@ -1,5 +1,5 @@
 import type { Message } from "discord.js";
-import type Client from "../classes/Client";
+import type Client from "../classes/client";
 
 export type BuiltInArgumentTypeName =
   | "string"

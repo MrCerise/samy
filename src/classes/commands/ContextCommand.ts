@@ -2,7 +2,7 @@ import type {
   ContextMenuCommandBuilder,
   ContextMenuCommandInteraction,
 } from "discord.js";
-import type Client from "../Client";
+import type Client from "../client";
 import type { BaseCommandOptions } from "./Shared";
 
 export interface ContextCommandOptions extends BaseCommandOptions {

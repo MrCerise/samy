@@ -1,5 +1,5 @@
 import type { Message } from "discord.js";
-import type Client from "../../classes/Client";
+import type Client from "../../classes/client";
 import type { ArgumentParseError } from "../../types/ArgumentError";
 import type { MessageArgument } from "../../types/MessageArgument";
 import { ParsedArguments, type ResolvedArgumentValue } from "./ParsedArguments";
