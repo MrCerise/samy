@@ -73,8 +73,8 @@ A list of planned features and improvements for Samy.
 - [ ] AFK system
 - [ ] Reminders
 - [ ] Polls
-- [ ] Embed builder
-- [ ] Cv2 builder
+- [x] Embed builder
+- [x] Cv2 builder
 - [ ] Color tools
 - [ ] Character information
 - [ ] Screenshot websites
