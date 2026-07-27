@@ -34,13 +34,13 @@ A list of planned features and improvements for Samy.
 - [ ] Moderation case logs
 - [ ] Mute / Unmute system
 - [ ] Jail system
-- [ ] Purge system
-  - [ ] Delete by amount
-  - [ ] Delete by user
-  - [ ] Delete links
-  - [ ] Delete bots
-  - [ ] Delete attachments
-  - [ ] Delete embeds
+- [x] Purge system
+  - [x] Delete by amount
+  - [x] Delete by user
+  - [x] Delete links
+  - [x] Delete bots
+  - [x] Delete attachments
+  - [x] Delete embeds
 - [ ] Slowmode controls
 - [ ] Lock / Unlock channels
 - [ ] Channel lockdown
