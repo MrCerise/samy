@@ -1,188 +1,229 @@
 # Samy TODO
 
-A list of planned features and improvements for Samy.
+A roadmap for Samy's development.
 
-> If you have an idea, feature request, or improvement, please create an issue.
+> Have an idea? Open an issue.
+
+---
+
+# Milestone 1 — Foundation
 
 ## Core
 
-- [x] Basic Discord client setup
-- [x] Event handler system
-- [x] Slash command handler
-- [x] Message command handler
-- [x] Command deployment system
-- [x] Structured logging system
-- [x] Improve error handling
-- [x] Add configuration system
-- [x] Add environment validation
-- [x] Add graceful shutdown handling
-- [x] Add command cooldown system
-- [x] Add permission checking system
-
-## Commands
-
-### Moderation Commands
-
-- [ ] Ban
-- [ ] Softban
-- [ ] Kick
-- [ ] Timeout
-- [ ] Untimeout
-- [ ] Warn system
-- [ ] Warning history
-- [ ] Moderation case logs
-- [ ] Jail system
-- [x] Purge system
-  - [x] Delete by amount
-  - [x] Delete by user
-  - [x] Delete links
-  - [x] Delete bots
-  - [x] Delete attachments
-  - [x] Delete embeds
-- [ ] Slowmode controls
-- [ ] Lock / Unlock channels
-- [ ] Channel lockdown
-- [ ] Nickname management
-- [ ] Role management
-  - [ ] Add role
-  - [ ] Remove role
-  - [ ] Create role
-  - [ ] Delete role
-  - [ ] Edit role
-  - [ ] Temporary roles
-- [ ] Restrict commands by role
-
-### Utility Commands
-
-- [ ] User information
-- [ ] Server information
-- [ ] Avatar
-- [ ] Server avatar
-- [ ] Banner lookup
-- [ ] Role information
-- [ ] Channel information
-- [ ] Bot list
-- [ ] Member count
-- [ ] Invite information
-- [ ] Emoji information
-- [ ] Emoji management
-- [ ] Sticker management
-- [ ] Ping improvements
-- [ ] AFK system
-- [ ] Reminders
-- [x] Embed builder
-- [x] Cv2 builder
-- [ ] Color tools
-- [ ] Character information
-- [ ] Screenshot websites
-- [x] Timezone system
-- [x] Birthday system
-
-### Fun Commands
-
-- [ ] Random choice
-- [ ] Would you rather
-- [ ] Rock paper scissors
-- [ ] Text transformations
-  - [ ] UwU
-  - [ ] Freakify
-- [ ] Roleplay commands
-- [ ] Random games
-
-### Information & External Services
-
-- [ ] GitHub lookup
-- [ ] Steam lookup
-- [ ] Roblox lookup
-- [ ] Minecraft lookup
-- [ ] Valorant lookup
-- [ ] Xbox lookup
-- [ ] Weather
-- [ ] Dictionary
-- [ ] Urban Dictionary
-- [ ] WikiHow search
-- [ ] Song recognition
-- [ ] Audio transcription
-
-## Moderation System
-
-- [ ] Auto moderation
-- [ ] Anti-spam
-- [ ] Anti-raid protection
-- [ ] Anti-nuke protection
-  - [ ] Mass ban detection
-  - [ ] Mass kick detection
-  - [ ] Mass channel deletion detection
-  - [ ] Mass role deletion detection
-  - [ ] Webhook protection
-  - [ ] Bot join protection
-  - [ ] Permission change protection
-- [ ] Moderation logs
-- [ ] Member notes
-- [ ] Evidence system
-- [ ] Moderation dashboard
-
-## Server Features
-
-- [x] Welcome messages
-- [ ] Leave messages
-- [ ] Starboard
-- [ ] Server counters
-- [ ] Bump reminders
-- [ ] Sticky roles
-- [ ] Highlight notifications
-- [ ] Social media feeds
-  - [ ] YouTube notifications
-  - [ ] TikTok notifications
-  - [ ] Instagram notifications
-  - [ ] X/Twitter notifications
-
-## Last.fm
-
-- [x] Last.fm integration
-- [ ] Now playing
-- [ ] Listening statistics
-- [ ] Top tracks
-- [ ] Top artists
-- [ ] leaderboards
+[x] Discord client
+[x] Event handler
+[x] Slash commands
+[x] Message commands
+[x] Command deployment
+[x] Structured logging
+[x] Configuration system
+[x] Environment validation
+[x] Error handling
+[x] Graceful shutdown
+[x] Command cooldowns
+[x] Permission system
 
 ## Database
 
-- [x] Prisma setup
-- [x] PostgreSQL support
-- [ ] User profiles
-- [ ] Guild configuration
-- [ ] Command settings
-- [ ] Moderation records
-- [ ] User preferences
-- [ ] Premium data
+[x] Prisma
+[x] PostgreSQL
 
-## Dashboard
+[ ] User profiles
+[ ] Guild configuration
+[ ] Command settings
+[ ] User preferences
 
-- [ ] Web dashboard
-- [ ] Server management panel
-- [ ] Command configuration
-- [ ] Moderation logs viewer
-- [ ] Auto moderation configuration
-- [ ] Analytics dashboard
-- [ ] Premium management
+---
 
-## Developer Experience
+# Milestone 2 — Complete Utility
 
-- [ ] Plugin system
-- [ ] Better documentation
-- [ ] Command documentation generator
-- [ ] Docker support
-- [ ] Development environment setup
-- [ ] Contribution guide
+## User
 
-## Future Ideas
+[ ] User info
+[ ] Avatar
+[ ] Banner
 
-- [ ] Premium features
-- [ ] Custom bot instances
-- [ ] Custom command support
-- [ ] More integrations
+## Server
 
-More ideas to come.
+[ ] Server info
+[ ] Role info
+[ ] Channel info
+[ ] Emoji info
+[ ] Invite info
+[ ] Member count
+[ ] Bot list
 
-Have an idea? Create an issue and describe your suggestion.
+## Tools
+
+[x] Embed builder
+[x] Cv2 builder
+[x] Birthday
+[x] Timezone
+
+[ ] AFK
+[ ] Reminders
+[ ] Color tools
+[ ] Character information
+[ ] Screenshot websites
+
+---
+
+# Milestone 3 — Moderation
+
+## Basic Moderation
+
+[ ] Ban
+[ ] Softban
+[ ] Kick
+[ ] Timeout
+[ ] Untimeout
+
+## Warnings
+
+[ ] Warn
+[ ] Warning history
+[ ] Moderation cases
+[ ] Member notes
+[ ] Evidence
+
+## Channel Management
+
+[ ] Slowmode
+[ ] Lock
+[ ] Unlock
+[ ] Lockdown
+
+## Role Management
+
+[ ] Add role
+[ ] Remove role
+[ ] Create role
+[ ] Edit role
+[ ] Delete role
+[ ] Temporary roles
+
+## Purge
+
+[x] Amount
+[x] User
+[x] Links
+[x] Bots
+[x] Attachments
+[x] Embeds
+
+## Logging
+
+[ ] Moderation logs
+
+---
+
+# Milestone 4 — Server Features
+
+[x] Welcome messages
+[ ] Leave messages
+[ ] Starboard
+[ ] Sticky roles
+[ ] Highlight notifications
+[ ] Server counters
+[ ] Bump reminders
+
+## Social Feeds
+
+[ ] YouTube
+[ ] TikTok
+[ ] Instagram
+[ ] X / Twitter
+
+---
+
+# Milestone 5 — Music
+
+## Last.fm
+
+[x] Account linking
+[x] Now Playing
+
+[ ] Listening statistics
+[ ] Top tracks
+[ ] Top artists
+[ ] Top albums
+[ ] Weekly charts
+[ ] Leaderboards
+
+---
+
+# Milestone 6 — External Services
+
+[ ] GitHub
+[ ] Steam
+[ ] Roblox
+[ ] Minecraft
+[ ] Valorant
+[ ] Xbox
+
+[ ] Weather
+[ ] Dictionary
+[ ] Urban Dictionary
+[ ] WikiHow
+
+[ ] Song recognition
+[ ] Audio transcription
+
+---
+
+# Milestone 7 — Fun
+
+[ ] Random choice
+[ ] Would you rather
+[ ] Rock Paper Scissors
+
+## Text
+
+[ ] UwU
+[ ] Freakify
+
+## Games
+
+[ ] Random games
+[ ] Roleplay
+
+---
+
+# Milestone 8 — Auto Moderation
+
+[ ] Auto moderation
+[ ] Anti-spam
+[ ] Anti-raid
+
+## Anti-Nuke
+
+[ ] Mass bans
+[ ] Mass kicks
+[ ] Channel deletion
+[ ] Role deletion
+[ ] Webhook protection
+[ ] Bot join protection
+[ ] Permission changes
+
+---
+
+# Milestone 9 — Dashboard
+
+[ ] Web dashboard
+[ ] Server management
+[ ] Command configuration
+[ ] Moderation logs
+[ ] Auto moderation settings
+[ ] Analytics
+
+---
+
+# Future
+
+[ ] Command documentation generator
+[ ] Contribution guide
+
+[ ] Premium
+[ ] Custom bot instances
+[ ] Custom commands
+[ ] More integrations
