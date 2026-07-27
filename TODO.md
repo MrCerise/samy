@@ -30,11 +30,11 @@ A roadmap for Samy's development.
 [x] Prisma
 [x] PostgreSQL
 
-[ ] User profiles
-[ ] Guild configuration
-[ ] Command settings
-[ ] User preferences
-[ ] Locale settings
+[x] User profiles
+[x] Guild configuration
+[x] Command settings
+[x] User preferences
+[x] Locale settings
 
 ---
 
