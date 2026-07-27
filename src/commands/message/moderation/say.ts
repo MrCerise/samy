@@ -8,6 +8,7 @@ import {
 } from "@/libs/scripting/detectScriptKind";
 import { compileEmbedScript } from "@/libs/scripting/embed";
 import { extractRawScript } from "@/libs/scripting/extractRawScript";
+import { replaceVariables } from "@/libs/scripting/variables";
 import errorUI from "@/ui/error";
 import { LEADING_CHANNEL_MENTION } from "@/utils/constants";
 
@@ -19,6 +20,7 @@ export default new MessageCommand({
   guildOnly: true,
   botPermissions: ["SendMessages", "EmbedLinks"],
   userPermissions: ["ManageMessages"],
+
   arguments: [
     {
       name: "message",
@@ -48,6 +50,7 @@ export default new MessageCommand({
 
     if (mentionMatch) {
       const channelId = mentionMatch[1]!;
+
       const targetChannel =
         message.guild?.channels.cache.get(channelId) ??
         (await message.guild?.channels.fetch(channelId).catch(() => null));
@@ -74,6 +77,12 @@ export default new MessageCommand({
       return;
     }
 
+    // Replace variables before detecting/compiling scripts
+    body = replaceVariables(body, {
+      user: message.author,
+      guild: message.guild!,
+    });
+
     const detected = detectScriptKind(body);
 
     if (detected.kind === "text") {
@@ -86,7 +95,7 @@ export default new MessageCommand({
         message,
         detected.kind === "embed"
           ? "Provide an embed script after `{embed}`.\nExample: `,say Hello {embed}$v{title: Hi}`"
-          : "Provide a CV2 script after `{cv2}`.\nExample: `,say Hello {cv2}$v{container}$v{text: Hi}`",
+          : "Provide a CV2 script after `{cv2}`.\nExample: `,say {cv2}$v{container}$v{text: Hi}`",
       );
       return;
     }
@@ -116,16 +125,19 @@ export default new MessageCommand({
         ...(content ? { content } : {}),
         embeds: [compiled.result.embed],
         ...(compiled.result.components.length > 0
-          ? { components: compiled.result.components }
+          ? {
+              components: compiled.result.components,
+            }
           : {}),
       });
+
       return;
     }
 
     if (!detected.source) {
       await replyError(
         message,
-        "Provide a CV2 script after `{cv2}`.\nExample: `,say Hello {cv2}$v{container}$v{text: Hi}`",
+        "Provide a CV2 script after `{cv2}`.\nExample: `,say {cv2}$v{container}$v{text: Hi}`",
       );
       return;
     }

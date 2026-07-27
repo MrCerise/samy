@@ -4,7 +4,7 @@ export function replaceVariables(
   content: string,
   options: {
     user: User;
-    guild: Guild;
+    guild: Guild | null;
   },
 ): string {
   const { user, guild } = options;
@@ -17,14 +17,14 @@ export function replaceVariables(
       size: 1024,
     }),
 
-    "{guild.name}": guild.name,
-    "{guild.id}": guild.id,
+    "{guild.name}": guild?.name ?? "DM",
+    "{guild.id}": guild?.id ?? "",
     "{guild.icon}":
-      guild.iconURL({
+      guild?.iconURL({
         size: 1024,
       }) ?? "",
 
-    "{memberCount}": guild.memberCount.toString(),
+    "{memberCount}": guild?.memberCount.toString() ?? "0",
   };
 
   let result = content;

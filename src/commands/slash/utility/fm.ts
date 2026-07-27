@@ -52,7 +52,7 @@ export default new SlashCommand({
             components: [
               errorUI(
                 userOption.id === interaction.user.id
-                  ? "You don't have a Last.fm account linked."
+                  ? "You don't have a Last.fm account linked. Run **/setfm** to link your account"
                   : "That user doesn't have a Last.fm account linked.",
               ),
             ],

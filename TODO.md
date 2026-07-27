@@ -186,7 +186,6 @@ A list of planned features and improvements for Samy.
 - [ ] Custom bot instances
 - [ ] Custom command support
 - [ ] More integrations
-- [x] Add sharding
 
 More ideas to come.
 

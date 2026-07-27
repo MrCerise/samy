@@ -1,33 +1,27 @@
-import { ShardingManager } from "discord.js";
+import Client from "@/classes/client";
 import Logger from "@/classes/Logger";
 import { CheckEnvs } from "@/utils/env";
 
 CheckEnvs(["DISCORD_TOKEN"]);
 
-const manager = new ShardingManager("./src/bot.ts", {
-  token: process.env.DISCORD_TOKEN,
-});
+const logger = new Logger();
+const client = new Client(logger);
 
-manager.on("shardCreate", (shard) => {
-  new Logger().info(`Launched shard ${shard.id}`);
-});
-
-manager.spawn();
+client.connect();
 
 process.on("unhandledRejection", (reason) => {
-  new Logger().error("Unhandled Rejection", reason as any);
+  logger.error("Unhandled Rejection", reason as any);
 });
 
 process.on("uncaughtException", (error) => {
-  new Logger().error("Uncaught Exception", error);
+  logger.error("Uncaught Exception", error);
 });
 
-process.on("SIGINT", () => {
-  new Logger().info("Stopping ShardingManager...");
+async function shutdown(signal: string) {
+  logger.info(`${signal} received, shutting down...`);
+  await client.destroy();
   process.exit(0);
-});
+}
 
-process.on("SIGTERM", () => {
-  new Logger().info("Stopping ShardingManager...");
-  process.exit(0);
-});
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));

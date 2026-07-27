@@ -6,32 +6,20 @@ Build embeds and Components V2 messages with a simple script syntax.
 
 ## Commands
 
-### Embed
+### Builder
 
 Prefix:
 
 ```text
-,embed {title: Hello}$v{description: World}$v{color: #5865F2}
+,builder {embed}$v{title: Hello}$v{description: World}$v{color: #5865F2}
+,builder {cv2}$v{container}$v{text: Hello}$v{separator}$v{section}$v{text: Welcome}$v{button: Click && https://discord.com}
 ```
 
 Slash:
 
 ```text
-/embed script:{title: Hello}$v{description: World}$v{color: #5865F2}
-```
-
-### Components V2
-
-Prefix:
-
-```text
-,cv2 {container}$v{text: Hello}$v{separator}$v{section}$v{text: Welcome}$v{button: Click && https://discord.com}
-```
-
-Slash:
-
-```text
-/cv2 script:{container}$v{text: Hello}$v{separator}$v{section}$v{text: Welcome}$v{button: Click && https://discord.com}
+/builder message:{embed}$v{title: Hello}$v{description: World}$v{color: #5865F2}
+/builder message:{cv2}$v{container}$v{text: Hello}$v{separator}$v{section}$v{text: Welcome}$v{button: Click && https://discord.com}
 ```
 
 ### `,say`
@@ -103,77 +91,77 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 **Title**
 
 ```text
-,embed {title: Hello World}
+,builder {embed}$v{title: Hello World}
 ```
 
 **Description**
 
 ```text
-,embed {description: This is a longer description for your embed.}
+,builder {embed}$v{description: This is a longer description for your embed.}
 ```
 
 **Color**
 
 ```text
-,embed {title: Blurple}$v{color: #5865F2}
-,embed {title: Red}$v{color: #ED4245}
-,embed {title: Green}$v{color: #57F287}
-,embed {title: Decimal color}$v{color: 5793266}
+,builder {embed}$v{title: Blurple}$v{color: #5865F2}
+,builder {embed}$v{title: Red}$v{color: #ED4245}
+,builder {embed}$v{title: Green}$v{color: #57F287}
+,builder {embed}$v{title: Decimal color}$v{color: 5793266}
 ```
 
 **URL** (makes the title clickable)
 
 ```text
-,embed {title: Discord}$v{url: https://discord.com}
+,builder {embed}$v{title: Discord}$v{url: https://discord.com}
 ```
 
 **Thumbnail**
 
 ```text
-,embed {title: Avatar}$v{thumbnail: https://cdn.discordapp.com/embed/avatars/0.png}
+,builder {embed}$v{title: Avatar}$v{thumbnail: https://cdn.discordapp.com/embed/avatars/0.png}
 ```
 
 **Image**
 
 ```text
-,embed {title: Banner}$v{image: https://cdn.discordapp.com/embed/avatars/1.png}
+,builder {embed}$v{title: Banner}$v{image: https://cdn.discordapp.com/embed/avatars/1.png}
 ```
 
 **Timestamp**
 
 ```text
-,embed {title: Just now}$v{timestamp}
+,builder {embed}$v{title: Just now}$v{timestamp}
 ```
 
 **Author**
 
 ```text
-,embed {author: Samy}
-,embed {author: Samy && https://cdn.discordapp.com/embed/avatars/0.png}
-,embed {author: Samy && https://cdn.discordapp.com/embed/avatars/0.png && https://discord.com}
+,builder {embed}$v{author: Samy}
+,builder {embed}$v{author: Samy && https://cdn.discordapp.com/embed/avatars/0.png}
+,builder {embed}$v{author: Samy && https://cdn.discordapp.com/embed/avatars/0.png && https://discord.com}
 ```
 
 **Footer**
 
 ```text
-,embed {title: Info}$v{footer: Made with Samy}
-,embed {title: Info}$v{footer: Made with Samy && https://cdn.discordapp.com/embed/avatars/0.png}
+,builder {embed}$v{title: Info}$v{footer: Made with Samy}
+,builder {embed}$v{title: Info}$v{footer: Made with Samy && https://cdn.discordapp.com/embed/avatars/0.png}
 ```
 
 **Fields**
 
 ```text
-,embed {title: Stats}$v{field: Ping && 12ms}
-,embed {title: Stats}$v{field: Ping && 12ms}$v{field: API && Online}
-,embed {title: Stats}$v{field: Ping && 12ms && inline}$v{field: API && Online && inline}$v{field: Shard && 0 && inline}
+,builder {embed}$v{title: Stats}$v{field: Ping && 12ms}
+,builder {embed}$v{title: Stats}$v{field: Ping && 12ms}$v{field: API && Online}
+,builder {embed}$v{title: Stats}$v{field: Ping && 12ms && inline}$v{field: API && Online && inline}$v{field: Status && Active && inline}
 ```
 
 **Buttons** (link only)
 
 ```text
-,embed {title: Links}$v{button: Website && https://discord.com}
-,embed {title: Links}$v{button: Website && https://discord.com}$v{button: Support && https://discord.gg/discord-developers}
-,embed {title: Links}$v{button: Disabled && https://discord.com && disabled}
+,builder {embed}$v{button: Website && https://discord.com}
+,builder {embed}$v{button: Website && https://discord.com}$v{button: Support && https://discord.gg/discord-developers}
+,builder {embed}$v{button: Disabled && https://discord.com && disabled}
 ```
 
 ### Full embed examples
@@ -181,7 +169,7 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 **Simple announcement**
 
 ```text
-,embed
+,builder {embed}$v
 {title: Server Update}$v
 {description: We added new channels and roles. Check #announcements for details.}$v
 {color: #5865F2}$v
@@ -192,7 +180,7 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 **Welcome-style embed**
 
 ```text
-,embed
+,builder {embed}$v
 {title: Welcome!}$v
 {description: Hey {user}, welcome to {guild.name}!}$v
 {color: #57F287}$v
@@ -203,7 +191,7 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 **Status / info card**
 
 ```text
-,embed
+,builder {embed}$v
 {author: Status Bot && https://cdn.discordapp.com/embed/avatars/2.png}$v
 {title: System Status}$v
 {description: Everything looks good right now.}$v
@@ -218,7 +206,7 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 **Rules / guide**
 
 ```text
-,embed
+,builder {embed}$v
 {title: Server Rules}$v
 {description: Please read before chatting.}$v
 {color: #ED4245}$v
@@ -232,7 +220,7 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 **Media embed**
 
 ```text
-,embed
+,builder {embed}$v
 {title: New Artwork}$v
 {description: Check out this image.}$v
 {image: https://cdn.discordapp.com/embed/avatars/4.png}$v
@@ -244,7 +232,7 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 **Profile-style embed**
 
 ```text
-,embed
+,builder {embed}$v
 {author: {user} && https://cdn.discordapp.com/embed/avatars/1.png}$v
 {title: User Profile}$v
 {description: Member of {guild.name}}$v
@@ -259,7 +247,7 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 **Everything together**
 
 ```text
-,embed
+,builder {embed}$v
 {author: Samy && https://cdn.discordapp.com/embed/avatars/0.png && https://discord.com}$v
 {title: Kitchen Sink}$v
 {url: https://discord.com}$v
@@ -305,30 +293,30 @@ Write components in order with `$v`.
 **Container**
 
 ```text
-,cv2 {container}$v{text: Hello}
-,cv2 {container: #5865F2}$v{text: Colored container}
+,builder {cv2}$v{container}$v{text: Hello}
+,builder {cv2}$v{container: #5865F2}$v{text: Colored container}
 ```
 
 **Text**
 
 ```text
-,cv2 {container}$v{text: Plain text}
-,cv2 {container}$v{text: **Bold** and *italic*}
-,cv2 {container}$v{text: # Heading}$v{text: Body text under it}
+,builder {cv2}$v{container}$v{text: Plain text}
+,builder {cv2}$v{container}$v{text: **Bold** and *italic*}
+,builder {cv2}$v{container}$v{text: # Heading}$v{text: Body text under it}
 ```
 
 **Separator**
 
 ```text
-,cv2 {container}$v{text: Above}$v{separator}$v{text: Below}
-,cv2 {container}$v{text: Above}$v{separator: large}$v{text: Below}
-,cv2 {container}$v{text: Above}$v{separator: small && hidden}$v{text: Below}
+,builder {cv2}$v{container}$v{text: Above}$v{separator}$v{text: Below}
+,builder {cv2}$v{container}$v{text: Above}$v{separator: large}$v{text: Below}
+,builder {cv2}$v{container}$v{text: Above}$v{separator: small && hidden}$v{text: Below}
 ```
 
 **Section + button**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container}$v
 {section}$v
 {text: Click the button}$v
@@ -338,7 +326,7 @@ Write components in order with `$v`.
 **Section + thumbnail**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container}$v
 {section}$v
 {text: Profile card}$v
@@ -349,9 +337,9 @@ Write components in order with `$v`.
 **Media / gallery**
 
 ```text
-,cv2 {container}$v{media: https://cdn.discordapp.com/embed/avatars/0.png}
-,cv2 {container}$v{gallery: https://cdn.discordapp.com/embed/avatars/0.png && https://cdn.discordapp.com/embed/avatars/1.png}
-,cv2
+,builder {cv2}$v{container}$v{media: https://cdn.discordapp.com/embed/avatars/0.png}
+,builder {cv2}$v{container}$v{gallery: https://cdn.discordapp.com/embed/avatars/0.png && https://cdn.discordapp.com/embed/avatars/1.png}
+,builder {cv2}$v
 {container}$v
 {text: Screenshots}$v
 {media: https://cdn.discordapp.com/embed/avatars/0.png && https://cdn.discordapp.com/embed/avatars/1.png && https://cdn.discordapp.com/embed/avatars/2.png}
@@ -360,7 +348,7 @@ Write components in order with `$v`.
 **Buttons in a container**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container}$v
 {text: Useful links}$v
 {button: Website && https://discord.com}$v
@@ -373,7 +361,7 @@ Write components in order with `$v`.
 **Simple announcement**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container: #5865F2}$v
 {text: # Server Update}$v
 {text: We shipped a few quality-of-life changes today.}$v
@@ -384,7 +372,7 @@ Write components in order with `$v`.
 **Welcome message**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container: #57F287}$v
 {section}$v
 {text: # Welcome!}$v
@@ -398,7 +386,7 @@ Write components in order with `$v`.
 **Link card**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container}$v
 {section}$v
 {text: **Need help?**}$v
@@ -412,7 +400,7 @@ Write components in order with `$v`.
 **Gallery post**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container: #FEE75C}$v
 {text: # Weekly Highlights}$v
 {text: A few moments from this week.}$v
@@ -427,7 +415,7 @@ Write components in order with `$v`.
 **Multi-section layout**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container}$v
 {text: # Feature Overview}$v
 {separator}$v
@@ -450,7 +438,7 @@ Write components in order with `$v`.
 **Two containers**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container: #5865F2}$v
 {text: # Part 1}$v
 {text: First block of content.}$v
@@ -462,7 +450,7 @@ Write components in order with `$v`.
 **Product / store style**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container: #EB459E}$v
 {section}$v
 {text: # Premium Plan}$v
@@ -480,7 +468,7 @@ Write components in order with `$v`.
 **Everything together**
 
 ```text
-,cv2
+,builder {cv2}$v
 {container: #5865F2}$v
 {text: # Components Showcase}$v
 {text: Text, separators, media, sections, thumbnails, and buttons.}$v
@@ -516,19 +504,19 @@ Buttons are **link buttons only**.
 **Embed**
 
 ```text
-,embed {title: Links}$v{button: Discord && https://discord.com}$v{button: GitHub && https://github.com}
+,builder {embed}$v{title: Links}$v{button: Discord && https://discord.com}$v{button: GitHub && https://github.com}
 ```
 
 **CV2 section accessory**
 
 ```text
-,cv2 {container}$v{section}$v{text: Open the site}$v{button: Visit && https://discord.com}
+,builder {cv2}$v{container}$v{section}$v{text: Open the site}$v{button: Visit && https://discord.com}
 ```
 
 **CV2 action row**
 
 ```text
-,cv2 {container}$v{text: Pick a link}$v{button: A && https://discord.com}$v{button: B && https://discord.gg/discord-developers}
+,builder {cv2}$v{container}$v{text: Pick a link}$v{button: A && https://discord.com}$v{button: B && https://discord.gg/discord-developers}
 ```
 
 ---
