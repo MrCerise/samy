@@ -38,7 +38,7 @@ export default new MessageCommand({
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
-              errorUI("That user doesn't have a Last.fm account linked."),
+              errorUI(client.i18n.t("en-US", "commands.lastfm.user_no_link")),
             ],
           });
 
@@ -53,7 +53,7 @@ export default new MessageCommand({
       if (!nowPlaying) {
         await message.reply({
           flags: MessageFlags.IsComponentsV2,
-          components: [new Container().text(Text("No recent tracks found."))],
+          components: [new Container().text(Text(client.i18n.t("en-US", "commands.lastfm.no_tracks")))],
         });
 
         return;
@@ -61,7 +61,11 @@ export default new MessageCommand({
 
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
-        components: [LastFMNowUI(nowPlaying)],
+        components: [
+          LastFMNowUI(nowPlaying, "en-US", (key, variables) =>
+            client.i18n.t("en-US", key, variables),
+          ),
+        ],
       });
     } catch (error) {
       client.logger.error("Failed to get Last.fm track", {
@@ -73,7 +77,7 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           errorUI(
-            "I couldn't find that Last.fm profile or get its recent tracks.",
+            client.i18n.t("en-US", "commands.lastfm.fetch_error"),
           ),
         ],
       });
@@ -101,7 +105,7 @@ export default new MessageCommand({
         if (!username) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI("You need to provide a Last.fm username.")],
+            components: [errorUI(client.i18n.t("en-US", "commands.lastfm.provide_username"))],
           });
 
           return;
@@ -114,7 +118,7 @@ export default new MessageCommand({
             flags: MessageFlags.IsComponentsV2,
             components: [
               new Container().text(
-                Text(`Linked your Last.fm account as **${profile.name}**.`),
+                Text(client.i18n.t("en-US", "commands.lastfm.linked", { username: profile.name })),
               ),
             ],
           });
@@ -129,7 +133,7 @@ export default new MessageCommand({
             flags: MessageFlags.IsComponentsV2,
             components: [
               errorUI(
-                "I couldn't link that Last.fm account. Double-check the username and make sure the profile is public.",
+                client.i18n.t("en-US", "commands.lastfm.link_error"),
               ),
             ],
           });
@@ -148,7 +152,7 @@ export default new MessageCommand({
           if (!user) {
             await message.reply({
               flags: MessageFlags.IsComponentsV2,
-              components: [errorUI("You don't have a Last.fm account linked.")],
+              components: [errorUI(client.i18n.t("en-US", "commands.lastfm.no_link"))],
             });
 
             return;
@@ -160,7 +164,7 @@ export default new MessageCommand({
             flags: MessageFlags.IsComponentsV2,
             components: [
               new Container().text(
-                Text(`Unlinked your Last.fm account **${user.username}**.`),
+                Text(client.i18n.t("en-US", "commands.lastfm.unlinked", { username: user.username })),
               ),
             ],
           });
@@ -172,7 +176,7 @@ export default new MessageCommand({
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI("I couldn't unlink your Last.fm account.")],
+            components: [errorUI(client.i18n.t("en-US", "commands.lastfm.unlink_error"))],
           });
         }
       },

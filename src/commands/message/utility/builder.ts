@@ -37,11 +37,7 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           errorUI(
-            "Provide a message to build.\n\n" +
-              "Examples:\n" +
-              "`,builder Hello {user}`\n" +
-              "`,builder {embed}$v{title: Hello {user}}`\n" +
-              "`,builder {cv2}$v{container}$v{text: Hello {user}}`",
+            client.i18n.t("en-US", "commands.builder.provide_message"),
           ),
         ],
       });
@@ -67,8 +63,8 @@ export default new MessageCommand({
         components: [
           errorUI(
             detected.kind === "embed"
-              ? "Provide an embed script after `{embed}`."
-              : "Provide a CV2 script after `{cv2}`.",
+              ? client.i18n.t("en-US", "commands.builder.missing_embed")
+              : client.i18n.t("en-US", "commands.builder.missing_cv2"),
           ),
         ],
       });
@@ -82,8 +78,7 @@ export default new MessageCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             errorUI(
-              "Provide an embed script after `{embed}`.\n" +
-                "Example: `{embed}$v{title: Hello}`",
+              client.i18n.t("en-US", "commands.builder.missing_embed_example"),
             ),
           ],
         });
@@ -125,8 +120,7 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           errorUI(
-            "Provide a CV2 script after `{cv2}`.\n" +
-              "Example: `{cv2}$v{container}$v{text: Hello}`",
+            client.i18n.t("en-US", "commands.builder.missing_cv2_example"),
           ),
         ],
       });

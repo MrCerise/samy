@@ -9,6 +9,7 @@ import { SlashCommand } from "@/classes/Command";
 import { LastFMLink } from "@/commands/shared/lastfm";
 import { Container, Text } from "@/ui/components";
 import errorUI from "@/ui/error";
+import { resolveLocale } from "@/libs/i18n";
 
 export default new SlashCommand({
   data: new SlashCommandBuilder()
@@ -33,6 +34,10 @@ export default new SlashCommand({
   category: "Last.fm",
 
   async execute(client, interaction) {
+    const locale = resolveLocale({
+      guildLocale: interaction.guildLocale,
+      interactionLocale: interaction.locale,
+    });
     const username = interaction.options.getString("username", true);
 
     await interaction.deferReply();
@@ -44,7 +49,11 @@ export default new SlashCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           new Container().text(
-            Text(`Linked your Last.fm account as **${profile.name}**.`),
+            Text(
+              client.i18n.t(locale, "commands.lastfm.linked", {
+                username: profile.name,
+              }),
+            ),
           ),
         ],
       });
@@ -58,9 +67,7 @@ export default new SlashCommand({
       await interaction.editReply({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          errorUI(
-            "I couldn't link that Last.fm account. Double-check the username and make sure the profile is public.",
-          ),
+          errorUI(client.i18n.t(locale, "commands.lastfm.link_error")),
         ],
       });
     }

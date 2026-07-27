@@ -9,14 +9,6 @@ const client = new Client(logger);
 
 client.connect();
 
-process.on("unhandledRejection", (reason) => {
-  logger.error("Unhandled Rejection", reason as any);
-});
-
-process.on("uncaughtException", (error) => {
-  logger.error("Uncaught Exception", error);
-});
-
 async function shutdown(signal: string) {
   logger.info(`${signal} received, shutting down...`);
   await client.destroy();

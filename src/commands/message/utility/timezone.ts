@@ -40,8 +40,8 @@ export default new MessageCommand({
           components: [
             errorUI(
               self
-                ? "You haven't set your timezone yet. Use `tz set <timezone>`."
-                : `**${targetUser.username}** hasn't set their timezone yet.`,
+                ? client.i18n.t("en-US", "commands.timezone.not_set_yet", { command: "tz set <timezone>" })
+                : client.i18n.t("en-US", "commands.timezone.user_not_set", { user: targetUser.username }),
             ),
           ],
         });
@@ -71,9 +71,7 @@ export default new MessageCommand({
         components: [
           new Container().text(
             Text(
-              `${self ? "Your" : `**${targetUser.username}'s**`} local time\n` +
-                `**${tzData.timeString}** · ${tzData.dateString}\n` +
-                `-# ${extra}`,
+              client.i18n.t("en-US", "commands.timezone.details", { owner: self ? "Your" : `**${targetUser.username}'s**`, time: tzData.timeString, date: tzData.dateString, metadata: extra }),
             ),
           ),
         ],
@@ -87,7 +85,7 @@ export default new MessageCommand({
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          errorUI("An error occurred while fetching timezone info."),
+          errorUI(client.i18n.t("en-US", "commands.timezone.fetch_error")),
         ],
       });
     }
@@ -114,7 +112,7 @@ export default new MessageCommand({
         if (!input) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI("Please provide a timezone.")],
+            components: [errorUI(client.i18n.t("en-US", "commands.timezone.provide"))],
           });
 
           return;
@@ -128,8 +126,7 @@ export default new MessageCommand({
             components: [
               new Container().text(
                 Text(
-                  `Timezone set to \`${result.timezone}\` (${result.offsetString}).\n` +
-                    `-# ${result.timeString} · ${result.dateString}`,
+                  client.i18n.t("en-US", "commands.timezone.set", { timezone: result.timezone, offset: result.offsetString, time: result.timeString, date: result.dateString }),
                 ),
               ),
             ],
@@ -139,7 +136,7 @@ export default new MessageCommand({
             flags: MessageFlags.IsComponentsV2,
             components: [
               errorUI(
-                error instanceof Error ? error.message : "Invalid timezone.",
+                error instanceof Error ? error.message : client.i18n.t("en-US", "commands.timezone.invalid"),
               ),
             ],
           });
@@ -159,7 +156,7 @@ export default new MessageCommand({
           if (!removed) {
             await message.reply({
               flags: MessageFlags.IsComponentsV2,
-              components: [errorUI("You don't have a timezone set.")],
+              components: [errorUI(client.i18n.t("en-US", "commands.timezone.not_set"))],
             });
 
             return;
@@ -167,7 +164,7 @@ export default new MessageCommand({
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [new Container().text(Text("Timezone removed."))],
+            components: [new Container().text(Text(client.i18n.t("en-US", "commands.timezone.removed")))],
           });
         } catch (error) {
           client.logger.error("Failed to unset timezone", {
@@ -177,7 +174,7 @@ export default new MessageCommand({
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI("Couldn't remove your timezone right now.")],
+            components: [errorUI(client.i18n.t("en-US", "commands.timezone.remove_error"))],
           });
         }
       },
@@ -209,8 +206,8 @@ export default new MessageCommand({
             components: [
               errorUI(
                 self
-                  ? "You haven't set your timezone yet. Use `tz set <timezone>`."
-                  : `**${targetUser.username}** hasn't set their timezone yet.`,
+                ? client.i18n.t("en-US", "commands.timezone.not_set_yet", { command: "tz set <timezone>" })
+                : client.i18n.t("en-US", "commands.timezone.user_not_set", { user: targetUser.username }),
               ),
             ],
           });
@@ -238,9 +235,7 @@ export default new MessageCommand({
           components: [
             new Container().text(
               Text(
-                `${self ? "Your" : `**${targetUser.username}'s**`} local time\n` +
-                  `**${tzData.timeString}** · ${tzData.dateString}\n` +
-                  `-# ${metadata}`,
+              client.i18n.t("en-US", "commands.timezone.details", { owner: self ? "Your" : `**${targetUser.username}'s**`, time: tzData.timeString, date: tzData.dateString, metadata }),
               ),
             ),
           ],

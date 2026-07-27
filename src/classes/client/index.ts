@@ -10,6 +10,7 @@ import {
 import { config } from "@/config/config";
 import ClientLastFM from "./LastFm";
 import prisma from "@/libs/prisma";
+import { I18n } from "@/libs/i18n";
 
 //@ts-ignore
 Discord.DefaultWebSocketManagerOptions.identifyProperties.browser =
@@ -23,6 +24,7 @@ export default class Client extends Discord.Client {
   public lastFm = new ClientLastFM();
   public prefix = config.defaultPrefix;
   public prisma = prisma;
+  public i18n = new I18n();
   constructor(public readonly logger = new Logger()) {
     super({
       intents: [
@@ -39,6 +41,8 @@ export default class Client extends Discord.Client {
 
   async connect() {
     CheckEnvs(["NODE_ENV", "DATABASE_URL"]);
+
+    await this.i18n.load();
 
     await LoadEvents(this);
 

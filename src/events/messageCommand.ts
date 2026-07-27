@@ -84,7 +84,7 @@ export default new Event({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
-              Text("You don't have permission to use this command."),
+              Text(client.i18n.t("en-US", "errors.missing_permissions")),
             ),
           ],
         });
@@ -99,7 +99,7 @@ export default new Event({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
-              Text("I don't have permission to run this command."),
+              Text(client.i18n.t("en-US", "errors.bot_missing_permissions")),
             ),
           ],
         });
@@ -147,10 +147,7 @@ export default new Event({
           components: [
             new Container().text(
               Text(
-                `You may use this command ${time(
-                  retryAt,
-                  TimestampStyles.RelativeTime,
-                )}`,
+                client.i18n.t("en-US", "errors.cooldown", { time: time(retryAt, TimestampStyles.RelativeTime) }),
               ),
             ),
           ],
@@ -198,7 +195,7 @@ export default new Event({
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          errorUI("Something went wrong while executing this command."),
+          errorUI(client.i18n.t("en-US", "errors.command_failed")),
         ],
       });
     }

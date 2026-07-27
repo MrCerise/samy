@@ -41,7 +41,7 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           new Container().text(
-            Text("This command can only be used in a text channel."),
+            Text(client.i18n.t("en-US", "commands.nuke.text_channel_only")),
           ),
         ],
       });
@@ -61,7 +61,7 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           new Container().text(
-            Text("This is a protected Community channel and cannot be nuked."),
+            Text(client.i18n.t("en-US", "commands.nuke.protected")),
           ),
         ],
       });
@@ -74,7 +74,7 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           new Container().text(
-            Text("You do not have permission to nuke this channel."),
+            Text(client.i18n.t("en-US", "commands.nuke.missing_permission")),
           ),
         ],
       });
@@ -84,12 +84,12 @@ export default new MessageCommand({
 
     const nukeButton = new ButtonBuilder()
       .setCustomId(`nuke:${oldChannel.id}`)
-      .setLabel("Nuke")
+      .setLabel(client.i18n.t("en-US", "commands.nuke.button"))
       .setStyle(ButtonStyle.Danger);
 
     const cancelButton = new ButtonBuilder()
       .setCustomId(`cancel:${oldChannel.id}`)
-      .setLabel("Cancel")
+      .setLabel(client.i18n.t("en-US", "general.cancel"))
       .setStyle(ButtonStyle.Secondary);
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -102,8 +102,7 @@ export default new MessageCommand({
         new Container()
           .text(
             Text(
-              `You are about to delete ${oldChannel}.\n\n` +
-                "All messages will be permanently deleted.",
+              client.i18n.t("en-US", "commands.nuke.confirm", { channel: oldChannel.toString() }),
             ),
           )
           .separator(new SeparatorBuilder().setDivider(true))
@@ -126,7 +125,7 @@ export default new MessageCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
-              Text("The channel nuke operation was cancelled."),
+              Text(client.i18n.t("en-US", "commands.nuke.cancelled")),
             ),
           ],
         });
@@ -142,7 +141,7 @@ export default new MessageCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
-              Text("You no longer have permission to nuke this channel."),
+              Text(client.i18n.t("en-US", "commands.nuke.permission_revoked")),
             ),
           ],
         });
@@ -155,8 +154,7 @@ export default new MessageCommand({
         components: [
           new Container().text(
             Text(
-              `Confirmed by ${interaction.user}.\n\n` +
-                `Recreating ${oldChannel}...`,
+              client.i18n.t("en-US", "commands.nuke.recreating", { user: interaction.user.toString(), channel: oldChannel.toString() }),
             ),
           ),
         ],
@@ -176,7 +174,7 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           new Container().text(
-            Text(`This channel has been nuked by ${interaction.user}.`),
+            Text(client.i18n.t("en-US", "commands.nuke.complete", { user: interaction.user.toString() })),
           ),
         ],
       });
@@ -185,7 +183,7 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           new Container().text(
-            Text("The confirmation timed out after 30 seconds."),
+            Text(client.i18n.t("en-US", "commands.nuke.timeout")),
           ),
         ],
       });

@@ -1,7 +1,14 @@
 import type { LastFMNow } from "@/libs/lastfm/src/types/now";
+import type { TranslationVariables } from "@/libs/i18n";
 import { Container, Text } from "../components";
 
-export default function LastFMNowUI(data: LastFMNow) {
+type Translate = (key: string, variables?: TranslationVariables) => string;
+
+export default function LastFMNowUI(
+  data: LastFMNow,
+  locale: string,
+  t: Translate,
+) {
   const {
     username,
     track,
@@ -21,13 +28,22 @@ export default function LastFMNowUI(data: LastFMNow) {
   return new Container().addSectionComponents((section) => {
     section.addTextDisplayComponents(
       Text(
-        `${isPlaying ? "**Now Playing**" : "**Last Played**"} for **[${username}](${profile.url})**\n\n` +
-          `**${track.name}**\n` +
-          `**${track.artist["#text"]}** • ${track.album?.["#text"] || "Unknown Album"}\n\n` +
-          `-# ${artistScrobbles.toLocaleString()} artist scrobbles · ` +
-          `${albumScrobbles.toLocaleString()} album scrobbles · ` +
-          `${trackScrobbles.toLocaleString()} track scrobbles\n` +
-          `-# ${totalScrobbles.toLocaleString()} total scrobbles`,
+        t("commands.lastfm.now_details", {
+          state: t(
+            isPlaying
+              ? "commands.lastfm.now_playing"
+              : "commands.lastfm.last_played",
+          ),
+          username,
+          profileUrl: profile.url,
+          track: track.name,
+          artist: track.artist["#text"],
+          album: track.album?.["#text"] ?? t("commands.lastfm.unknown_album"),
+          artistScrobbles: artistScrobbles.toLocaleString(locale),
+          albumScrobbles: albumScrobbles.toLocaleString(locale),
+          trackScrobbles: trackScrobbles.toLocaleString(locale),
+          totalScrobbles: totalScrobbles.toLocaleString(locale),
+        }),
       ),
     );
 

@@ -10,12 +10,17 @@ import Event from "@/classes/Event";
 import { checkCooldown, setCooldown } from "@/utils/cooldown";
 import { checkPermissions } from "@/utils/permission";
 import errorUI from "@/ui/error";
+import { resolveLocale } from "@/libs/i18n";
 
 export default new Event({
   name: "interactionCreate",
 
   async execute(client, interaction) {
     if (!interaction.isChatInputCommand()) return;
+    const locale = resolveLocale({
+      guildLocale: interaction.guildLocale,
+      interactionLocale: interaction.locale,
+    });
 
     client.logger.info("Received slash command", {
       command: interaction.commandName,
@@ -53,7 +58,7 @@ export default new Event({
 
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
-        components: [errorUI("This command can only be used in a server.")],
+        components: [errorUI(client.i18n.t(locale, "errors.guild_only"))],
       });
 
       return;
@@ -97,7 +102,7 @@ export default new Event({
         await interaction.reply({
           flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
           components: [
-            errorUI("You don't have permission to use this command."),
+            errorUI(client.i18n.t(locale, "errors.missing_permissions")),
           ],
         });
 
@@ -113,7 +118,9 @@ export default new Event({
 
         await interaction.reply({
           flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
-          components: [errorUI("I don't have permission to run this command.")],
+          components: [
+            errorUI(client.i18n.t(locale, "errors.bot_missing_permissions")),
+          ],
         });
 
         return;
@@ -145,10 +152,9 @@ export default new Event({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
         components: [
           errorUI(
-            `You may use this command ${time(
-              retryAt,
-              TimestampStyles.RelativeTime,
-            )}.`,
+            client.i18n.t(locale, "errors.cooldown", {
+              time: time(retryAt, TimestampStyles.RelativeTime),
+            }),
           ),
         ],
       });
@@ -191,9 +197,7 @@ export default new Event({
 
       const reply: InteractionReplyOptions = {
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
-        components: [
-          errorUI("Something went wrong while executing this command."),
-        ],
+        components: [errorUI(client.i18n.t(locale, "errors.command_failed"))],
       };
 
       if (interaction.replied || interaction.deferred) {

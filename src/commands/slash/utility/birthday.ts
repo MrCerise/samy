@@ -16,6 +16,7 @@ import {
 } from "@/commands/shared/birthday";
 import { Container, Text } from "@/ui/components";
 import errorUI from "@/ui/error";
+import { resolveLocale } from "@/libs/i18n";
 
 export default new SlashCommand({
   data: new SlashCommandBuilder()
@@ -70,6 +71,10 @@ export default new SlashCommand({
   category: "Utility",
 
   async execute(client, interaction) {
+    const locale = resolveLocale({
+      guildLocale: interaction.guildLocale,
+      interactionLocale: interaction.locale,
+    });
     const subcommand = interaction.options.getSubcommand();
 
     if (subcommand === "set") {
@@ -82,18 +87,26 @@ export default new SlashCommand({
 
         const next =
           result.daysUntil === 0
-            ? "Today!"
+            ? client.i18n.t(locale, "commands.birthday.today")
             : time(result.nextBirthdayTimestamp, TimestampStyles.RelativeTime);
 
-        const age = result.age !== undefined ? ` · Turning ${result.age}` : "";
+        const age =
+          result.age !== undefined
+            ? client.i18n.t(locale, "commands.birthday.turning", {
+                age: result.age,
+              })
+            : "";
 
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
               Text(
-                `Birthday saved: **${result.formattedDate}**\n` +
-                  `-# ${next}${age}`,
+                client.i18n.t(locale, "commands.birthday.saved", {
+                  date: result.formattedDate,
+                  next,
+                  age,
+                }),
               ),
             ),
           ],
@@ -103,7 +116,9 @@ export default new SlashCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             errorUI(
-              error instanceof Error ? error.message : "Invalid birthday date.",
+              error instanceof Error
+                ? error.message
+                : client.i18n.t(locale, "commands.birthday.invalid_date"),
             ),
           ],
         });
@@ -121,7 +136,9 @@ export default new SlashCommand({
         if (!removed) {
           await interaction.editReply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI("You don't have a birthday set.")],
+            components: [
+              errorUI(client.i18n.t(locale, "commands.birthday.not_set")),
+            ],
           });
 
           return;
@@ -129,7 +146,11 @@ export default new SlashCommand({
 
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
-          components: [new Container().text(Text("Birthday removed."))],
+          components: [
+            new Container().text(
+              Text(client.i18n.t(locale, "commands.birthday.removed")),
+            ),
+          ],
         });
       } catch (error) {
         client.logger.error("Failed to unset birthday", {
@@ -139,7 +160,9 @@ export default new SlashCommand({
 
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
-          components: [errorUI("Couldn't remove your birthday right now.")],
+          components: [
+            errorUI(client.i18n.t(locale, "commands.birthday.remove_error")),
+          ],
         });
       }
 
@@ -163,8 +186,12 @@ export default new SlashCommand({
             components: [
               errorUI(
                 self
-                  ? "You haven't set your birthday yet. Use `/birthday set <date>`."
-                  : `**${targetUser.username}** hasn't set their birthday yet.`,
+                  ? client.i18n.t(locale, "commands.birthday.not_set_yet", {
+                      command: "/birthday set <date>",
+                    })
+                  : client.i18n.t(locale, "commands.birthday.user_not_set", {
+                      user: targetUser.username,
+                    }),
               ),
             ],
           });
@@ -176,19 +203,27 @@ export default new SlashCommand({
 
         const next =
           bday.daysUntil === 0
-            ? "Today!"
+            ? client.i18n.t(locale, "commands.birthday.today")
             : time(bday.nextBirthdayTimestamp, TimestampStyles.RelativeTime);
 
-        const age = bday.age !== undefined ? ` · Turning ${bday.age}` : "";
+        const age =
+          bday.age !== undefined
+            ? client.i18n.t(locale, "commands.birthday.turning", {
+                age: bday.age,
+              })
+            : "";
 
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
               Text(
-                `${self ? "Your" : `**${targetUser.username}'s**`} birthday\n` +
-                  `**${bday.formattedDate}**\n` +
-                  `-# ${next}${age}`,
+                client.i18n.t(locale, "commands.birthday.details", {
+                  owner: self ? "Your" : `**${targetUser.username}'s**`,
+                  date: bday.formattedDate,
+                  next,
+                  age,
+                }),
               ),
             ),
           ],
@@ -202,7 +237,7 @@ export default new SlashCommand({
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
           components: [
-            errorUI("An error occurred while fetching birthday info."),
+            errorUI(client.i18n.t(locale, "commands.birthday.fetch_error")),
           ],
         });
       }
@@ -213,7 +248,9 @@ export default new SlashCommand({
       if (!interaction.guild) {
         await interaction.reply({
           flags: MessageFlags.IsComponentsV2,
-          components: [errorUI("This command can only be used in a server.")],
+          components: [
+            errorUI(client.i18n.t(locale, "commands.birthday.guild_only")),
+          ],
         });
 
         return;
@@ -232,7 +269,9 @@ export default new SlashCommand({
           await interaction.editReply({
             flags: MessageFlags.IsComponentsV2,
             components: [
-              new Container().text(Text("No birthdays have been set yet.")),
+              new Container().text(
+                Text(client.i18n.t(locale, "commands.birthday.none_upcoming")),
+              ),
             ],
           });
 
@@ -248,7 +287,7 @@ export default new SlashCommand({
 
           const when =
             bday.daysUntil === 0
-              ? "Today!"
+              ? client.i18n.t(locale, "commands.birthday.today")
               : time(bday.nextBirthdayTimestamp, TimestampStyles.RelativeTime);
 
           return `${name} — ${bday.mmddyyyy} (${when})`;
@@ -258,7 +297,11 @@ export default new SlashCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
-              Text(`Upcoming birthdays\n` + lines.join("\n")),
+              Text(
+                client.i18n.t(locale, "commands.birthday.upcoming", {
+                  birthdays: lines.join("\n"),
+                }),
+              ),
             ),
           ],
         });
@@ -270,7 +313,9 @@ export default new SlashCommand({
 
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
-          components: [errorUI("Couldn't fetch upcoming birthdays.")],
+          components: [
+            errorUI(client.i18n.t(locale, "commands.birthday.upcoming_error")),
+          ],
         });
       }
     }

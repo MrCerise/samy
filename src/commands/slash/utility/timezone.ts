@@ -14,6 +14,7 @@ import {
 } from "@/commands/shared/timezone";
 import { Container, Text } from "@/ui/components";
 import errorUI from "@/ui/error";
+import { resolveLocale } from "@/libs/i18n";
 
 export default new SlashCommand({
   data: new SlashCommandBuilder()
@@ -64,6 +65,10 @@ export default new SlashCommand({
   category: "Utility",
 
   async execute(client, interaction) {
+    const locale = resolveLocale({
+      guildLocale: interaction.guildLocale,
+      interactionLocale: interaction.locale,
+    });
     const subcommand = interaction.options.getSubcommand();
 
     if (subcommand === "set") {
@@ -79,8 +84,12 @@ export default new SlashCommand({
           components: [
             new Container().text(
               Text(
-                `Timezone set to \`${result.timezone}\` (${result.offsetString}).\n` +
-                  `-# ${result.timeString} · ${result.dateString}`,
+                client.i18n.t(locale, "commands.timezone.set", {
+                  timezone: result.timezone,
+                  offset: result.offsetString,
+                  time: result.timeString,
+                  date: result.dateString,
+                }),
               ),
             ),
           ],
@@ -90,7 +99,9 @@ export default new SlashCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             errorUI(
-              error instanceof Error ? error.message : "Invalid timezone.",
+              error instanceof Error
+                ? error.message
+                : client.i18n.t(locale, "commands.timezone.invalid"),
             ),
           ],
         });
@@ -108,7 +119,9 @@ export default new SlashCommand({
         if (!removed) {
           await interaction.editReply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI("You don't have a timezone set.")],
+            components: [
+              errorUI(client.i18n.t(locale, "commands.timezone.not_set")),
+            ],
           });
 
           return;
@@ -116,7 +129,11 @@ export default new SlashCommand({
 
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
-          components: [new Container().text(Text("Timezone removed."))],
+          components: [
+            new Container().text(
+              Text(client.i18n.t(locale, "commands.timezone.removed")),
+            ),
+          ],
         });
       } catch (error) {
         client.logger.error("Failed to unset timezone", {
@@ -126,7 +143,9 @@ export default new SlashCommand({
 
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
-          components: [errorUI("Couldn't remove your timezone right now.")],
+          components: [
+            errorUI(client.i18n.t(locale, "commands.timezone.remove_error")),
+          ],
         });
       }
 
@@ -150,8 +169,12 @@ export default new SlashCommand({
             components: [
               errorUI(
                 self
-                  ? "You haven't set your timezone yet. Use `/timezone set <timezone>`."
-                  : `**${targetUser.username}** hasn't set their timezone yet.`,
+                  ? client.i18n.t(locale, "commands.timezone.not_set_yet", {
+                      command: "/timezone set <timezone>",
+                    })
+                  : client.i18n.t(locale, "commands.timezone.user_not_set", {
+                      user: targetUser.username,
+                    }),
               ),
             ],
           });
@@ -179,9 +202,12 @@ export default new SlashCommand({
           components: [
             new Container().text(
               Text(
-                `${self ? "Your" : `**${targetUser.username}'s**`} local time\n` +
-                  `**${tzData.timeString}** · ${tzData.dateString}\n` +
-                  `-# ${metadata}`,
+                client.i18n.t(locale, "commands.timezone.details", {
+                  owner: self ? "Your" : `**${targetUser.username}'s**`,
+                  time: tzData.timeString,
+                  date: tzData.dateString,
+                  metadata,
+                }),
               ),
             ),
           ],
@@ -195,7 +221,7 @@ export default new SlashCommand({
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
           components: [
-            errorUI("An error occurred while fetching timezone info."),
+            errorUI(client.i18n.t(locale, "commands.timezone.fetch_error")),
           ],
         });
       }

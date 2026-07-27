@@ -10,6 +10,7 @@ import { LastFMNow, LastFMNowUsername } from "@/commands/shared/lastfm";
 import { Container, Text } from "@/ui/components";
 import errorUI from "@/ui/error";
 import LastFMNowUI from "@/ui/lastfm/now";
+import { resolveLocale } from "@/libs/i18n";
 
 export default new SlashCommand({
   data: new SlashCommandBuilder()
@@ -36,6 +37,10 @@ export default new SlashCommand({
   category: "Utility",
 
   async execute(client, interaction) {
+    const locale = resolveLocale({
+      guildLocale: interaction.guildLocale,
+      interactionLocale: interaction.locale,
+    });
     await interaction.deferReply();
 
     try {
@@ -52,8 +57,8 @@ export default new SlashCommand({
             components: [
               errorUI(
                 userOption.id === interaction.user.id
-                  ? "You don't have a Last.fm account linked. Run **/setfm** to link your account"
-                  : "That user doesn't have a Last.fm account linked.",
+                  ? client.i18n.t(locale, "commands.lastfm.no_link")
+                  : client.i18n.t(locale, "commands.lastfm.user_no_link"),
               ),
             ],
           });
@@ -69,7 +74,11 @@ export default new SlashCommand({
       if (!nowPlaying) {
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
-          components: [new Container().text(Text("No recent tracks found."))],
+          components: [
+            new Container().text(
+              Text(client.i18n.t(locale, "commands.lastfm.no_tracks")),
+            ),
+          ],
         });
 
         return;
@@ -77,7 +86,11 @@ export default new SlashCommand({
 
       await interaction.editReply({
         flags: MessageFlags.IsComponentsV2,
-        components: [LastFMNowUI(nowPlaying)],
+        components: [
+          LastFMNowUI(nowPlaying, locale, (key, variables) =>
+            client.i18n.t(locale, key, variables),
+          ),
+        ],
       });
     } catch (error) {
       client.logger.error("Failed to get Last.fm track", {
@@ -88,9 +101,7 @@ export default new SlashCommand({
       await interaction.editReply({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          errorUI(
-            "I couldn't find that Last.fm profile or get its recent tracks.",
-          ),
+          errorUI(client.i18n.t(locale, "commands.lastfm.fetch_error")),
         ],
       });
     }

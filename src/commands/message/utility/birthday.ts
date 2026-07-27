@@ -39,8 +39,8 @@ export default new MessageCommand({
           components: [
             errorUI(
               self
-                ? "You haven't set your birthday yet. Use `bday set <date>`."
-                : `**${targetUser.username}** hasn't set their birthday yet.`,
+                ? client.i18n.t("en-US", "commands.birthday.not_set_yet", { command: "bday set <date>" })
+                : client.i18n.t("en-US", "commands.birthday.user_not_set", { user: targetUser.username }),
             ),
           ],
         });
@@ -52,19 +52,17 @@ export default new MessageCommand({
 
       const next =
         bday.daysUntil === 0
-          ? "Today!"
+          ? client.i18n.t("en-US", "commands.birthday.today")
           : time(bday.nextBirthdayTimestamp, TimestampStyles.RelativeTime);
 
-      const age = bday.age !== undefined ? ` · Turning ${bday.age}` : "";
+      const age = bday.age !== undefined ? client.i18n.t("en-US", "commands.birthday.turning", { age: bday.age }) : "";
 
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
         components: [
           new Container().text(
             Text(
-              `${self ? "Your" : `**${targetUser.username}'s**`} birthday\n` +
-                `**${bday.formattedDate}**\n` +
-                `-# ${next}${age}`,
+              client.i18n.t("en-US", "commands.birthday.details", { owner: self ? "Your" : `**${targetUser.username}'s**`, date: bday.formattedDate, next, age }),
             ),
           ),
         ],
@@ -78,7 +76,7 @@ export default new MessageCommand({
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          errorUI("An error occurred while fetching birthday info."),
+          errorUI(client.i18n.t("en-US", "commands.birthday.fetch_error")),
         ],
       });
     }
@@ -105,7 +103,7 @@ export default new MessageCommand({
         if (!input) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI("Please provide a birthday date.")],
+            components: [errorUI(client.i18n.t("en-US", "commands.birthday.provide_date"))],
           });
 
           return;
@@ -116,22 +114,21 @@ export default new MessageCommand({
 
           const next =
             result.daysUntil === 0
-              ? "Today!"
+              ? client.i18n.t("en-US", "commands.birthday.today")
               : time(
                   result.nextBirthdayTimestamp,
                   TimestampStyles.RelativeTime,
                 );
 
           const age =
-            result.age !== undefined ? ` · Turning ${result.age}` : "";
+            result.age !== undefined ? client.i18n.t("en-US", "commands.birthday.turning", { age: result.age }) : "";
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
               new Container().text(
                 Text(
-                  `Birthday saved: **${result.formattedDate}**\n` +
-                    `-# ${next}${age}`,
+                  client.i18n.t("en-US", "commands.birthday.saved", { date: result.formattedDate, next, age }),
                 ),
               ),
             ],
@@ -143,7 +140,7 @@ export default new MessageCommand({
               errorUI(
                 error instanceof Error
                   ? error.message
-                  : "Invalid birthday date.",
+                  : client.i18n.t("en-US", "commands.birthday.invalid_date"),
               ),
             ],
           });
@@ -163,7 +160,7 @@ export default new MessageCommand({
           if (!removed) {
             await message.reply({
               flags: MessageFlags.IsComponentsV2,
-              components: [errorUI("You don't have a birthday set.")],
+              components: [errorUI(client.i18n.t("en-US", "commands.birthday.not_set"))],
             });
 
             return;
@@ -171,7 +168,7 @@ export default new MessageCommand({
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [new Container().text(Text("Birthday removed."))],
+            components: [new Container().text(Text(client.i18n.t("en-US", "commands.birthday.removed")))],
           });
         } catch (error) {
           client.logger.error("Failed to unset birthday", {
@@ -181,7 +178,7 @@ export default new MessageCommand({
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI("Couldn't remove your birthday right now.")],
+            components: [errorUI(client.i18n.t("en-US", "commands.birthday.remove_error"))],
           });
         }
       },
@@ -195,7 +192,7 @@ export default new MessageCommand({
         if (!message.guild) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI("This command can only be used in a server.")],
+            components: [errorUI(client.i18n.t("en-US", "commands.birthday.guild_only"))],
           });
 
           return;
@@ -211,7 +208,7 @@ export default new MessageCommand({
             await message.reply({
               flags: MessageFlags.IsComponentsV2,
               components: [
-                new Container().text(Text("No birthdays have been set yet.")),
+                new Container().text(Text(client.i18n.t("en-US", "commands.birthday.none_upcoming"))),
               ],
             });
 
@@ -227,7 +224,7 @@ export default new MessageCommand({
 
             const when =
               bday.daysUntil === 0
-                ? "Today!"
+                ? client.i18n.t("en-US", "commands.birthday.today")
                 : time(
                     bday.nextBirthdayTimestamp,
                     TimestampStyles.RelativeTime,
@@ -240,7 +237,7 @@ export default new MessageCommand({
             flags: MessageFlags.IsComponentsV2,
             components: [
               new Container().text(
-                Text(`Upcoming birthdays\n` + lines.join("\n")),
+                Text(client.i18n.t("en-US", "commands.birthday.upcoming", { birthdays: lines.join("\n") })),
               ),
             ],
           });
@@ -252,7 +249,7 @@ export default new MessageCommand({
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI("Couldn't fetch upcoming birthdays.")],
+            components: [errorUI(client.i18n.t("en-US", "commands.birthday.upcoming_error"))],
           });
         }
       },
@@ -285,8 +282,8 @@ export default new MessageCommand({
             components: [
               errorUI(
                 self
-                  ? "You haven't set your birthday yet. Use `bday set <date>`."
-                  : `**${targetUser.username}** hasn't set their birthday yet.`,
+                  ? client.i18n.t("en-US", "commands.birthday.not_set_yet", { command: "bday set <date>" })
+                  : client.i18n.t("en-US", "commands.birthday.user_not_set", { user: targetUser.username }),
               ),
             ],
           });
@@ -298,19 +295,17 @@ export default new MessageCommand({
 
         const next =
           bday.daysUntil === 0
-            ? "Today!"
+            ? client.i18n.t("en-US", "commands.birthday.today")
             : time(bday.nextBirthdayTimestamp, TimestampStyles.RelativeTime);
 
-        const age = bday.age !== undefined ? ` · Turning ${bday.age}` : "";
+        const age = bday.age !== undefined ? client.i18n.t("en-US", "commands.birthday.turning", { age: bday.age }) : "";
 
         await message.reply({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
               Text(
-                `${self ? "Your" : `**${targetUser.username}'s**`} birthday\n` +
-                  `**${bday.formattedDate}**\n` +
-                  `-# ${next}${age}`,
+                client.i18n.t("en-US", "commands.birthday.details", { owner: self ? "Your" : `**${targetUser.username}'s**`, date: bday.formattedDate, next, age }),
               ),
             ),
           ],

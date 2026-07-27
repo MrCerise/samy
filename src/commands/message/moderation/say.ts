@@ -38,7 +38,7 @@ export default new MessageCommand({
     if (!raw) {
       await replyError(
         message,
-        "Provide a message to send.\nExamples:\n`,say Hello`\n`,say Hello {embed}$v{title: Hi}`\n`,say {cv2}$v{container}$v{text: Hello}`",
+        client.i18n.t("en-US", "commands.say.provide_message"),
       );
       return;
     }
@@ -58,7 +58,9 @@ export default new MessageCommand({
       if (!targetChannel) {
         await replyError(
           message,
-          `I couldn't find a channel with ID "${channelId}".`,
+          client.i18n.t("en-US", "commands.say.channel_not_found", {
+            channelId,
+          }),
         );
         return;
       }
@@ -68,12 +70,18 @@ export default new MessageCommand({
     }
 
     if (!body.trim()) {
-      await replyError(message, "You need to provide a message to send.");
+      await replyError(
+        message,
+        client.i18n.t("en-US", "commands.say.message_required"),
+      );
       return;
     }
 
     if (!channel.isTextBased() || !("send" in channel)) {
-      await replyError(message, "I can't send messages in that channel.");
+      await replyError(
+        message,
+        client.i18n.t("en-US", "commands.say.channel_unavailable"),
+      );
       return;
     }
 
@@ -94,8 +102,8 @@ export default new MessageCommand({
       await replyError(
         message,
         detected.kind === "embed"
-          ? "Provide an embed script after `{embed}`.\nExample: `,say Hello {embed}$v{title: Hi}`"
-          : "Provide a CV2 script after `{cv2}`.\nExample: `,say {cv2}$v{container}$v{text: Hi}`",
+          ? client.i18n.t("en-US", "commands.say.missing_embed")
+          : client.i18n.t("en-US", "commands.say.missing_cv2"),
       );
       return;
     }
@@ -104,7 +112,7 @@ export default new MessageCommand({
       if (!detected.source) {
         await replyError(
           message,
-          "Provide an embed script after `{embed}`.\nExample: `,say Hello {embed}$v{title: Hi}`",
+          client.i18n.t("en-US", "commands.say.missing_embed"),
         );
         return;
       }
@@ -137,7 +145,7 @@ export default new MessageCommand({
     if (!detected.source) {
       await replyError(
         message,
-        "Provide a CV2 script after `{cv2}`.\nExample: `,say {cv2}$v{container}$v{text: Hi}`",
+        client.i18n.t("en-US", "commands.say.missing_cv2"),
       );
       return;
     }

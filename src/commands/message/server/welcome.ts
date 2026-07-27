@@ -49,8 +49,8 @@ export default new MessageCommand({
           if (!detected.source) {
             await message.reply(
               detected.kind === "embed"
-                ? "Provide an embed script after `{embed}`."
-                : "Provide a CV2 script after `{cv2}`.",
+                ? client.i18n.t("en-US", "commands.builder.missing_embed")
+                : client.i18n.t("en-US", "commands.builder.missing_cv2"),
             );
             return;
           }
@@ -100,7 +100,7 @@ export default new MessageCommand({
 
           components: [
             new Container().addTextDisplayComponents(
-              Text(`Successfully added a welcome message for ${channel}.`),
+              Text(client.i18n.t("en-US", "commands.welcome.added", { channel: channel.toString() })),
             ),
           ],
         });
@@ -125,7 +125,7 @@ export default new MessageCommand({
         const channel = args.getChannel("channel")!;
 
         if (!channel.isTextBased() || !("send" in channel)) {
-          await message.reply("That channel cannot receive messages.");
+          await message.reply(client.i18n.t("en-US", "commands.welcome.channel_unavailable"));
           return;
         }
 
@@ -140,7 +140,7 @@ export default new MessageCommand({
 
         if (!welcome) {
           await message.reply(
-            `There is no welcome message configured for ${channel}.`,
+            client.i18n.t("en-US", "commands.welcome.not_configured", { channel: channel.toString() }),
           );
           return;
         }
@@ -160,7 +160,7 @@ export default new MessageCommand({
 
           case "embed": {
             if (!detected.source) {
-              await message.reply("The stored embed script is invalid.");
+              await message.reply(client.i18n.t("en-US", "commands.welcome.invalid_embed"));
               return;
             }
 
@@ -188,7 +188,7 @@ export default new MessageCommand({
 
           case "cv2": {
             if (!detected.source) {
-              await message.reply("The stored CV2 script is invalid.");
+              await message.reply(client.i18n.t("en-US", "commands.welcome.invalid_cv2"));
               return;
             }
 
@@ -225,15 +225,16 @@ export default new MessageCommand({
 
         if (welcomes.length === 0) {
           container.addTextDisplayComponents(
-            Text("No welcome messages are configured."),
+            Text(client.i18n.t("en-US", "commands.welcome.none")),
           );
         } else {
           container.addTextDisplayComponents(
             Text(
-              `Welcome messages are configured in ${welcomes.length} channel${welcomes.length < 1 ? "s" : ""}:\n\n` +
-                welcomes
-                  .map((welcome) => `- <#${welcome.channelId}>`)
-                  .join("\n"),
+              client.i18n.t("en-US", "commands.welcome.configured", {
+                count: welcomes.length,
+                noun: welcomes.length === 1 ? "channel" : "channels",
+                channels: welcomes.map((welcome) => `- <#${welcome.channelId}>`).join("\n"),
+              }),
             ),
           );
         }
@@ -276,7 +277,7 @@ export default new MessageCommand({
             flags: MessageFlags.IsComponentsV2,
             components: [
               new Container().addTextDisplayComponents(
-                Text(`There is no welcome message configured for ${channel}.`),
+                Text(client.i18n.t("en-US", "commands.welcome.not_configured", { channel: channel.toString() })),
               ),
             ],
           });
@@ -296,7 +297,7 @@ export default new MessageCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().addTextDisplayComponents(
-              Text(`Successfully removed the welcome message from ${channel}.`),
+              Text(client.i18n.t("en-US", "commands.welcome.removed", { channel: channel.toString() })),
             ),
           ],
         });

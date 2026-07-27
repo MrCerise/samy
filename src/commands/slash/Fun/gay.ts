@@ -1,4 +1,5 @@
 import { SlashCommand } from "@/classes/Command";
+import { resolveLocale } from "@/libs/i18n";
 import { Container, Text } from "@/ui/components";
 import {
   ApplicationIntegrationType,
@@ -25,6 +26,10 @@ export default new SlashCommand({
     ),
 
   async execute(client, interaction) {
+    const locale = resolveLocale({
+      guildLocale: interaction.guildLocale,
+      interactionLocale: interaction.locale,
+    });
     const user = interaction.options.getUser("user") ?? interaction.user;
     const percentage = getGay(user.id);
 
@@ -35,7 +40,12 @@ export default new SlashCommand({
       },
       components: [
         new Container().addTextDisplayComponents(
-          Text(`**${user.username}** is **${percentage}%** gay!`),
+          Text(
+            client.i18n.t(locale, "commands.gay.result", {
+              user: user.username,
+              percentage,
+            }),
+          ),
         ),
       ],
     });

@@ -9,6 +9,10 @@ datasource db {
 model User {
   id String @id
 
+  locale String?
+
+  prefix String?
+
   timezone String?
   birthday DateTime?
 
@@ -33,17 +37,52 @@ model LastFM {
 model Guild {
   id String @id
 
+  locale String?
+
+  prefix String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  welcomes Welcome[]
+  welcomes        Welcome[]
+  leaves          Leave[]
+  commandSettings CommandSetting[]
+}
+
+model CommandSetting {
+  id String @id @default(cuid())
+
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  command String
+
+  enabled Boolean @default(true)
+
+  @@unique([guildId, command])
+  @@index([guildId])
 }
 
 model Welcome {
   id String @id @default(cuid())
 
   guildId String
-  guild   Guild  @relation(fields: [guildId], references: [id])
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  channelId String
+
+  message String @db.Text()
+
+  @@unique([guildId, channelId])
+  @@index([guildId])
+  @@index([channelId])
+}
+
+model Leave {
+  id String @id @default(cuid())
+
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
 
   channelId String
 

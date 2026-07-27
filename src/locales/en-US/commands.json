@@ -1,0 +1,96 @@
+{
+  "birthday": {
+    "saved": "Birthday saved: **{date}**\n-# {next}{age}",
+    "removed": "Birthday removed.",
+    "not_set": "You don't have a birthday set.",
+    "not_set_yet": "You haven't set your birthday yet. Use `{command}`.",
+    "user_not_set": "**{user}** hasn't set their birthday yet.",
+    "details": "{owner} birthday\n**{date}**\n-# {next}{age}",
+    "today": "Today!",
+    "turning": " · Turning {age}",
+    "fetch_error": "An error occurred while fetching birthday info.",
+    "invalid_date": "Invalid birthday date.",
+    "provide_date": "Please provide a birthday date.",
+    "remove_error": "Couldn't remove your birthday right now.",
+    "guild_only": "This command can only be used in a server.",
+    "none_upcoming": "No birthdays have been set yet.",
+    "upcoming": "Upcoming birthdays\n{birthdays}",
+    "upcoming_error": "Couldn't fetch upcoming birthdays."
+  },
+  "timezone": {
+    "set": "Timezone set to `{timezone}` ({offset}).\n-# {time} · {date}",
+    "removed": "Timezone removed.",
+    "not_set": "You don't have a timezone set.",
+    "not_set_yet": "You haven't set your timezone yet. Use `{command}`.",
+    "user_not_set": "**{user}** hasn't set their timezone yet.",
+    "details": "{owner} local time\n**{time}** · {date}\n-# {metadata}",
+    "fetch_error": "An error occurred while fetching timezone info.",
+    "invalid": "Invalid timezone.",
+    "remove_error": "Couldn't remove your timezone right now.",
+    "provide": "Please provide a timezone."
+  },
+  "lastfm": {
+    "no_link": "You don't have a Last.fm account linked. Run **/setfm** to link your account.",
+    "user_no_link": "That user doesn't have a Last.fm account linked.",
+    "no_tracks": "No recent tracks found.",
+    "fetch_error": "I couldn't find that Last.fm profile or get its recent tracks.",
+    "linked": "Linked your Last.fm account as **{username}**.",
+    "link_error": "I couldn't link that Last.fm account. Double-check the username and make sure the profile is public.",
+    "provide_username": "You need to provide a Last.fm username.",
+    "unlinked": "Unlinked your Last.fm account **{username}**.",
+    "unlink_error": "I couldn't unlink your Last.fm account.",
+    "now_playing": "Now Playing",
+    "last_played": "Last Played",
+    "unknown_album": "Unknown Album",
+    "now_details": "**{state}** for **[{username}]({profileUrl})**\n\n**{track}**\n**{artist}** • {album}\n\n-# {artistScrobbles} artist scrobbles · {albumScrobbles} album scrobbles · {trackScrobbles} track scrobbles\n-# {totalScrobbles} total scrobbles"
+  },
+  "ping": {
+    "latency": "**Latency:** `{latency}ms`",
+    "edit": "**Edit:** `{latency}ms`"
+  },
+  "gay": {
+    "result": "**{user}** is **{percentage}%** gay!"
+  },
+  "builder": {
+    "provide_message": "Provide a message to build.\n\nExamples:\n`,builder Hello {user}`\n`,builder {embed}$v{title: Hello {user}}`\n`,builder {cv2}$v{container}$v{text: Hello {user}}`",
+    "missing_embed": "Provide an embed script after `{embed}`.",
+    "missing_cv2": "Provide a CV2 script after `{cv2}`.",
+    "missing_embed_example": "Provide an embed script after `{embed}`.\nExample: `{embed}$v{title: Hello}`",
+    "missing_cv2_example": "Provide a CV2 script after `{cv2}`.\nExample: `{cv2}$v{container}$v{text: Hello}`"
+  },
+  "nuke": {
+    "text_channel_only": "This command can only be used in a text channel.",
+    "protected": "This is a protected Community channel and cannot be nuked.",
+    "missing_permission": "You do not have permission to nuke this channel.",
+    "confirm": "You are about to delete {channel}.\n\nAll messages will be permanently deleted.",
+    "cancelled": "The channel nuke operation was cancelled.",
+    "permission_revoked": "You no longer have permission to nuke this channel.",
+    "recreating": "Confirmed by {user}.\n\nRecreating {channel}...",
+    "complete": "This channel has been nuked by {user}.",
+    "timeout": "The confirmation timed out after 30 seconds.",
+    "button": "Nuke"
+  },
+  "purge": {
+    "text_channel_only": "Messages can only be purged in text channels.",
+    "none": "No recent messages (under 14 days old) were found matching the criteria.",
+    "deleted": "Successfully deleted {count} {noun}."
+  },
+  "say": {
+    "provide_message": "Provide a message to send.\nExamples:\n`,say Hello`\n`,say Hello {embed}$v{title: Hi}`\n`,say {cv2}$v{container}$v{text: Hello}`",
+    "channel_not_found": "I couldn't find a channel with ID `{channelId}`.",
+    "message_required": "You need to provide a message to send.",
+    "channel_unavailable": "I can't send messages in that channel.",
+    "missing_embed": "Provide an embed script after `{embed}`.\nExample: `,say Hello {embed}$v{title: Hi}`",
+    "missing_cv2": "Provide a CV2 script after `{cv2}`.\nExample: `,say {cv2}$v{container}$v{text: Hi}`"
+  },
+  "welcome": {
+    "added": "Successfully added a welcome message for {channel}.",
+    "channel_unavailable": "That channel cannot receive messages.",
+    "not_configured": "There is no welcome message configured for {channel}.",
+    "invalid_embed": "The stored embed script is invalid.",
+    "invalid_cv2": "The stored CV2 script is invalid.",
+    "none": "No welcome messages are configured.",
+    "configured": "Welcome messages are configured in {count} {noun}:\n\n{channels}",
+    "removed": "Successfully removed the welcome message from {channel}."
+  }
+}

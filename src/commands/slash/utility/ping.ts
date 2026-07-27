@@ -9,6 +9,7 @@ import { SlashCommand } from "@/classes/Command";
 import { PingCommand } from "@/commands/shared/ping";
 
 import { Container, Text } from "@/ui/components";
+import { resolveLocale } from "@/libs/i18n";
 
 export default new SlashCommand({
   data: new SlashCommandBuilder()
@@ -27,10 +28,20 @@ export default new SlashCommand({
   category: PingCommand.category,
 
   async execute(client, interaction) {
+    const locale = resolveLocale({
+      guildLocale: interaction.guildLocale,
+      interactionLocale: interaction.locale,
+    });
     const sent = await interaction.reply({
       flags: MessageFlags.IsComponentsV2,
       components: [
-        new Container().text(Text(`**Latency:** \`${client.ws.ping}ms\``)),
+        new Container().text(
+          Text(
+            client.i18n.t(locale, "commands.ping.latency", {
+              latency: client.ws.ping,
+            }),
+          ),
+        ),
       ],
       withResponse: true,
     });
@@ -41,8 +52,12 @@ export default new SlashCommand({
       sent.resource.message.createdTimestamp - interaction.createdTimestamp;
 
     const page = new Container().text(
-      Text(`**Latency:** \`${client.ws.ping}ms\``),
-      Text(`**Edit:** \`${latency}ms\``),
+      Text(
+        client.i18n.t(locale, "commands.ping.latency", {
+          latency: client.ws.ping,
+        }),
+      ),
+      Text(client.i18n.t(locale, "commands.ping.edit", { latency })),
     );
 
     await interaction.editReply({

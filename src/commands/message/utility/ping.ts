@@ -14,15 +14,17 @@ export default new MessageCommand({
     const sent = await message.reply({
       flags: MessageFlags.IsComponentsV2,
       components: [
-        new Container().text(Text(`**Latency:** \`${client.ws.ping}ms\``)),
+        new Container().text(
+          Text(client.i18n.t("en-US", "commands.ping.latency", { latency: client.ws.ping })),
+        ),
       ],
     });
 
     const latency = sent.createdTimestamp - message.createdTimestamp;
 
     const page = new Container().text(
-      Text(`**Latency:** \`${client.ws.ping}ms\``),
-      Text(`**Edit:** \`${latency}ms\``),
+      Text(client.i18n.t("en-US", "commands.ping.latency", { latency: client.ws.ping })),
+      Text(client.i18n.t("en-US", "commands.ping.edit", { latency })),
     );
 
     await sent.edit({

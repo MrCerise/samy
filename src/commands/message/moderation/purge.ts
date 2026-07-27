@@ -2,15 +2,18 @@ import { MessageFlags, type Message } from "discord.js";
 
 import { MessageCommand, MessageSubcommand } from "@/classes/Command";
 import { Container, Text } from "@/ui/components";
+import type Client from "@/classes/client";
 
 const URL_REGEX = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/i;
 
 async function executePurge({
   message,
+  client,
   filterFn,
   amount,
 }: {
   message: Message;
+  client: Client;
   filterFn?: (msg: Message) => boolean;
   amount: number;
 }): Promise<void> {
@@ -21,7 +24,7 @@ async function executePurge({
       flags: MessageFlags.IsComponentsV2,
       components: [
         new Container().text(
-          Text("Messages can only be purged in text channels."),
+          Text(client.i18n.t("en-US", "commands.purge.text_channel_only")),
         ),
       ],
     });
@@ -48,7 +51,7 @@ async function executePurge({
       components: [
         new Container().text(
           Text(
-            "No recent messages (under 14 days old) were found matching the criteria.",
+            client.i18n.t("en-US", "commands.purge.none"),
           ),
         ),
       ],
@@ -65,7 +68,7 @@ async function executePurge({
     components: [
       new Container().text(
         Text(
-          `Successfully deleted ${deleted.size} message${deleted.size === 1 ? "" : "s"}.`,
+          client.i18n.t("en-US", "commands.purge.deleted", { count: deleted.size, noun: deleted.size === 1 ? "message" : "messages" }),
         ),
       ),
     ],
@@ -96,7 +99,7 @@ export default new MessageCommand({
 
   async execute(client, message, args) {
     const amount = args.getInteger("amount") ?? 10;
-    await executePurge({ message, amount });
+    await executePurge({ client, message, amount });
   },
 
   subcommands: [
@@ -129,6 +132,7 @@ export default new MessageCommand({
         const targetUser = args.getUser("user")!;
         const amount = args.getInteger("amount") ?? 10;
         await executePurge({
+          client,
           message,
           amount,
           filterFn: (msg) => msg.author.id === targetUser.id,
@@ -158,6 +162,7 @@ export default new MessageCommand({
       async execute(client, message, args) {
         const amount = args.getInteger("amount") ?? 10;
         await executePurge({
+          client,
           message,
           amount,
           filterFn: (msg) => URL_REGEX.test(msg.content),
@@ -186,6 +191,7 @@ export default new MessageCommand({
       async execute(client, message, args) {
         const amount = args.getInteger("amount") ?? 10;
         await executePurge({
+          client,
           message,
           amount,
           filterFn: (msg) => msg.author.bot,
@@ -215,6 +221,7 @@ export default new MessageCommand({
       async execute(client, message, args) {
         const amount = args.getInteger("amount") ?? 10;
         await executePurge({
+          client,
           message,
           amount,
           filterFn: (msg) => msg.attachments.size > 0,
@@ -244,6 +251,7 @@ export default new MessageCommand({
       async execute(client, message, args) {
         const amount = args.getInteger("amount") ?? 10;
         await executePurge({
+          client,
           message,
           amount,
           filterFn: (msg) => msg.embeds.length > 0,

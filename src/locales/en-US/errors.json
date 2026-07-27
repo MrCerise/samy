@@ -1,0 +1,8 @@
+{
+  "generic": "An unexpected error occurred.",
+  "missing_permissions": "You don't have permission to use this command.",
+  "bot_missing_permissions": "I don't have permission to run this command.",
+  "guild_only": "This command can only be used in a server.",
+  "cooldown": "You may use this command {time}.",
+  "command_failed": "Something went wrong while executing this command."
+}

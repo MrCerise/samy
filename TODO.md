@@ -23,6 +23,8 @@ A roadmap for Samy's development.
 [x] Command cooldowns
 [x] Permission system
 
+[ ] Internationalization (i18n) framework
+
 ## Database
 
 [x] Prisma
@@ -32,6 +34,7 @@ A roadmap for Samy's development.
 [ ] Guild configuration
 [ ] Command settings
 [ ] User preferences
+[ ] Locale settings
 
 ---
 
