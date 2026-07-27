@@ -16,30 +16,46 @@ const MONTH_NAMES = [
 ];
 
 const MONTH_MAP: Record<string, number> = {
-  jan: 1, january: 1,
-  feb: 2, february: 2,
-  mar: 3, march: 3,
-  apr: 4, april: 4,
+  jan: 1,
+  january: 1,
+  feb: 2,
+  february: 2,
+  mar: 3,
+  march: 3,
+  apr: 4,
+  april: 4,
   may: 5,
-  jun: 6, june: 6,
-  jul: 7, july: 7,
-  aug: 8, august: 8,
-  sep: 9, sept: 9, september: 9,
-  oct: 10, october: 10,
-  nov: 11, november: 11,
-  dec: 12, december: 12,
+  jun: 6,
+  june: 6,
+  jul: 7,
+  july: 7,
+  aug: 8,
+  august: 8,
+  sep: 9,
+  sept: 9,
+  september: 9,
+  oct: 10,
+  october: 10,
+  nov: 11,
+  november: 11,
+  dec: 12,
+  december: 12,
 };
 
 export interface ParsedBirthday {
   day: number;
-  month: number; // 1-12
+  month: number;
   year?: number;
   date: Date;
   hasYear: boolean;
 }
 
 export function parseBirthdayInput(input: string): ParsedBirthday | null {
-  const trimmed = input.trim().replaceAll(",", " ").replaceAll("-", "/").replaceAll(".", "/");
+  const trimmed = input
+    .trim()
+    .replaceAll(",", " ")
+    .replaceAll("-", "/")
+    .replaceAll(".", "/");
   const currentYear = new Date().getFullYear();
 
   const parts = trimmed.split("/").map((p) => p.trim());
@@ -54,12 +70,10 @@ export function parseBirthdayInput(input: string): ParsedBirthday | null {
     let year: number, month: number, day: number;
 
     if (p1 > 1000) {
-      // YYYY/MM/DD
       year = p1;
       month = p2;
       day = p3;
     } else if (p3 > 1000) {
-      // MM/DD/YYYY
       year = p3;
       if (p1 <= 12 && p2 <= 31) {
         month = p1;
@@ -75,8 +89,11 @@ export function parseBirthdayInput(input: string): ParsedBirthday | null {
     return createParsedBirthday(day, month, year, true);
   }
 
-  if (parts.length === 2 && !isNaN(parseInt(parts[0]!, 10)) && !isNaN(parseInt(parts[1]!, 10))) {
-    // MM/DD — no year
+  if (
+    parts.length === 2 &&
+    !isNaN(parseInt(parts[0]!, 10)) &&
+    !isNaN(parseInt(parts[1]!, 10))
+  ) {
     const p1 = parseInt(parts[0]!, 10);
     const p2 = parseInt(parts[1]!, 10);
 
@@ -94,7 +111,6 @@ export function parseBirthdayInput(input: string): ParsedBirthday | null {
     return createParsedBirthday(day, month, undefined, false);
   }
 
-  // Text month: "May 15", "15 May", "May 15 2000", etc.
   const words = trimmed.split(/\s+/);
   let foundMonth: number | undefined;
   let foundDay: number | undefined;
@@ -117,18 +133,26 @@ export function parseBirthdayInput(input: string): ParsedBirthday | null {
   }
 
   if (foundMonth && foundDay) {
-    return createParsedBirthday(foundDay, foundMonth, foundYear, foundYear !== undefined);
+    return createParsedBirthday(
+      foundDay,
+      foundMonth,
+      foundYear,
+      foundYear !== undefined,
+    );
   }
 
   return null;
 }
 
-function createParsedBirthday(day: number, month: number, year?: number, hasYear = true): ParsedBirthday | null {
+function createParsedBirthday(
+  day: number,
+  month: number,
+  year?: number,
+  hasYear = true,
+): ParsedBirthday | null {
   if (month < 1 || month > 12) return null;
   if (day < 1 || day > 31) return null;
 
-  // Use year 400 (a leap year) as the sentinel for "no year provided".
-  // Must be >= 100 so Date.UTC doesn't interpret it as 1900+year.
   const storedYear = hasYear && year ? year : 400;
   const testDate = new Date(Date.UTC(storedYear, month - 1, day));
 
@@ -161,22 +185,24 @@ export interface BirthdayInfo {
   hasYear: boolean;
   formattedDate: string;
   mmddyyyy: string;
-  /** Unix timestamp (seconds) of the next occurrence of this birthday at midnight UTC */
   nextBirthdayTimestamp: number;
   daysUntil: number;
   age?: number;
 }
 
-export function calculateBirthdayInfo(birthdayDate: Date, now = new Date()): BirthdayInfo {
+export function calculateBirthdayInfo(
+  birthdayDate: Date,
+  now = new Date(),
+): BirthdayInfo {
   const month = birthdayDate.getUTCMonth() + 1;
   const day = birthdayDate.getUTCDate();
   const year = birthdayDate.getUTCFullYear();
   const hasYear = year >= 1900;
 
-  // hasYear is true only when the stored year is a real birth year (>= 1900).
-  // Years below 1900 are our sentinel for "no year provided".
   const currentYear = now.getUTCFullYear();
-  const todayMidnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const todayMidnight = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  );
 
   let nextBday = new Date(Date.UTC(currentYear, month - 1, day));
   if (nextBday.getTime() < todayMidnight.getTime()) {
@@ -185,10 +211,10 @@ export function calculateBirthdayInfo(birthdayDate: Date, now = new Date()): Bir
 
   const diffMs = nextBday.getTime() - todayMidnight.getTime();
   const daysUntil = Math.round(diffMs / (1000 * 60 * 60 * 24));
-  // nextBirthday at noon UTC so Discord's LongDate renders the correct calendar day
-  // in all timezones (noon UTC is never the day before or after locally).
   const nextBirthdayTimestamp = Math.floor(
-    new Date(Date.UTC(nextBday.getUTCFullYear(), month - 1, day, 12, 0, 0)).getTime() / 1000,
+    new Date(
+      Date.UTC(nextBday.getUTCFullYear(), month - 1, day, 12, 0, 0),
+    ).getTime() / 1000,
   );
 
   let age: number | undefined;
@@ -219,7 +245,11 @@ export function calculateBirthdayInfo(birthdayDate: Date, now = new Date()): Bir
   };
 }
 
-export async function setBirthday(client: Client, userId: string, dateInput: string) {
+export async function setBirthday(
+  client: Client,
+  userId: string,
+  dateInput: string,
+) {
   const parsed = parseBirthdayInput(dateInput);
 
   if (!parsed) {

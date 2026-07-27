@@ -38,23 +38,19 @@ export function resolveTimezone(input: string): string | null {
   const trimmed = input.trim();
   const uppercase = trimmed.toUpperCase();
 
-  // Check alias table first
   if (TIMEZONE_ALIASES[uppercase]) {
     return TIMEZONE_ALIASES[uppercase];
   }
 
-  // Handle GMT/UTC offsets e.g. GMT+2, UTC-5, +5, -4:30
-  const offsetMatch = trimmed.match(/^(?:UTC|GMT)?\s*([+-])\s*(\d{1,2})(?::?(\d{2}))?$/i);
+  const offsetMatch = trimmed.match(
+    /^(?:UTC|GMT)?\s*([+-])\s*(\d{1,2})(?::?(\d{2}))?$/i,
+  );
   if (offsetMatch) {
     const sign = offsetMatch[1];
     const hours = parseInt(offsetMatch[2]!, 10);
     const minutes = offsetMatch[3] ? parseInt(offsetMatch[3], 10) : 0;
 
     if (hours <= 14 && minutes < 60) {
-      // Note: Etc/GMT sign convention in IANA is inverted (Etc/GMT-5 means UTC+5),
-      // so for user clarity we find or test an offset or use fixed offset formatting with UTC/Etc.
-      // But standard offset formats e.g. "Etc/GMT-X" or formatted string can be validated.
-      // In JS Intl, Etc/GMT-X maps to UTC+X. So sign inverted for Etc/GMT:
       const invertedSign = sign === "+" ? "-" : "+";
       const tzName = minutes === 0 ? `Etc/GMT${invertedSign}${hours}` : null;
       if (tzName && isValidTimezone(tzName)) {
@@ -63,18 +59,19 @@ export function resolveTimezone(input: string): string | null {
     }
   }
 
-  // Test if it's a valid IANA timezone string directly
   if (isValidTimezone(trimmed)) {
     return trimmed;
   }
 
-  // Try title-cased or standard region format e.g. "america/new_york" -> "America/New_York"
   const formatted = trimmed
     .split("/")
     .map(
       (part) =>
         part.charAt(0).toUpperCase() +
-        part.slice(1).toLowerCase().replace(/_([a-z])/g, (_, c) => `_${c.toUpperCase()}`),
+        part
+          .slice(1)
+          .toLowerCase()
+          .replace(/_([a-z])/g, (_, c) => `_${c.toUpperCase()}`),
     )
     .join("/");
 
@@ -94,7 +91,10 @@ export function isValidTimezone(tz: string): boolean {
   }
 }
 
-export function getFormattedTime(tz: string, date = new Date()): {
+export function getFormattedTime(
+  tz: string,
+  date = new Date(),
+): {
   timeString: string;
   dateString: string;
   offsetString: string;
@@ -128,7 +128,8 @@ export function getFormattedTime(tz: string, date = new Date()): {
   });
 
   const partsOffset = dtfOffset.formatToParts(date);
-  const offsetPart = partsOffset.find((p) => p.type === "timeZoneName")?.value ?? tz;
+  const offsetPart =
+    partsOffset.find((p) => p.type === "timeZoneName")?.value ?? tz;
 
   const hour24Str = dtfHour24.format(date);
   const hour24 = parseInt(hour24Str, 10);
@@ -141,7 +142,11 @@ export function getFormattedTime(tz: string, date = new Date()): {
   };
 }
 
-export function getTimezoneDifference(tz1: string, tz2: string, date = new Date()): string {
+export function getTimezoneDifference(
+  tz1: string,
+  tz2: string,
+  date = new Date(),
+): string {
   const getTimezoneOffsetMinutes = (timeZone: string) => {
     const dtf = new Intl.DateTimeFormat("en-US", {
       timeZone,
@@ -186,7 +191,11 @@ export function getTimezoneDifference(tz1: string, tz2: string, date = new Date(
     : `${hoursFormatted} ${suffix} behind you`;
 }
 
-export async function setTimezone(client: Client, userId: string, input: string) {
+export async function setTimezone(
+  client: Client,
+  userId: string,
+  input: string,
+) {
   const resolvedTz = resolveTimezone(input);
   if (!resolvedTz) {
     throw new Error(

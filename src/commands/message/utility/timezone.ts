@@ -40,8 +40,12 @@ export default new MessageCommand({
           components: [
             errorUI(
               self
-                ? client.i18n.t("en-US", "commands.timezone.not_set_yet", { command: "tz set <timezone>" })
-                : client.i18n.t("en-US", "commands.timezone.user_not_set", { user: targetUser.username }),
+                ? client.i18n.t("commands.timezone.not_set_yet", {
+                    command: "tz set <timezone>",
+                  })
+                : client.i18n.t("commands.timezone.user_not_set", {
+                    user: targetUser.username,
+                  }),
             ),
           ],
         });
@@ -71,7 +75,12 @@ export default new MessageCommand({
         components: [
           new Container().text(
             Text(
-              client.i18n.t("en-US", "commands.timezone.details", { owner: self ? "Your" : `**${targetUser.username}'s**`, time: tzData.timeString, date: tzData.dateString, metadata: extra }),
+              client.i18n.t("commands.timezone.details", {
+                owner: self ? "Your" : `**${targetUser.username}'s**`,
+                time: tzData.timeString,
+                date: tzData.dateString,
+                metadata: extra,
+              }),
             ),
           ),
         ],
@@ -84,9 +93,7 @@ export default new MessageCommand({
 
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
-        components: [
-          errorUI(client.i18n.t("en-US", "commands.timezone.fetch_error")),
-        ],
+        components: [errorUI(client.i18n.t("commands.timezone.fetch_error"))],
       });
     }
   },
@@ -112,7 +119,7 @@ export default new MessageCommand({
         if (!input) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI(client.i18n.t("en-US", "commands.timezone.provide"))],
+            components: [errorUI(client.i18n.t("commands.timezone.provide"))],
           });
 
           return;
@@ -126,7 +133,12 @@ export default new MessageCommand({
             components: [
               new Container().text(
                 Text(
-                  client.i18n.t("en-US", "commands.timezone.set", { timezone: result.timezone, offset: result.offsetString, time: result.timeString, date: result.dateString }),
+                  client.i18n.t("commands.timezone.set", {
+                    timezone: result.timezone,
+                    offset: result.offsetString,
+                    time: result.timeString,
+                    date: result.dateString,
+                  }),
                 ),
               ),
             ],
@@ -136,7 +148,9 @@ export default new MessageCommand({
             flags: MessageFlags.IsComponentsV2,
             components: [
               errorUI(
-                error instanceof Error ? error.message : client.i18n.t("en-US", "commands.timezone.invalid"),
+                error instanceof Error
+                  ? error.message
+                  : client.i18n.t("commands.timezone.invalid"),
               ),
             ],
           });
@@ -156,7 +170,7 @@ export default new MessageCommand({
           if (!removed) {
             await message.reply({
               flags: MessageFlags.IsComponentsV2,
-              components: [errorUI(client.i18n.t("en-US", "commands.timezone.not_set"))],
+              components: [errorUI(client.i18n.t("commands.timezone.not_set"))],
             });
 
             return;
@@ -164,7 +178,11 @@ export default new MessageCommand({
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [new Container().text(Text(client.i18n.t("en-US", "commands.timezone.removed")))],
+            components: [
+              new Container().text(
+                Text(client.i18n.t("commands.timezone.removed")),
+              ),
+            ],
           });
         } catch (error) {
           client.logger.error("Failed to unset timezone", {
@@ -174,7 +192,9 @@ export default new MessageCommand({
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI(client.i18n.t("en-US", "commands.timezone.remove_error"))],
+            components: [
+              errorUI(client.i18n.t("commands.timezone.remove_error")),
+            ],
           });
         }
       },
@@ -206,8 +226,12 @@ export default new MessageCommand({
             components: [
               errorUI(
                 self
-                ? client.i18n.t("en-US", "commands.timezone.not_set_yet", { command: "tz set <timezone>" })
-                : client.i18n.t("en-US", "commands.timezone.user_not_set", { user: targetUser.username }),
+                  ? client.i18n.t("commands.timezone.not_set_yet", {
+                      command: "tz set <timezone>",
+                    })
+                  : client.i18n.t("commands.timezone.user_not_set", {
+                      user: targetUser.username,
+                    }),
               ),
             ],
           });
@@ -235,7 +259,12 @@ export default new MessageCommand({
           components: [
             new Container().text(
               Text(
-              client.i18n.t("en-US", "commands.timezone.details", { owner: self ? "Your" : `**${targetUser.username}'s**`, time: tzData.timeString, date: tzData.dateString, metadata }),
+                client.i18n.t("commands.timezone.details", {
+                  owner: self ? "Your" : `**${targetUser.username}'s**`,
+                  time: tzData.timeString,
+                  date: tzData.dateString,
+                  metadata,
+                }),
               ),
             ),
           ],

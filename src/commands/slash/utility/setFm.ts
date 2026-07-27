@@ -9,7 +9,6 @@ import { SlashCommand } from "@/classes/Command";
 import { LastFMLink } from "@/commands/shared/lastfm";
 import { Container, Text } from "@/ui/components";
 import errorUI from "@/ui/error";
-import { resolveLocale } from "@/libs/i18n";
 
 export default new SlashCommand({
   data: new SlashCommandBuilder()
@@ -34,10 +33,6 @@ export default new SlashCommand({
   category: "Last.fm",
 
   async execute(client, interaction) {
-    const locale = resolveLocale({
-      guildLocale: interaction.guildLocale,
-      interactionLocale: interaction.locale,
-    });
     const username = interaction.options.getString("username", true);
 
     await interaction.deferReply();
@@ -50,7 +45,7 @@ export default new SlashCommand({
         components: [
           new Container().text(
             Text(
-              client.i18n.t(locale, "commands.lastfm.linked", {
+              client.i18n.t("commands.lastfm.linked", {
                 username: profile.name,
               }),
             ),
@@ -66,9 +61,7 @@ export default new SlashCommand({
 
       await interaction.editReply({
         flags: MessageFlags.IsComponentsV2,
-        components: [
-          errorUI(client.i18n.t(locale, "commands.lastfm.link_error")),
-        ],
+        components: [errorUI(client.i18n.t("commands.lastfm.link_error"))],
       });
     }
   },

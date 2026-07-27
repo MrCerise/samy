@@ -12,9 +12,7 @@ import type { Cv2Script, Cv2RenderContext } from "../types/ComponentDefinition";
 import { renderCv2Child } from "./renderChild";
 import { CV2_LIMITS } from "../../common/limits";
 
-type MessageComponent = NonNullable<
-  BaseMessageOptions["components"]
->[number];
+type MessageComponent = NonNullable<BaseMessageOptions["components"]>[number];
 
 export interface Cv2RenderResult {
   components: MessageComponent[];
@@ -23,15 +21,11 @@ export interface Cv2RenderResult {
 export interface Cv2RenderOptions {
   variables?: VariableContext;
   resolver?: VariableResolver;
-  /** Plain text shown above/inside the CV2 layout (Components V2 has no content field). */
   prependText?: string;
 }
 
 export class Cv2Renderer {
-  render(
-    script: Cv2Script,
-    options: Cv2RenderOptions = {},
-  ): Cv2RenderResult {
+  render(script: Cv2Script, options: Cv2RenderOptions = {}): Cv2RenderResult {
     const context: Cv2RenderContext = {
       variables: options.variables ?? {},
       resolver: options.resolver ?? passthroughVariableResolver,

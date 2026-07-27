@@ -41,7 +41,7 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           new Container().text(
-            Text(client.i18n.t("en-US", "commands.nuke.text_channel_only")),
+            Text(client.i18n.t("commands.nuke.text_channel_only")),
           ),
         ],
       });
@@ -60,9 +60,7 @@ export default new MessageCommand({
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          new Container().text(
-            Text(client.i18n.t("en-US", "commands.nuke.protected")),
-          ),
+          new Container().text(Text(client.i18n.t("commands.nuke.protected"))),
         ],
       });
 
@@ -74,7 +72,7 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           new Container().text(
-            Text(client.i18n.t("en-US", "commands.nuke.missing_permission")),
+            Text(client.i18n.t("commands.nuke.missing_permission")),
           ),
         ],
       });
@@ -84,25 +82,28 @@ export default new MessageCommand({
 
     const nukeButton = new ButtonBuilder()
       .setCustomId(`nuke:${oldChannel.id}`)
-      .setLabel(client.i18n.t("en-US", "commands.nuke.button"))
+      .setLabel(client.i18n.t("commands.nuke.button"))
       .setStyle(ButtonStyle.Danger);
 
     const cancelButton = new ButtonBuilder()
       .setCustomId(`cancel:${oldChannel.id}`)
-      .setLabel(client.i18n.t("en-US", "general.cancel"))
+      .setLabel(client.i18n.t("general.cancel"))
       .setStyle(ButtonStyle.Secondary);
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       cancelButton,
       nukeButton,
     );
+
     const confirmation = await message.reply({
       flags: MessageFlags.IsComponentsV2,
       components: [
         new Container()
           .text(
             Text(
-              client.i18n.t("en-US", "commands.nuke.confirm", { channel: oldChannel.toString() }),
+              client.i18n.t("commands.nuke.confirm", {
+                channel: oldChannel.toString(),
+              }),
             ),
           )
           .separator(new SeparatorBuilder().setDivider(true))
@@ -125,7 +126,7 @@ export default new MessageCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
-              Text(client.i18n.t("en-US", "commands.nuke.cancelled")),
+              Text(client.i18n.t("commands.nuke.cancelled")),
             ),
           ],
         });
@@ -141,7 +142,7 @@ export default new MessageCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
-              Text(client.i18n.t("en-US", "commands.nuke.permission_revoked")),
+              Text(client.i18n.t("commands.nuke.permission_revoked")),
             ),
           ],
         });
@@ -154,11 +155,15 @@ export default new MessageCommand({
         components: [
           new Container().text(
             Text(
-              client.i18n.t("en-US", "commands.nuke.recreating", { user: interaction.user.toString(), channel: oldChannel.toString() }),
+              client.i18n.t("commands.nuke.recreating", {
+                user: interaction.user.toString(),
+                channel: oldChannel.toString(),
+              }),
             ),
           ),
         ],
       });
+
       const clone = await oldChannel.clone({
         name: oldChannel.name,
         reason: `Channel nuked by ${interaction.user.tag}`,
@@ -174,7 +179,11 @@ export default new MessageCommand({
         flags: MessageFlags.IsComponentsV2,
         components: [
           new Container().text(
-            Text(client.i18n.t("en-US", "commands.nuke.complete", { user: interaction.user.toString() })),
+            Text(
+              client.i18n.t("commands.nuke.complete", {
+                user: interaction.user.toString(),
+              }),
+            ),
           ),
         ],
       });
@@ -182,9 +191,7 @@ export default new MessageCommand({
       await confirmation.edit({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          new Container().text(
-            Text(client.i18n.t("en-US", "commands.nuke.timeout")),
-          ),
+          new Container().text(Text(client.i18n.t("commands.nuke.timeout"))),
         ],
       });
     }

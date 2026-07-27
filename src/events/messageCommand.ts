@@ -21,6 +21,9 @@ export default new Event({
       return;
     }
 
+    const guild = message.guild;
+    const channel = message.channel;
+
     const prefix = client.prefix;
 
     if (!message.content.startsWith(prefix)) return;
@@ -37,167 +40,180 @@ export default new Event({
 
     if (!command) return;
 
-    let current: MessageCommand | MessageSubcommand = command;
-    const path: string[] = [];
+    await client.i18n.withResolvedLocale(
+      {
+        userId: message.author.id,
+        guildId: guild.id,
+      },
+      async () => {
+        let current: MessageCommand | MessageSubcommand = command;
+        const path: string[] = [];
 
-    const botMember = message.guild.members.me;
+        const botMember = guild.members.me;
 
-    if (!botMember) return;
+        if (!botMember) return;
 
-    if (
-      !checkPermissions(botMember, message.channel, [
-        "ReadMessageHistory",
-        "SendMessages",
-      ])
-    ) {
-      return;
-    }
+        if (
+          !checkPermissions(botMember, channel, [
+            "ReadMessageHistory",
+            "SendMessages",
+          ])
+        ) {
+          return;
+        }
 
-    const start = performance.now();
+        const start = performance.now();
 
-    try {
-      while (args.length > 0) {
-        const name = args[0];
+        try {
+          while (args.length > 0) {
+            const name = args[0];
 
-        if (!name) break;
+            if (!name) break;
 
-        const next = current.find(name.toLowerCase());
+            const next = current.find(name.toLowerCase());
 
-        if (!next) break;
+            if (!next) break;
 
-        args.shift();
-        path.push(next.name);
+            args.shift();
+            path.push(next.name);
 
-        current = next;
-      }
+            current = next;
+          }
 
-      if (!current.execute) {
-        return;
-      }
+          if (!current.execute) {
+            return;
+          }
 
-      const member = message.member;
+          const member = message.member;
 
-      if (!member) return;
+          if (!member) return;
 
-      if (!checkPermissions(member, message.channel, current.userPermissions)) {
-        await message.reply({
-          flags: MessageFlags.IsComponentsV2,
-          components: [
-            new Container().text(
-              Text(client.i18n.t("en-US", "errors.missing_permissions")),
-            ),
-          ],
-        });
+          if (!checkPermissions(member, channel, current.userPermissions)) {
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(
+                  Text(client.i18n.t("errors.missing_permissions")),
+                ),
+              ],
+            });
 
-        return;
-      }
+            return;
+          }
 
-      if (
-        !checkPermissions(botMember, message.channel, current.botPermissions)
-      ) {
-        await message.reply({
-          flags: MessageFlags.IsComponentsV2,
-          components: [
-            new Container().text(
-              Text(client.i18n.t("en-US", "errors.bot_missing_permissions")),
-            ),
-          ],
-        });
+          if (!checkPermissions(botMember, channel, current.botPermissions)) {
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(
+                  Text(client.i18n.t("errors.bot_missing_permissions")),
+                ),
+              ],
+            });
 
-        return;
-      }
+            return;
+          }
 
-      const usageName = [command.name, ...path].join(" ");
-      const parsed = await current.parse(client, message, args.join(" "));
+          const usageName = [command.name, ...path].join(" ");
 
-      if (!parsed.success) {
-        const errorList = parsed.errors
-          .map((error) => `• ${error.message}`)
-          .join("\n");
+          const parsed = await current.parse(client, message, args.join(" "));
 
-        await message.reply({
-          flags: MessageFlags.IsComponentsV2,
-          components: [
-            errorUI(
-              `${errorList}\n\n${buildHelp({ prefix, name: usageName }, current.arguments)}`,
-            ),
-          ],
-        });
+          if (!parsed.success) {
+            const errorList = parsed.errors
+              .map((error) => `• ${error.message}`)
+              .join("\n");
 
-        return;
-      }
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                errorUI(
+                  `${errorList}\n\n${buildHelp(
+                    {
+                      prefix,
+                      name: usageName,
+                    },
+                    current.arguments,
+                  )}`,
+                ),
+              ],
+            });
 
-      const cooldown = current.cooldown ?? client.config.defaults.cooldown;
+            return;
+          }
 
-      const remaining = checkCooldown(
-        client,
-        "message",
-        message.author.id,
-        current,
-        {
-          path,
-        },
-      );
+          const cooldown = current.cooldown ?? client.config.defaults.cooldown;
 
-      if (remaining) {
-        const retryAt = Math.floor(Date.now() / 1000) + remaining;
+          const remaining = checkCooldown(
+            client,
+            "message",
+            message.author.id,
+            current,
+            {
+              path,
+            },
+          );
 
-        await message.reply({
-          flags: MessageFlags.IsComponentsV2,
-          components: [
-            new Container().text(
-              Text(
-                client.i18n.t("en-US", "errors.cooldown", { time: time(retryAt, TimestampStyles.RelativeTime) }),
-              ),
-            ),
-          ],
-        });
+          if (remaining) {
+            const retryAt = Math.floor(Date.now() / 1000) + remaining;
 
-        return;
-      }
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(
+                  Text(
+                    client.i18n.t("errors.cooldown", {
+                      time: time(retryAt, TimestampStyles.RelativeTime),
+                    }),
+                  ),
+                ),
+              ],
+            });
 
-      setCooldown(client, "message", message.author.id, current, cooldown, {
-        path,
-      });
+            return;
+          }
 
-      const commandPath = [command.name, ...path].join(":");
+          setCooldown(client, "message", message.author.id, current, cooldown, {
+            path,
+          });
 
-      client.logger.info("Executing message command", {
-        command: commandPath,
-        user: message.author.id,
-        guild: message.guild.id,
-        channel: message.channel.id,
-      });
+          const commandPath = [command.name, ...path].join(":");
 
-      await message.channel.sendTyping();
+          client.logger.info("Executing message command", {
+            command: commandPath,
+            user: message.author.id,
+            guild: guild.id,
+            channel: channel.id,
+          });
 
-      await current.execute(client, message, parsed.args);
+          await channel.sendTyping();
 
-      client.logger.info("Message command completed", {
-        command: commandPath,
-        user: message.author.id,
-        guild: message.guild.id,
-        channel: message.channel.id,
-        duration: `${(performance.now() - start).toFixed(2)}ms`,
-      });
-    } catch (error) {
-      const commandPath = [command.name, ...path].join(":");
+          await current.execute(client, message, parsed.args);
 
-      client.logger.error("Error executing message command", {
-        error,
-        command: commandPath,
-        user: message.author.id,
-        guild: message.guild.id,
-        channel: message.channel.id,
-        duration: `${(performance.now() - start).toFixed(2)}ms`,
-      });
+          client.logger.info("Message command completed", {
+            command: commandPath,
+            user: message.author.id,
+            guild: guild.id,
+            channel: channel.id,
+            duration: `${(performance.now() - start).toFixed(2)}ms`,
+          });
+        } catch (error) {
+          const commandPath = [command.name, ...path].join(":");
 
-      await message.reply({
-        flags: MessageFlags.IsComponentsV2,
-        components: [
-          errorUI(client.i18n.t("en-US", "errors.command_failed")),
-        ],
-      });
-    }
+          client.logger.error("Error executing message command", {
+            error,
+            command: commandPath,
+            user: message.author.id,
+            guild: guild.id,
+            channel: channel.id,
+            duration: `${(performance.now() - start).toFixed(2)}ms`,
+          });
+
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [errorUI(client.i18n.t("errors.command_failed"))],
+          });
+        }
+      },
+    );
   },
 });

@@ -14,6 +14,7 @@ export default new MessageCommand({
   guildOnly: true,
   userPermissions: ["ManageGuild"],
   category: "Server",
+
   subcommands: [
     new MessageSubcommand({
       name: "add",
@@ -37,21 +38,34 @@ export default new MessageCommand({
         },
       ],
 
-      async execute(client, message, args): Promise<void> {
-        const channel = args.getChannel("channel")!;
+      async execute(client, message, args) {
+        const channel = args.getChannel("channel");
+
+        if (!channel || !message.guildId) return;
 
         const content = args.getString("message");
+
         if (!content) return;
 
         const detected = detectScriptKind(content);
 
         if (detected.kind !== "text") {
           if (!detected.source) {
-            await message.reply(
-              detected.kind === "embed"
-                ? client.i18n.t("en-US", "commands.builder.missing_embed")
-                : client.i18n.t("en-US", "commands.builder.missing_cv2"),
-            );
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(
+                  Text(
+                    client.i18n.t(
+                      detected.kind === "embed"
+                        ? "commands.builder.missing_embed"
+                        : "commands.builder.missing_cv2",
+                    ),
+                  ),
+                ),
+              ],
+            });
+
             return;
           }
 
@@ -61,27 +75,29 @@ export default new MessageCommand({
               : compileCv2Script(detected.source);
 
           if (!compiled.success) {
-            await message.reply(compiled.error.message);
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [new Container().text(Text(compiled.error.message))],
+            });
+
             return;
           }
         }
 
-        const guildId = message.guild!.id;
-
         await client.prisma.guild.upsert({
           where: {
-            id: guildId,
+            id: message.guildId,
           },
           update: {},
           create: {
-            id: guildId,
+            id: message.guildId,
           },
         });
 
         await client.prisma.welcome.upsert({
           where: {
             guildId_channelId: {
-              guildId,
+              guildId: message.guildId,
               channelId: channel.id,
             },
           },
@@ -89,7 +105,7 @@ export default new MessageCommand({
             message: content,
           },
           create: {
-            guildId,
+            guildId: message.guildId,
             channelId: channel.id,
             message: content,
           },
@@ -97,10 +113,13 @@ export default new MessageCommand({
 
         await message.reply({
           flags: MessageFlags.IsComponentsV2,
-
           components: [
-            new Container().addTextDisplayComponents(
-              Text(client.i18n.t("en-US", "commands.welcome.added", { channel: channel.toString() })),
+            new Container().text(
+              Text(
+                client.i18n.t("commands.welcome.added", {
+                  channel: channel.toString(),
+                }),
+              ),
             ),
           ],
         });
@@ -121,27 +140,47 @@ export default new MessageCommand({
         },
       ],
 
-      async execute(client, message, args): Promise<void> {
-        const channel = args.getChannel("channel")!;
+      async execute(client, message, args) {
+        const channel = args.getChannel("channel");
+
+        if (!channel || !message.guildId) return;
 
         if (!channel.isTextBased() || !("send" in channel)) {
-          await message.reply(client.i18n.t("en-US", "commands.welcome.channel_unavailable"));
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [
+              new Container().text(
+                Text(client.i18n.t("commands.welcome.channel_unavailable")),
+              ),
+            ],
+          });
+
           return;
         }
 
         const welcome = await client.prisma.welcome.findUnique({
           where: {
             guildId_channelId: {
-              guildId: message.guild!.id,
+              guildId: message.guildId,
               channelId: channel.id,
             },
           },
         });
 
         if (!welcome) {
-          await message.reply(
-            client.i18n.t("en-US", "commands.welcome.not_configured", { channel: channel.toString() }),
-          );
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [
+              new Container().text(
+                Text(
+                  client.i18n.t("commands.welcome.not_configured", {
+                    channel: channel.toString(),
+                  }),
+                ),
+              ),
+            ],
+          });
+
           return;
         }
 
@@ -152,67 +191,90 @@ export default new MessageCommand({
 
         const detected = detectScriptKind(source);
 
-        switch (detected.kind) {
-          case "text": {
-            await channel.send(detected.source);
-            return;
-          }
-
-          case "embed": {
-            if (!detected.source) {
-              await message.reply(client.i18n.t("en-US", "commands.welcome.invalid_embed"));
-              return;
-            }
-
-            const compiled = compileEmbedScript(detected.source);
-
-            if (!compiled.success) {
-              await message.reply(compiled.error.message);
-              return;
-            }
-
-            await channel.send({
-              ...(compiled.result.content
-                ? { content: compiled.result.content }
-                : {}),
-              embeds: [compiled.result.embed],
-              ...(compiled.result.components.length > 0
-                ? {
-                    components: compiled.result.components,
-                  }
-                : {}),
-            });
-
-            return;
-          }
-
-          case "cv2": {
-            if (!detected.source) {
-              await message.reply(client.i18n.t("en-US", "commands.welcome.invalid_cv2"));
-              return;
-            }
-
-            const compiled = compileCv2Script(detected.source);
-
-            if (!compiled.success) {
-              await message.reply(compiled.error.message);
-              return;
-            }
-
-            await channel.send({
-              flags: MessageFlags.IsComponentsV2,
-              components: compiled.result.components,
-            });
-          }
+        if (detected.kind === "text") {
+          await channel.send(detected.source);
+          return;
         }
+
+        if (detected.kind === "embed") {
+          if (!detected.source) {
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(
+                  Text(client.i18n.t("commands.welcome.invalid_embed")),
+                ),
+              ],
+            });
+
+            return;
+          }
+
+          const compiled = compileEmbedScript(detected.source);
+
+          if (!compiled.success) {
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [new Container().text(Text(compiled.error.message))],
+            });
+
+            return;
+          }
+
+          await channel.send({
+            ...(compiled.result.content
+              ? {
+                  content: compiled.result.content,
+                }
+              : {}),
+            embeds: [compiled.result.embed],
+            ...(compiled.result.components.length > 0
+              ? {
+                  components: compiled.result.components,
+                }
+              : {}),
+          });
+
+          return;
+        }
+
+        if (!detected.source) {
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [
+              new Container().text(
+                Text(client.i18n.t("commands.welcome.invalid_cv2")),
+              ),
+            ],
+          });
+
+          return;
+        }
+
+        const compiled = compileCv2Script(detected.source);
+
+        if (!compiled.success) {
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [new Container().text(Text(compiled.error.message))],
+          });
+
+          return;
+        }
+
+        await channel.send({
+          flags: MessageFlags.IsComponentsV2,
+          components: compiled.result.components,
+        });
       },
     }),
+
     new MessageSubcommand({
       name: "list",
-      description: "List all the welcome messages for each channel.",
+      description: "List all configured welcome messages.",
       userPermissions: ["ManageGuild"],
 
-      async execute(client, message, args) {
+      async execute(client, message) {
         if (!message.guildId) return;
 
         const welcomes = await client.prisma.welcome.findMany({
@@ -224,16 +286,16 @@ export default new MessageCommand({
         const container = new Container();
 
         if (welcomes.length === 0) {
-          container.addTextDisplayComponents(
-            Text(client.i18n.t("en-US", "commands.welcome.none")),
-          );
+          container.text(Text(client.i18n.t("commands.welcome.none")));
         } else {
-          container.addTextDisplayComponents(
+          container.text(
             Text(
-              client.i18n.t("en-US", "commands.welcome.configured", {
+              client.i18n.t("commands.welcome.configured", {
                 count: welcomes.length,
                 noun: welcomes.length === 1 ? "channel" : "channels",
-                channels: welcomes.map((welcome) => `- <#${welcome.channelId}>`).join("\n"),
+                channels: welcomes
+                  .map((welcome) => `- <#${welcome.channelId}>`)
+                  .join("\n"),
               }),
             ),
           );
@@ -261,12 +323,14 @@ export default new MessageCommand({
       ],
 
       async execute(client, message, args) {
-        const channel = args.getChannel("channel")!;
+        const channel = args.getChannel("channel");
+
+        if (!channel || !message.guildId) return;
 
         const welcome = await client.prisma.welcome.findUnique({
           where: {
             guildId_channelId: {
-              guildId: message.guild!.id,
+              guildId: message.guildId,
               channelId: channel.id,
             },
           },
@@ -276,18 +340,23 @@ export default new MessageCommand({
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
-              new Container().addTextDisplayComponents(
-                Text(client.i18n.t("en-US", "commands.welcome.not_configured", { channel: channel.toString() })),
+              new Container().text(
+                Text(
+                  client.i18n.t("commands.welcome.not_configured", {
+                    channel: channel.toString(),
+                  }),
+                ),
               ),
             ],
           });
+
           return;
         }
 
         await client.prisma.welcome.delete({
           where: {
             guildId_channelId: {
-              guildId: message.guild!.id,
+              guildId: message.guildId,
               channelId: channel.id,
             },
           },
@@ -296,8 +365,12 @@ export default new MessageCommand({
         await message.reply({
           flags: MessageFlags.IsComponentsV2,
           components: [
-            new Container().addTextDisplayComponents(
-              Text(client.i18n.t("en-US", "commands.welcome.removed", { channel: channel.toString() })),
+            new Container().text(
+              Text(
+                client.i18n.t("commands.welcome.removed", {
+                  channel: channel.toString(),
+                }),
+              ),
             ),
           ],
         });

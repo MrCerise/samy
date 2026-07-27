@@ -36,10 +36,7 @@ export default new MessageCommand({
     const raw = extractRawScript(message.content, client.prefix);
 
     if (!raw) {
-      await replyError(
-        message,
-        client.i18n.t("en-US", "commands.say.provide_message"),
-      );
+      await replyError(client, message, "commands.say.missing_message");
       return;
     }
 
@@ -56,12 +53,10 @@ export default new MessageCommand({
         (await message.guild?.channels.fetch(channelId).catch(() => null));
 
       if (!targetChannel) {
-        await replyError(
-          message,
-          client.i18n.t("en-US", "commands.say.channel_not_found", {
-            channelId,
-          }),
-        );
+        await replyError(client, message, "commands.say.channel_not_found", {
+          channel: channelId,
+        });
+
         return;
       }
 
@@ -70,22 +65,15 @@ export default new MessageCommand({
     }
 
     if (!body.trim()) {
-      await replyError(
-        message,
-        client.i18n.t("en-US", "commands.say.message_required"),
-      );
+      await replyError(client, message, "commands.say.empty_message");
       return;
     }
 
     if (!channel.isTextBased() || !("send" in channel)) {
-      await replyError(
-        message,
-        client.i18n.t("en-US", "commands.say.channel_unavailable"),
-      );
+      await replyError(client, message, "commands.say.invalid_channel");
       return;
     }
 
-    // Replace variables before detecting/compiling scripts
     body = replaceVariables(body, {
       user: message.author,
       guild: message.guild!,
@@ -100,27 +88,29 @@ export default new MessageCommand({
 
     if (!detected.source && !detected.content) {
       await replyError(
+        client,
         message,
         detected.kind === "embed"
-          ? client.i18n.t("en-US", "commands.say.missing_embed")
-          : client.i18n.t("en-US", "commands.say.missing_cv2"),
+          ? "commands.say.missing_embed"
+          : "commands.say.missing_cv2",
       );
+
       return;
     }
 
     if (detected.kind === "embed") {
       if (!detected.source) {
-        await replyError(
-          message,
-          client.i18n.t("en-US", "commands.say.missing_embed"),
-        );
+        await replyError(client, message, "commands.say.missing_embed");
         return;
       }
 
       const compiled = compileEmbedScript(detected.source);
 
       if (!compiled.success) {
-        await replyError(message, compiled.error.message);
+        await replyError(client, message, "commands.say.invalid_script", {
+          error: compiled.error.message,
+        });
+
         return;
       }
 
@@ -143,10 +133,7 @@ export default new MessageCommand({
     }
 
     if (!detected.source) {
-      await replyError(
-        message,
-        client.i18n.t("en-US", "commands.say.missing_cv2"),
-      );
+      await replyError(client, message, "commands.say.missing_cv2");
       return;
     }
 
@@ -155,7 +142,10 @@ export default new MessageCommand({
     });
 
     if (!compiled.success) {
-      await replyError(message, compiled.error.message);
+      await replyError(client, message, "commands.say.invalid_script", {
+        error: compiled.error.message,
+      });
+
       return;
     }
 
@@ -166,9 +156,14 @@ export default new MessageCommand({
   },
 });
 
-async function replyError(message: Message, text: string): Promise<void> {
+async function replyError(
+  client: any,
+  message: Message,
+  key: string,
+  variables?: Record<string, unknown>,
+): Promise<void> {
   await message.reply({
     flags: MessageFlags.IsComponentsV2,
-    components: [errorUI(text)],
+    components: [errorUI(client.i18n.t(key, variables))],
   });
 }

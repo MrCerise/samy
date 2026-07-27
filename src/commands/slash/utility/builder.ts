@@ -14,7 +14,6 @@ import {
 import { compileEmbedScript } from "@/libs/scripting/embed";
 import { replaceVariables } from "@/libs/scripting/variables";
 import errorUI from "@/ui/error";
-import { resolveLocale } from "@/libs/i18n";
 
 export default new SlashCommand({
   data: new SlashCommandBuilder()
@@ -40,10 +39,6 @@ export default new SlashCommand({
   botPermissions: ["SendMessages", "EmbedLinks"],
 
   async execute(client, interaction) {
-    const locale = resolveLocale({
-      guildLocale: interaction.guildLocale,
-      interactionLocale: interaction.locale,
-    });
     const raw = interaction.options.getString("script", true).trim();
 
     const script = replaceVariables(raw, {
@@ -64,8 +59,8 @@ export default new SlashCommand({
         components: [
           errorUI(
             detected.kind === "embed"
-              ? client.i18n.t(locale, "commands.builder.missing_embed")
-              : client.i18n.t(locale, "commands.builder.missing_cv2"),
+              ? client.i18n.t("commands.builder.missing_embed")
+              : client.i18n.t("commands.builder.missing_cv2"),
           ),
         ],
       });
@@ -78,9 +73,7 @@ export default new SlashCommand({
         await interaction.reply({
           flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
           components: [
-            errorUI(
-              client.i18n.t(locale, "commands.builder.missing_embed_example"),
-            ),
+            errorUI(client.i18n.t("commands.builder.missing_embed_example")),
           ],
         });
 
@@ -120,9 +113,7 @@ export default new SlashCommand({
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
         components: [
-          errorUI(
-            client.i18n.t(locale, "commands.builder.missing_cv2_example"),
-          ),
+          errorUI(client.i18n.t("commands.builder.missing_cv2_example")),
         ],
       });
 

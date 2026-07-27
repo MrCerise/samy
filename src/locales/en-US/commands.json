@@ -92,5 +92,23 @@
     "none": "No welcome messages are configured.",
     "configured": "Welcome messages are configured in {count} {noun}:\n\n{channels}",
     "removed": "Successfully removed the welcome message from {channel}."
+  },
+  "locale": {
+    "current": "Your locale is set to **{locale}**.",
+    "auto": "You haven't set a locale — I'm currently using **{locale}** based on your server/Discord settings.",
+    "set_user": "Your locale has been set to **{locale}**.",
+    "set_server": "This server's locale has been set to **{locale}**.",
+    "removed": "Your locale preference has been removed.",
+    "removed_server": "This server's locale has been removed.",
+    "not_set": "You don't have a locale preference set.",
+    "not_set_server": "This server doesn't have a locale preference set.",
+    "invalid": "That's not a supported locale.",
+    "invalid_scope": "Scope must be `user` or `server`.",
+    "guild_only": "The server scope can only be used in a server.",
+    "missing_permission": "You need the Manage Server permission to set the server's locale.",
+    "available": "Available locales: {locales}",
+    "provide": "Please provide a locale (e.g. **en-US**, **es-ES**, **fr-FR**).",
+    "fetch_error": "An error occurred while fetching your locale.",
+    "remove_error": "Couldn't remove your locale preference right now."
   }
 }

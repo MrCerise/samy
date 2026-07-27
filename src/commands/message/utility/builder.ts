@@ -36,9 +36,7 @@ export default new MessageCommand({
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          errorUI(
-            client.i18n.t("en-US", "commands.builder.provide_message"),
-          ),
+          errorUI(client.i18n.t("commands.builder.provide_message")),
         ],
       });
 
@@ -63,8 +61,8 @@ export default new MessageCommand({
         components: [
           errorUI(
             detected.kind === "embed"
-              ? client.i18n.t("en-US", "commands.builder.missing_embed")
-              : client.i18n.t("en-US", "commands.builder.missing_cv2"),
+              ? client.i18n.t("commands.builder.missing_embed")
+              : client.i18n.t("commands.builder.missing_cv2"),
           ),
         ],
       });
@@ -77,9 +75,7 @@ export default new MessageCommand({
         await message.reply({
           flags: MessageFlags.IsComponentsV2,
           components: [
-            errorUI(
-              client.i18n.t("en-US", "commands.builder.missing_embed_example"),
-            ),
+            errorUI(client.i18n.t("commands.builder.missing_embed_example")),
           ],
         });
 
@@ -119,9 +115,7 @@ export default new MessageCommand({
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          errorUI(
-            client.i18n.t("en-US", "commands.builder.missing_cv2_example"),
-          ),
+          errorUI(client.i18n.t("commands.builder.missing_cv2_example")),
         ],
       });
 

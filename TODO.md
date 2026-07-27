@@ -23,7 +23,7 @@ A roadmap for Samy's development.
 [x] Command cooldowns
 [x] Permission system
 
-[ ] Internationalization (i18n) framework
+[x] Internationalization (i18n) framework
 
 ## Database
 

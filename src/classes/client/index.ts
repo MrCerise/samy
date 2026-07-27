@@ -24,7 +24,7 @@ export default class Client extends Discord.Client {
   public lastFm = new ClientLastFM();
   public prefix = config.defaultPrefix;
   public prisma = prisma;
-  public i18n = new I18n();
+  public i18n = new I18n(prisma);
   constructor(public readonly logger = new Logger()) {
     super({
       intents: [

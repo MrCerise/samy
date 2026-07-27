@@ -38,7 +38,7 @@ export default new MessageCommand({
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
-              errorUI(client.i18n.t("en-US", "commands.lastfm.user_no_link")),
+              errorUI(client.i18n.t("commands.lastfm.user_no_link")),
             ],
           });
 
@@ -53,7 +53,11 @@ export default new MessageCommand({
       if (!nowPlaying) {
         await message.reply({
           flags: MessageFlags.IsComponentsV2,
-          components: [new Container().text(Text(client.i18n.t("en-US", "commands.lastfm.no_tracks")))],
+          components: [
+            new Container().text(
+              Text(client.i18n.t("commands.lastfm.no_tracks")),
+            ),
+          ],
         });
 
         return;
@@ -62,8 +66,8 @@ export default new MessageCommand({
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
         components: [
-          LastFMNowUI(nowPlaying, "en-US", (key, variables) =>
-            client.i18n.t("en-US", key, variables),
+          LastFMNowUI(nowPlaying, (key, variables) =>
+            client.i18n.t(key, variables),
           ),
         ],
       });
@@ -75,11 +79,7 @@ export default new MessageCommand({
 
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
-        components: [
-          errorUI(
-            client.i18n.t("en-US", "commands.lastfm.fetch_error"),
-          ),
-        ],
+        components: [errorUI(client.i18n.t("commands.lastfm.fetch_error"))],
       });
     }
   },
@@ -105,7 +105,9 @@ export default new MessageCommand({
         if (!username) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI(client.i18n.t("en-US", "commands.lastfm.provide_username"))],
+            components: [
+              errorUI(client.i18n.t("commands.lastfm.provide_username")),
+            ],
           });
 
           return;
@@ -118,7 +120,11 @@ export default new MessageCommand({
             flags: MessageFlags.IsComponentsV2,
             components: [
               new Container().text(
-                Text(client.i18n.t("en-US", "commands.lastfm.linked", { username: profile.name })),
+                Text(
+                  client.i18n.t("commands.lastfm.linked", {
+                    username: profile.name,
+                  }),
+                ),
               ),
             ],
           });
@@ -131,11 +137,7 @@ export default new MessageCommand({
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [
-              errorUI(
-                client.i18n.t("en-US", "commands.lastfm.link_error"),
-              ),
-            ],
+            components: [errorUI(client.i18n.t("commands.lastfm.link_error"))],
           });
         }
       },
@@ -152,7 +154,7 @@ export default new MessageCommand({
           if (!user) {
             await message.reply({
               flags: MessageFlags.IsComponentsV2,
-              components: [errorUI(client.i18n.t("en-US", "commands.lastfm.no_link"))],
+              components: [errorUI(client.i18n.t("commands.lastfm.no_link"))],
             });
 
             return;
@@ -164,7 +166,11 @@ export default new MessageCommand({
             flags: MessageFlags.IsComponentsV2,
             components: [
               new Container().text(
-                Text(client.i18n.t("en-US", "commands.lastfm.unlinked", { username: user.username })),
+                Text(
+                  client.i18n.t("commands.lastfm.unlinked", {
+                    username: user.username,
+                  }),
+                ),
               ),
             ],
           });
@@ -176,7 +182,9 @@ export default new MessageCommand({
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
-            components: [errorUI(client.i18n.t("en-US", "commands.lastfm.unlink_error"))],
+            components: [
+              errorUI(client.i18n.t("commands.lastfm.unlink_error")),
+            ],
           });
         }
       },

@@ -14,7 +14,6 @@ import {
 } from "@/commands/shared/timezone";
 import { Container, Text } from "@/ui/components";
 import errorUI from "@/ui/error";
-import { resolveLocale } from "@/libs/i18n";
 
 export default new SlashCommand({
   data: new SlashCommandBuilder()
@@ -65,10 +64,6 @@ export default new SlashCommand({
   category: "Utility",
 
   async execute(client, interaction) {
-    const locale = resolveLocale({
-      guildLocale: interaction.guildLocale,
-      interactionLocale: interaction.locale,
-    });
     const subcommand = interaction.options.getSubcommand();
 
     if (subcommand === "set") {
@@ -84,7 +79,7 @@ export default new SlashCommand({
           components: [
             new Container().text(
               Text(
-                client.i18n.t(locale, "commands.timezone.set", {
+                client.i18n.t("commands.timezone.set", {
                   timezone: result.timezone,
                   offset: result.offsetString,
                   time: result.timeString,
@@ -101,7 +96,7 @@ export default new SlashCommand({
             errorUI(
               error instanceof Error
                 ? error.message
-                : client.i18n.t(locale, "commands.timezone.invalid"),
+                : client.i18n.t("commands.timezone.invalid"),
             ),
           ],
         });
@@ -119,9 +114,7 @@ export default new SlashCommand({
         if (!removed) {
           await interaction.editReply({
             flags: MessageFlags.IsComponentsV2,
-            components: [
-              errorUI(client.i18n.t(locale, "commands.timezone.not_set")),
-            ],
+            components: [errorUI(client.i18n.t("commands.timezone.not_set"))],
           });
 
           return;
@@ -131,7 +124,7 @@ export default new SlashCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
-              Text(client.i18n.t(locale, "commands.timezone.removed")),
+              Text(client.i18n.t("commands.timezone.removed")),
             ),
           ],
         });
@@ -144,7 +137,7 @@ export default new SlashCommand({
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
           components: [
-            errorUI(client.i18n.t(locale, "commands.timezone.remove_error")),
+            errorUI(client.i18n.t("commands.timezone.remove_error")),
           ],
         });
       }
@@ -169,10 +162,10 @@ export default new SlashCommand({
             components: [
               errorUI(
                 self
-                  ? client.i18n.t(locale, "commands.timezone.not_set_yet", {
+                  ? client.i18n.t("commands.timezone.not_set_yet", {
                       command: "/timezone set <timezone>",
                     })
-                  : client.i18n.t(locale, "commands.timezone.user_not_set", {
+                  : client.i18n.t("commands.timezone.user_not_set", {
                       user: targetUser.username,
                     }),
               ),
@@ -202,7 +195,7 @@ export default new SlashCommand({
           components: [
             new Container().text(
               Text(
-                client.i18n.t(locale, "commands.timezone.details", {
+                client.i18n.t("commands.timezone.details", {
                   owner: self ? "Your" : `**${targetUser.username}'s**`,
                   time: tzData.timeString,
                   date: tzData.dateString,
@@ -220,9 +213,7 @@ export default new SlashCommand({
 
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,
-          components: [
-            errorUI(client.i18n.t(locale, "commands.timezone.fetch_error")),
-          ],
+          components: [errorUI(client.i18n.t("commands.timezone.fetch_error"))],
         });
       }
     }

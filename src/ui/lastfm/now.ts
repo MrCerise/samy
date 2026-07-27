@@ -4,11 +4,7 @@ import { Container, Text } from "../components";
 
 type Translate = (key: string, variables?: TranslationVariables) => string;
 
-export default function LastFMNowUI(
-  data: LastFMNow,
-  locale: string,
-  t: Translate,
-) {
+export default function LastFMNowUI(data: LastFMNow, t: Translate) {
   const {
     username,
     track,
@@ -39,10 +35,10 @@ export default function LastFMNowUI(
           track: track.name,
           artist: track.artist["#text"],
           album: track.album?.["#text"] ?? t("commands.lastfm.unknown_album"),
-          artistScrobbles: artistScrobbles.toLocaleString(locale),
-          albumScrobbles: albumScrobbles.toLocaleString(locale),
-          trackScrobbles: trackScrobbles.toLocaleString(locale),
-          totalScrobbles: totalScrobbles.toLocaleString(locale),
+          artistScrobbles: artistScrobbles.toLocaleString(),
+          albumScrobbles: albumScrobbles.toLocaleString(),
+          trackScrobbles: trackScrobbles.toLocaleString(),
+          totalScrobbles: totalScrobbles.toLocaleString(),
         }),
       ),
     );

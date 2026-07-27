@@ -13,9 +13,12 @@ export function translate(
   key: string,
   variables?: TranslationVariables,
 ): string {
-  const dictionary =
-    translations.get(locale) ?? translations.get(DEFAULT_LOCALE);
-  const value = dictionary ? getNestedValue(dictionary, key) : undefined;
+  const dictionary = translations.get(locale);
+  const fallbackDictionary = translations.get(DEFAULT_LOCALE);
+
+  const value =
+    (dictionary ? getNestedValue(dictionary, key) : undefined) ??
+    (fallbackDictionary ? getNestedValue(fallbackDictionary, key) : undefined);
 
   if (typeof value !== "string") return key;
 

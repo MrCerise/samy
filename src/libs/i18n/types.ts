@@ -13,3 +13,8 @@ export interface LocaleResolutionOptions {
   guildLocale?: LocaleIdentifier | null;
   interactionLocale?: LocaleIdentifier | null;
 }
+
+export interface StoredLocaleResolutionOptions extends LocaleResolutionOptions {
+  userId?: string | null;
+  guildId?: string | null;
+}
