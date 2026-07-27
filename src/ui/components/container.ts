@@ -1,10 +1,12 @@
 import {
+  ActionRowBuilder,
   ContainerBuilder,
   FileBuilder,
   MediaGalleryBuilder,
   SectionBuilder,
   SeparatorBuilder,
   TextDisplayBuilder,
+  type MessageActionRowComponentBuilder,
 } from "discord.js";
 
 export class Container extends ContainerBuilder {
@@ -38,6 +40,13 @@ export class Container extends ContainerBuilder {
 
   file(...components: FileBuilder[]) {
     this.addFileComponents(...components);
+    return this;
+  }
+
+  actionRow(
+    ...components: ActionRowBuilder<MessageActionRowComponentBuilder>[]
+  ) {
+    this.addActionRowComponents(...components);
     return this;
   }
 }

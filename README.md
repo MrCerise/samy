@@ -13,7 +13,7 @@ Built with:
 ## Development
 
 > Samy is currently in active development. Features may change, break, or be incomplete.\
-> **Support:** [https://discord.gg/mCaNMPkW8U](https://discord.gg/mCaNMPkW8U)\
+> **Support:** https://discord.gg/fgzgtTeQzr \
 > You can follow planned features and progress in the [TODO.md](TODO.md) file.\
 > Have an idea, suggestion, or feature request? Please create an issue so it can be discussed and tracked.
 

@@ -127,7 +127,7 @@ A list of planned features and improvements for Samy.
 
 ## Server Features
 
-- [ ] Welcome messages
+- [x] Welcome messages
 - [ ] Leave messages
 - [ ] Starboard
 - [ ] Server counters

@@ -226,12 +226,16 @@ ArgumentRegistry.register<Channel>({
 
     if (id) {
       const channel = await message.guild.channels.fetch(id).catch(() => null);
+
       return channel ? ok(channel) : fail(`No channel found with ID "${id}"`);
     }
 
     const cleaned = raw.replace(/^#/, "").toLowerCase();
-    const channel = message.guild.channels.cache.find(
-      (c) => c.name.toLowerCase() === cleaned,
+
+    const channels = (await message.guild.channels.fetch()).values();
+
+    const channel = [...channels].find(
+      (c) => c?.name?.toLowerCase() === cleaned,
     );
 
     return channel ? ok(channel) : fail(`No channel found matching "${raw}"`);

@@ -46,6 +46,7 @@ model Welcome {
 
   message String @db.Text()
 
+  @@unique([guildId, channelId])
   @@index([guildId])
   @@index([channelId])
 }
