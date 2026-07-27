@@ -25,14 +25,12 @@ A list of planned features and improvements for Samy.
 
 - [ ] Ban
 - [ ] Softban
-- [ ] Tempban
 - [ ] Kick
 - [ ] Timeout
 - [ ] Untimeout
 - [ ] Warn system
 - [ ] Warning history
 - [ ] Moderation case logs
-- [ ] Mute / Unmute system
 - [ ] Jail system
 - [x] Purge system
   - [x] Delete by amount
@@ -72,14 +70,13 @@ A list of planned features and improvements for Samy.
 - [ ] Ping improvements
 - [ ] AFK system
 - [ ] Reminders
-- [ ] Polls
 - [x] Embed builder
 - [x] Cv2 builder
 - [ ] Color tools
 - [ ] Character information
 - [ ] Screenshot websites
-- [ ] Timezone system
-- [ ] Birthday system
+- [x] Timezone system
+- [x] Birthday system
 
 ### Fun Commands
 
@@ -173,7 +170,6 @@ A list of planned features and improvements for Samy.
 ## Developer Experience
 
 - [ ] Plugin system
-- [ ] API support
 - [ ] Better documentation
 - [ ] Command documentation generator
 - [ ] Docker support

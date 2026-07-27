@@ -9,6 +9,9 @@ datasource db {
 model User {
   id String @id
 
+  timezone String?
+  birthday DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
