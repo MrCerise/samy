@@ -24,6 +24,8 @@ export default new SlashCommand({
       InteractionContextType.PrivateChannel,
     ),
 
+  category: "Fun",
+
   async execute(client, interaction) {
     const user = interaction.options.getUser("user") ?? interaction.user;
 

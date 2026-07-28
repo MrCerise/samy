@@ -17,6 +17,10 @@ Built with:
 > You can follow planned features and progress in the [TODO.md](TODO.md) file.\
 > Have an idea, suggestion, or feature request? Please create an issue so it can be discussed and tracked.
 
+## Commands
+
+Command docs are generated from source into [`docs/commands`](docs/commands). Run `bun run docs` to regenerate.
+
 ## License
 
 Samy is licensed under the [GNU Affero General Public License v3.0](LICENSE).

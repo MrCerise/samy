@@ -1,0 +1,115 @@
+# `purge`
+
+`prefix` `guild only`
+
+**Aliases:** `clear`, `c`, `clean`, `prune`
+
+**Requires:** ManageMessages
+
+Purge messages from the current channel.
+
+**Usage**
+```
+,purge [amount]
+```
+
+| Argument | Description | Required |
+| :-- | :-- | :--: |
+| `amount` | Number of messages to delete (1-100). | false |
+
+## `purge user`
+
+`prefix`
+
+**Aliases:** `member`, `author`
+
+**Requires:** ManageMessages
+
+Delete messages sent by a specific user.
+
+**Usage**
+```
+,user <user> [amount]
+```
+
+| Argument | Description | Required |
+| :-- | :-- | :--: |
+| `user` | The user whose messages to delete. | false |
+| `amount` | Number of messages to delete. | false |
+
+## `purge links`
+
+`prefix`
+
+**Aliases:** `link`, `urls`, `url`
+
+**Requires:** ManageMessages
+
+Delete messages containing links/URLs.
+
+**Usage**
+```
+,links [amount]
+```
+
+| Argument | Description | Required |
+| :-- | :-- | :--: |
+| `amount` | Number of messages to delete. | false |
+
+## `purge bots`
+
+`prefix`
+
+**Aliases:** `bot`
+
+**Requires:** ManageMessages
+
+Delete messages sent by bots.
+
+**Usage**
+```
+,bots [amount]
+```
+
+| Argument | Description | Required |
+| :-- | :-- | :--: |
+| `amount` | Number of messages to delete. | false |
+
+## `purge attachments`
+
+`prefix`
+
+**Aliases:** `attachment`, `files`, `file`
+
+**Requires:** ManageMessages
+
+Delete messages containing attachments.
+
+**Usage**
+```
+,attachments [amount]
+```
+
+| Argument | Description | Required |
+| :-- | :-- | :--: |
+| `amount` | Number of messages to delete. | false |
+
+## `purge embeds`
+
+`prefix`
+
+**Aliases:** `embed`
+
+**Requires:** ManageMessages
+
+Delete messages containing embeds.
+
+**Usage**
+```
+,embeds [amount]
+```
+
+| Argument | Description | Required |
+| :-- | :-- | :--: |
+| `amount` | Number of messages to delete. | false |
+

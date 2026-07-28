@@ -30,7 +30,7 @@ export default new SlashCommand({
       ApplicationIntegrationType.UserInstall,
     ),
 
-  category: "Last.fm",
+  category: "Utility",
 
   async execute(client, interaction) {
     const username = interaction.options.getString("username", true);

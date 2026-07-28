@@ -223,7 +223,7 @@ A roadmap for Samy's development.
 
 # Future
 
-[ ] Command documentation generator
+[x] Command documentation generator
 [ ] Contribution guide
 
 [ ] Premium
