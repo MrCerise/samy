@@ -110,5 +110,14 @@
     "provide": "Please provide a locale (e.g. **en-US**, **es-ES**, **fr-FR**).",
     "fetch_error": "An error occurred while fetching your locale.",
     "remove_error": "Couldn't remove your locale preference right now."
+  },
+  "user": {
+    "details": "**{displayName}** - **{tag}**\n-# {id}\n\n**Created:** {created}{joined}{boosting}\n{footer}{timezone}",
+    "joined": "\n**Joined:** {date}",
+    "boosting": "\n**Boosting since:** {date}",
+    "footer_lastfm": "Last.fm: {username}",
+    "footer_birthday": "Birthday: {next}",
+    "footer_timezone": "\n-# {timezone} · {time} · {date}",
+    "fetch_error": "An error occurred while fetching user info."
   }
 }

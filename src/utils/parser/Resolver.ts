@@ -19,6 +19,126 @@ function fail<T = never>(error: string): ArgumentResolveResult<T> {
   return { success: false, error };
 }
 
+function normalize(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function levenshtein(a: string, b: string): number {
+  if (a === b) return 0;
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
+
+  let previousRow: number[] = Array.from({ length: b.length + 1 }, (_, i) => i);
+  let currentRow: number[] = new Array<number>(b.length + 1).fill(0);
+
+  for (let i = 1; i <= a.length; i++) {
+    currentRow[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      currentRow[j] = Math.min(
+        currentRow[j - 1]! + 1,
+        previousRow[j]! + 1,
+        previousRow[j - 1]! + cost,
+      );
+    }
+    [previousRow, currentRow] = [currentRow, previousRow];
+  }
+
+  return previousRow[b.length]!;
+}
+
+function similarity(a: string, b: string): number {
+  const na = normalize(a);
+  const nb = normalize(b);
+
+  if (na === nb) return 1;
+
+  const maxLen = Math.max(na.length, nb.length);
+  if (maxLen === 0) return 1;
+
+  const distance = levenshtein(na, nb);
+  return Math.max(0, 1 - distance / maxLen);
+}
+
+function scoreCandidate(query: string, candidate: string): number {
+  const nq = normalize(query);
+  const nc = normalize(candidate);
+
+  if (nq.length === 0 || nc.length === 0) return 0;
+  if (nq === nc) return 1;
+
+  if (nc.startsWith(nq)) {
+    return 0.85 + (nq.length / nc.length) * 0.1;
+  }
+
+  if (nc.includes(nq)) {
+    return 0.65 + (nq.length / nc.length) * 0.1;
+  }
+
+  return similarity(nq, nc) * 0.6;
+}
+
+interface MatchCandidate<T> {
+  readonly item: T;
+  readonly keys: readonly string[];
+}
+
+interface BestMatchOptions {
+  readonly threshold?: number;
+}
+
+type BestMatchResult<T> =
+  | { readonly status: "found"; readonly item: T; readonly score: number }
+  | { readonly status: "none" };
+
+function bestMatch<T>(
+  query: string,
+  candidates: readonly MatchCandidate<T>[],
+  options: BestMatchOptions = {},
+): BestMatchResult<T> {
+  const threshold = options.threshold ?? 0.45;
+
+  let bestItem: T | undefined;
+  let bestScore = 0;
+
+  for (const candidate of candidates) {
+    let best = 0;
+    for (const key of candidate.keys) {
+      if (!key) continue;
+      const score = scoreCandidate(query, key);
+      if (score > best) best = score;
+    }
+    if (best >= threshold && best > bestScore) {
+      bestScore = best;
+      bestItem = candidate.item;
+    }
+  }
+
+  if (bestItem === undefined) {
+    return { status: "none" };
+  }
+
+  return { status: "found", item: bestItem, score: bestScore };
+}
+
+function userSearchKeys(user: User, member?: GuildMember): string[] {
+  const keys = [
+    user.username,
+    user.globalName,
+    member?.displayName,
+    member?.nickname,
+  ];
+  return keys.filter((key): key is string => Boolean(key));
+}
+
+function memberSearchKeys(member: GuildMember): string[] {
+  return userSearchKeys(member.user, member);
+}
+
 class ArgumentRegistryClass {
   private readonly types = new Map<string, ArgumentTypeDefinition<unknown>>();
 
@@ -88,7 +208,7 @@ ArgumentRegistry.register<boolean>({
 
 ArgumentRegistry.register<User>({
   name: "user",
-  description: "A Discord user (mention, ID, or unique username).",
+  description: "A Discord user (mention, ID, or fuzzy name match).",
   resolve: async (
     raw,
     context: ArgumentResolverContext,
@@ -96,39 +216,83 @@ ArgumentRegistry.register<User>({
     const { client, message } = context;
 
     const mentionMatch = raw.match(USER_MENTION);
-    const id = mentionMatch?.[1] ?? (SNOWFLAKE.test(raw) ? raw : undefined);
-
-    if (id) {
+    if (mentionMatch) {
+      const id = mentionMatch[1];
+      if (!id) {
+        return fail(`Malformed mention "${raw}"`);
+      }
+      const cached = client.users.cache.get(id);
+      if (cached) return ok(cached);
       try {
-        const user = await client.users.fetch(id);
-        return ok(user);
+        return ok(await client.users.fetch(id));
       } catch {
         return fail(`No user found with ID "${id}"`);
       }
     }
 
-    const cleaned = raw.replace(/^@/, "").toLowerCase();
-
-    if (message.guild) {
-      const members = await message.guild.members
-        .fetch()
-        .catch(() => message.guild!.members.cache);
-
-      const matches = members.filter(
-        (member) => member.user.username.toLowerCase() === cleaned,
-      );
-
-      if (matches.size === 1) return ok(matches.first()!.user);
-      if (matches.size > 1)
-        return fail(
-          `Multiple users match "${raw}" — try a mention or ID instead`,
-        );
+    if (SNOWFLAKE.test(raw)) {
+      const cached = client.users.cache.get(raw);
+      if (cached) return ok(cached);
+      try {
+        return ok(await client.users.fetch(raw));
+      } catch {
+        return fail(`No user found with ID "${raw}"`);
+      }
     }
 
-    const cached = client.users.cache.find(
-      (user) => user.username.toLowerCase() === cleaned,
+    const channel = message.channel;
+    if (channel.isTextBased()) {
+      const candidateMap = new Map<string, MatchCandidate<User>>();
+
+      for (const recent of channel.messages.cache.values()) {
+        const author = recent.author;
+        if (candidateMap.has(author.id)) continue;
+
+        const member = message.guild?.members.cache.get(author.id);
+        candidateMap.set(author.id, {
+          item: author,
+          keys: userSearchKeys(author, member),
+        });
+      }
+
+      const result = bestMatch(raw, [...candidateMap.values()]);
+      if (result.status === "found") return ok(result.item);
+    }
+
+    if (message.guild) {
+      const guild = message.guild;
+      let candidates: MatchCandidate<User>[] = guild.members.cache.map(
+        (member) => ({
+          item: member.user,
+          keys: userSearchKeys(member.user, member),
+        }),
+      );
+
+      let result = bestMatch(raw, candidates);
+
+      if (result.status === "none") {
+        const fetched = await guild.members.fetch().catch(() => null);
+        if (fetched) {
+          candidates = fetched.map((member) => ({
+            item: member.user,
+            keys: userSearchKeys(member.user, member),
+          }));
+          result = bestMatch(raw, candidates);
+        }
+      }
+
+      if (result.status === "found") return ok(result.item);
+    }
+
+    const cacheCandidates: MatchCandidate<User>[] = client.users.cache.map(
+      (user) => ({
+        item: user,
+        keys: userSearchKeys(user),
+      }),
     );
-    if (cached) return ok(cached);
+
+    const cacheResult = bestMatch(raw, cacheCandidates);
+    if (cacheResult.status === "found") return ok(cacheResult.item);
 
     return fail(`No user found matching "${raw}"`);
   },
@@ -136,7 +300,7 @@ ArgumentRegistry.register<User>({
 
 ArgumentRegistry.register<GuildMember>({
   name: "member",
-  description: "A guild member (mention, ID, display name, or username).",
+  description: "A guild member (mention, ID, or fuzzy name match).",
   resolve: async (
     raw,
     context: ArgumentResolverContext,
@@ -148,31 +312,50 @@ ArgumentRegistry.register<GuildMember>({
     }
 
     const mentionMatch = raw.match(USER_MENTION);
-    const id = mentionMatch?.[1] ?? (SNOWFLAKE.test(raw) ? raw : undefined);
-
-    if (id) {
+    if (mentionMatch) {
+      const id = mentionMatch[1];
+      if (!id) {
+        return fail(`Malformed mention "${raw}"`);
+      }
+      const cached = message.guild.members.cache.get(id);
+      if (cached) return ok(cached);
       try {
-        const member = await message.guild.members.fetch(id);
-        return ok(member);
+        return ok(await message.guild.members.fetch(id));
       } catch {
         return fail(`No member found with ID "${id}"`);
       }
     }
 
-    const cleaned = raw.replace(/^@/, "").toLowerCase();
-    const members = await message.guild.members
-      .fetch()
-      .catch(() => message.guild!.members.cache);
+    if (SNOWFLAKE.test(raw)) {
+      const cached = message.guild.members.cache.get(raw);
+      if (cached) return ok(cached);
+      try {
+        return ok(await message.guild.members.fetch(raw));
+      } catch {
+        return fail(`No member found with ID "${raw}"`);
+      }
+    }
 
-    const byDisplayName = members.find(
-      (member) => member.displayName.toLowerCase() === cleaned,
-    );
-    if (byDisplayName) return ok(byDisplayName);
+    let candidates: MatchCandidate<GuildMember>[] =
+      message.guild.members.cache.map((member) => ({
+        item: member,
+        keys: memberSearchKeys(member),
+      }));
 
-    const byUsername = members.find(
-      (member) => member.user.username.toLowerCase() === cleaned,
-    );
-    if (byUsername) return ok(byUsername);
+    let result = bestMatch(raw, candidates);
+
+    if (result.status === "none") {
+      const fetched = await message.guild.members.fetch().catch(() => null);
+      if (fetched) {
+        candidates = fetched.map((member) => ({
+          item: member,
+          keys: memberSearchKeys(member),
+        }));
+        result = bestMatch(raw, candidates);
+      }
+    }
+
+    if (result.status === "found") return ok(result.item);
 
     return fail(`No member found matching "${raw}"`);
   },
@@ -180,7 +363,7 @@ ArgumentRegistry.register<GuildMember>({
 
 ArgumentRegistry.register<Role>({
   name: "role",
-  description: "A guild role (mention, ID, or exact name).",
+  description: "A guild role (mention, ID, or fuzzy name match).",
   resolve: async (
     raw,
     context: ArgumentResolverContext,
@@ -192,25 +375,41 @@ ArgumentRegistry.register<Role>({
     }
 
     const mentionMatch = raw.match(ROLE_MENTION);
-    const id = mentionMatch?.[1] ?? (SNOWFLAKE.test(raw) ? raw : undefined);
-
-    if (id) {
+    if (mentionMatch) {
+      const id = mentionMatch[1];
+      if (!id) {
+        return fail(`Malformed mention "${raw}"`);
+      }
+      const cached = message.guild.roles.cache.get(id);
+      if (cached) return ok(cached);
       const role = await message.guild.roles.fetch(id).catch(() => null);
       return role ? ok(role) : fail(`No role found with ID "${id}"`);
     }
 
-    const cleaned = raw.toLowerCase();
-    const role = message.guild.roles.cache.find(
-      (r) => r.name.toLowerCase() === cleaned,
+    if (SNOWFLAKE.test(raw)) {
+      const cached = message.guild.roles.cache.get(raw);
+      if (cached) return ok(cached);
+      const role = await message.guild.roles.fetch(raw).catch(() => null);
+      return role ? ok(role) : fail(`No role found with ID "${raw}"`);
+    }
+
+    const candidates: MatchCandidate<Role>[] = message.guild.roles.cache.map(
+      (role) => ({
+        item: role,
+        keys: [role.name],
+      }),
     );
 
-    return role ? ok(role) : fail(`No role found matching "${raw}"`);
+    const result = bestMatch(raw, candidates);
+    if (result.status === "found") return ok(result.item);
+
+    return fail(`No role found matching "${raw}"`);
   },
 });
 
 ArgumentRegistry.register<Channel>({
   name: "channel",
-  description: "A guild channel (mention, ID, or name).",
+  description: "A guild channel (mention, ID, or fuzzy name match).",
   resolve: async (
     raw,
     context: ArgumentResolverContext,
@@ -222,22 +421,34 @@ ArgumentRegistry.register<Channel>({
     }
 
     const mentionMatch = raw.match(CHANNEL_MENTION);
-    const id = mentionMatch?.[1] ?? (SNOWFLAKE.test(raw) ? raw : undefined);
-
-    if (id) {
+    if (mentionMatch) {
+      const id = mentionMatch[1];
+      if (!id) {
+        return fail(`Malformed mention "${raw}"`);
+      }
+      const cached = message.guild.channels.cache.get(id);
+      if (cached) return ok(cached);
       const channel = await message.guild.channels.fetch(id).catch(() => null);
-
       return channel ? ok(channel) : fail(`No channel found with ID "${id}"`);
     }
 
-    const cleaned = raw.replace(/^#/, "").toLowerCase();
+    if (SNOWFLAKE.test(raw)) {
+      const cached = message.guild.channels.cache.get(raw);
+      if (cached) return ok(cached);
+      const channel = await message.guild.channels.fetch(raw).catch(() => null);
+      return channel ? ok(channel) : fail(`No channel found with ID "${raw}"`);
+    }
 
-    const channels = (await message.guild.channels.fetch()).values();
+    const candidates: MatchCandidate<Channel>[] = [];
 
-    const channel = [...channels].find(
-      (c) => c?.name?.toLowerCase() === cleaned,
-    );
+    for (const channel of message.guild.channels.cache.values()) {
+      if (!channel?.name) continue;
+      candidates.push({ item: channel, keys: [channel.name] });
+    }
 
-    return channel ? ok(channel) : fail(`No channel found matching "${raw}"`);
+    const result = bestMatch(raw, candidates);
+    if (result.status === "found") return ok(result.item);
+
+    return fail(`No channel found matching "${raw}"`);
   },
 });
