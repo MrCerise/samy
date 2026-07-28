@@ -11,7 +11,7 @@ Get information about a user
 ,user [user]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `user` | The user to get the information from | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `user` | `u` | The user to get the information from | false |
 

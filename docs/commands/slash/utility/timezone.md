@@ -10,9 +10,9 @@ View or set local timezones.
 
 Set your local timezone.
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `timezone` | Timezone identifier (America/New_York, UTC, EST, etc). | true |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `timezone` | — | Timezone identifier (America/New_York, UTC, EST, etc). | true |
 
 ## `/timezone get`
 
@@ -20,9 +20,9 @@ Set your local timezone.
 
 View local time for a user.
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `user` | The user whose timezone to view. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `user` | — | The user whose timezone to view. | false |
 
 ## `/timezone unset`
 

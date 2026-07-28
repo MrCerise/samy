@@ -11,7 +11,7 @@ Deletes and recreates the current channel.
 ,nuke [channel]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `channel` | The channel to nuke. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `channel` | — | The channel to nuke. | false |
 

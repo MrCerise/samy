@@ -11,9 +11,9 @@ View, set, or list user birthdays.
 ,birthday [target]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `target` | The user whose birthday you want to view. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `target` | `u`, `user` | The user whose birthday you want to view. | false |
 
 ## `birthday set`
 
@@ -26,9 +26,9 @@ Set your birthday.
 ,set <date>
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `date` | Your date of birth (MM/DD/YYYY, MM/DD, or May 15). | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `date` | `d` | Your date of birth (MM/DD/YYYY, MM/DD, or May 15). | false |
 
 ## `birthday unset`
 
@@ -67,7 +67,7 @@ View birthday of a user.
 ,get [target]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `target` | The user to view birthday for. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `target` | `u`, `user` | The user to view birthday for. | false |
 

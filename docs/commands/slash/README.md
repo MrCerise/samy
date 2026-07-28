@@ -4,5 +4,5 @@
 
 | Category | Commands |
 | :-- | :--: |
-| [Utility](./utility) | 8 |
 | [Fun](./fun) | 1 |
+| [Utility](./utility) | 8 |

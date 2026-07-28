@@ -22,10 +22,10 @@ Set your preferred language, or the server's language.
 ,set <scope> <locale>
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `scope` | Whether to set your own locale or the server's (user or server). | false |
-| `locale` | Locale identifier (en-US, es-ES, fr-FR, etc). | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `scope` | `s` | Whether to set your own locale or the server's (user or server). | false |
+| `locale` | `l` | Locale identifier (en-US, es-ES, fr-FR, etc). | false |
 
 ## `locale unset`
 
@@ -40,7 +40,7 @@ Reset your language, or the server's, back to automatic detection.
 ,unset [scope]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `scope` | Whether to reset your own locale or the server's (user or server). Defaults to user. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `scope` | `s` | Whether to reset your own locale or the server's (user or server). Defaults to user. | false |
 

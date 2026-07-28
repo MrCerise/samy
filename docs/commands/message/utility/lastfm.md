@@ -11,9 +11,9 @@ View your Last.fm profile, recent tracks, and overall statistics
 ,lastfm [user]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `user` | A Discord user (mention or ID) to view. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `user` | `u` | A Discord user (mention or ID) to view. | false |
 
 ## `lastfm link`
 
@@ -26,9 +26,9 @@ Link your Last.fm profile to the bot
 ,link <username>
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `username` | Your Last.fm username. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `username` | `u` | Your Last.fm username. | false |
 
 ## `lastfm unlink`
 

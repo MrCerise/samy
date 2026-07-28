@@ -26,10 +26,10 @@ Add a welcome message to a channel.
 ,add <channel> <message>
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `channel` | The channel to send the welcome message to. | false |
-| `message` | Plain text, an {embed} script, or a {cv2} script. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `channel` | `c` | The channel to send the welcome message to. | false |
+| `message` | `m` | Plain text, an {embed} script, or a {cv2} script. | false |
 
 ## `welcomer preview`
 
@@ -44,9 +44,9 @@ Preview a configured welcome message.
 ,preview <channel>
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `channel` | The welcome channel to preview. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `channel` | `c` | The welcome channel to preview. | false |
 
 ## `welcomer list`
 
@@ -74,7 +74,7 @@ Remove a welcome message from a channel.
 ,remove <channel>
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `channel` | The channel to remove the welcome message from. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `channel` | `c` | The channel to remove the welcome message from. | false |
 

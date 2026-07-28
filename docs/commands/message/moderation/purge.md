@@ -13,9 +13,9 @@ Purge messages from the current channel.
 ,purge [amount]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `amount` | Number of messages to delete (1-100). | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `amount` | `a`, `count` | Number of messages to delete (1-100). | false |
 
 ## `purge user`
 
@@ -32,10 +32,10 @@ Delete messages sent by a specific user.
 ,user <user> [amount]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `user` | The user whose messages to delete. | false |
-| `amount` | Number of messages to delete. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `user` | `u`, `m`, `member` | The user whose messages to delete. | false |
+| `amount` | `a`, `count` | Number of messages to delete. | false |
 
 ## `purge links`
 
@@ -52,9 +52,9 @@ Delete messages containing links/URLs.
 ,links [amount]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `amount` | Number of messages to delete. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `amount` | `a`, `count` | Number of messages to delete. | false |
 
 ## `purge bots`
 
@@ -71,9 +71,9 @@ Delete messages sent by bots.
 ,bots [amount]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `amount` | Number of messages to delete. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `amount` | `a`, `count` | Number of messages to delete. | false |
 
 ## `purge attachments`
 
@@ -90,9 +90,9 @@ Delete messages containing attachments.
 ,attachments [amount]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `amount` | Number of messages to delete. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `amount` | `a`, `count` | Number of messages to delete. | false |
 
 ## `purge embeds`
 
@@ -109,7 +109,7 @@ Delete messages containing embeds.
 ,embeds [amount]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `amount` | Number of messages to delete. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `amount` | `a`, `count` | Number of messages to delete. | false |
 

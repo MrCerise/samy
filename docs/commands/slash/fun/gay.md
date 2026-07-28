@@ -4,7 +4,7 @@
 
 See how gay someone is.
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `user` | The user to check. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `user` | — | The user to check. | false |
 

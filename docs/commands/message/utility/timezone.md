@@ -11,9 +11,9 @@ View or set your local timezone.
 ,timezone [target]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `target` | The user whose timezone you want to view. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `target` | `u`, `user` | The user whose timezone you want to view. | false |
 
 ## `timezone set`
 
@@ -26,9 +26,9 @@ Set your local timezone.
 ,set <timezone>
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `timezone` | Timezone identifier (America/New_York, UTC, EST, etc). | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `timezone` | `tz` | Timezone identifier (America/New_York, UTC, EST, etc). | false |
 
 ## `timezone unset`
 
@@ -54,7 +54,7 @@ View local time for a user.
 ,get [target]
 ```
 
-| Argument | Description | Required |
-| :-- | :-- | :--: |
-| `target` | The user to view local time for. | false |
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `target` | `u`, `user` | The user to view local time for. | false |
 

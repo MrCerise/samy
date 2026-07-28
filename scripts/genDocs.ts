@@ -17,6 +17,7 @@ interface ArgDoc {
   description?: string;
   required?: boolean;
   type?: string;
+  aliases?: string[];
 }
 
 interface CommandDoc {
@@ -56,6 +57,7 @@ function docMessageSubcommand(
       name: a.name,
       description: a.description,
       type: a.type,
+      aliases: a.aliases,
     })),
     subcommands: [],
   };
@@ -78,6 +80,7 @@ function docMessageCommand(cmd: MessageCommand, prefix: string): CommandDoc {
       name: a.name,
       description: a.description,
       type: a.type,
+      aliases: a.aliases,
     })),
     subcommands: cmd.subcommands.map((sub) =>
       docMessageSubcommand(sub, prefix, cmd.name),
@@ -157,11 +160,11 @@ function renderArgs(args: ArgDoc[]): string {
   const rows = args
     .map(
       (a) =>
-        `| \`${a.name}\` | ${a.description ?? "—"} | ${a.required ? "true" : "false"} |`,
+        `| \`${a.name}\` | ${a.aliases?.length ? a.aliases.map((al) => `\`${al}\``).join(", ") : "—"} | ${a.description ?? "—"} | ${a.required ? "true" : "false"} |`,
     )
     .join("\n");
 
-  return `| Argument | Description | Required |\n| :-- | :-- | :--: |\n${rows}\n\n`;
+  return `| Argument | Aliases | Description | Required |\n| :-- | :-- | :-- | :--: |\n${rows}\n\n`;
 }
 
 function renderCommand(doc: CommandDoc, headingLevel = 1): string {

@@ -7,4 +7,4 @@
 | [Message](./message) | 11 |
 | [Slash](./slash) | 9 |
 
-<sub>Generated 2026-07-28T02:10:40.184Z — do not edit by hand, run `bun run docs` instead.</sub>
+<sub>Generated 2026-07-28T02:14:20.105Z — do not edit by hand, run `bun run docs` instead.</sub>

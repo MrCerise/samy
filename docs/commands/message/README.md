@@ -4,6 +4,6 @@
 
 | Category | Commands |
 | :-- | :--: |
-| [Moderation](./moderation) | 3 |
-| [Server](./server) | 1 |
 | [Utility](./utility) | 7 |
+| [Server](./server) | 1 |
+| [Moderation](./moderation) | 3 |
