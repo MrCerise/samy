@@ -63,10 +63,7 @@ A roadmap for Samy's development.
 [x] Birthday
 [x] Timezone
 
-[ ] AFK
-[ ] Reminders
-[ ] Color tools
-[ ] Character information
+[x] AFK
 
 ---
 
