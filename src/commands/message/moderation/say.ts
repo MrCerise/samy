@@ -8,6 +8,8 @@ import {
 } from "@/libs/scripting/detectScriptKind";
 import { compileEmbedScript } from "@/libs/scripting/embed";
 import { extractRawScript } from "@/libs/scripting/extractRawScript";
+import { isScriptError } from "@/libs/scripting/common/ScriptError";
+import { scheduleMessageDeletion } from "@/libs/scripting/scheduleMessageDeletion";
 import { replaceVariables } from "@/libs/scripting/variables";
 import errorUI from "@/ui/error";
 import { LEADING_CHANNEL_MENTION } from "@/utils/constants";
@@ -79,10 +81,27 @@ export default new MessageCommand({
       guild: message.guild!,
     });
 
-    const detected = detectScriptKind(body);
+    let detected;
+    try {
+      detected = detectScriptKind(body);
+    } catch (error) {
+      if (isScriptError(error)) {
+        await replyError(client, message, "commands.say.invalid_script", {
+          error: error.message,
+        });
+        return;
+      }
+      throw error;
+    }
 
     if (detected.kind === "text") {
-      await channel.send(detected.source);
+      if (!detected.source.trim()) {
+        await replyError(client, message, "commands.say.empty_message");
+        return;
+      }
+
+      const sent = await channel.send(detected.source);
+      scheduleMessageDeletion(sent, detected.deleteMs);
       return;
     }
 
@@ -119,7 +138,9 @@ export default new MessageCommand({
         compiled.result.content,
       );
 
-      await channel.send({
+      const deleteMs = compiled.result.deleteMs ?? detected.deleteMs;
+
+      const sent = await channel.send({
         ...(content ? { content } : {}),
         embeds: [compiled.result.embed],
         ...(compiled.result.components.length > 0
@@ -129,6 +150,7 @@ export default new MessageCommand({
           : {}),
       });
 
+      scheduleMessageDeletion(sent, deleteMs);
       return;
     }
 
@@ -149,10 +171,14 @@ export default new MessageCommand({
       return;
     }
 
-    await channel.send({
+    const deleteMs = compiled.result.deleteMs ?? detected.deleteMs;
+
+    const sent = await channel.send({
       flags: MessageFlags.IsComponentsV2,
       components: compiled.result.components,
     });
+
+    scheduleMessageDeletion(sent, deleteMs);
   },
 });
 

@@ -8,6 +8,8 @@ import {
 } from "@/libs/scripting/detectScriptKind";
 import { compileEmbedScript } from "@/libs/scripting/embed";
 import { extractRawScript } from "@/libs/scripting/extractRawScript";
+import { isScriptError } from "@/libs/scripting/common/ScriptError";
+import { scheduleMessageDeletion } from "@/libs/scripting/scheduleMessageDeletion";
 import { replaceVariables } from "@/libs/scripting/variables";
 import errorUI from "@/ui/error";
 
@@ -51,15 +53,31 @@ export default new MessageCommand({
       guild: message.guild,
     });
 
-    const detected = detectScriptKind(script);
+    let detected;
+    try {
+      detected = detectScriptKind(script);
+    } catch (error) {
+      if (isScriptError(error)) {
+        await message.reply({
+          flags: MessageFlags.IsComponentsV2,
+          allowedMentions: {
+            parse: [],
+          },
+          components: [errorUI(error.message)],
+        });
+        return;
+      }
+      throw error;
+    }
 
     if (detected.kind === "text") {
-      await message.reply({
+      const sent = await message.reply({
         content: detected.source,
         allowedMentions: {
           parse: [],
         },
       });
+      scheduleMessageDeletion(sent, detected.deleteMs);
       return;
     }
 
@@ -115,7 +133,9 @@ export default new MessageCommand({
         compiled.result.content,
       );
 
-      await message.reply({
+      const deleteMs = compiled.result.deleteMs ?? detected.deleteMs;
+
+      const sent = await message.reply({
         ...(content ? { content } : {}),
         allowedMentions: {
           parse: [],
@@ -128,6 +148,7 @@ export default new MessageCommand({
           : {}),
       });
 
+      scheduleMessageDeletion(sent, deleteMs);
       return;
     }
 
@@ -161,12 +182,16 @@ export default new MessageCommand({
       return;
     }
 
-    await message.reply({
+    const deleteMs = compiled.result.deleteMs ?? detected.deleteMs;
+
+    const sent = await message.reply({
       flags: MessageFlags.IsComponentsV2,
       allowedMentions: {
         parse: [],
       },
       components: compiled.result.components,
     });
+
+    scheduleMessageDeletion(sent, deleteMs);
   },
 });

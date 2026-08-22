@@ -49,6 +49,24 @@ model Guild {
   leaves          Leave[]
   commandSettings CommandSetting[]
   afks            Afk[]
+  guildBans       GuildBan[]
+}
+
+model GuildBan {
+  id String @id @default(cuid())
+
+  guildId String
+  userId  String
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  reason    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, userId])
+  @@index([expiresAt])
+  @@index([guildId])
 }
 
 model CommandSetting {

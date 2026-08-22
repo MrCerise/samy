@@ -10,3 +10,4 @@ export { footerParameter } from "./FooterNode";
 export { fieldParameter } from "./FieldNode";
 export { buttonParameter } from "./ButtonNode";
 export { contentParameter } from "./ContentNode";
+export { deleteParameter } from "./DeleteNode";

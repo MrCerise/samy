@@ -31,14 +31,15 @@ Prefix the script with `{embed}` or `{cv2}` (and usually `$v`). You can also put
 ```text
 ,say Hello world
 ,say #general Hello world
+,say Hello world {delete: 10s}
 
 ,say Hello {embed}$v{title: Title}$v{description: Body}
-,say {embed}$v{content: Hello}$v{title: Title}$v{description: Body}
-,say #announcements Update {embed}$v{title: Patch Notes}$v{description: We shipped something new.}
+,say {embed}$v{content: Hello}$v{title: Title}$v{description: Body}$v{delete: 1m}
+,say #announcements Update {embed}$v{title: Patch Notes}$v{description: We shipped something new.}$v{delete: 5m}
 
 ,say Hello {cv2}$v{container}$v{text: Welcome}$v{button: Click && https://discord.com}
-,say {cv2}$v{content: Hello}$v{container}$v{text: Welcome}
-,say #general {cv2}$v{container: #5865F2}$v{text: **Announcement**}$v{text: Please read the rules.}
+,say {cv2}$v{content: Hello}$v{container}$v{text: Welcome}$v{delete: 30s}
+,say #general {cv2}$v{container: #5865F2}$v{text: **Announcement**}$v{text: Please read the rules.}$v{delete: 5m}
 ```
 
 For embeds, plain text becomes the message content above the embed (`{content: ...}` also works).
@@ -85,6 +86,7 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 | `field`       | `{field: Name && Value}` or `{field: Name && Value && inline}` |
 | `button`      | `{button: Label && https://example.com}`                       |
 | `content`     | `{content: Plain text above the embed}`                        |
+| `delete`      | `{delete: 1m}` or `{delete: 5m}` or `{delete: 10s}`            |
 
 ### One parameter at a time
 
@@ -162,6 +164,14 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 ,builder {embed}$v{button: Website && https://discord.com}
 ,builder {embed}$v{button: Website && https://discord.com}$v{button: Support && https://discord.gg/discord-developers}
 ,builder {embed}$v{button: Disabled && https://discord.com && disabled}
+```
+
+**Delete** (auto-delete message after duration)
+
+```text
+,builder {embed}$v{title: Ephemeral Message}$v{delete: 10s}
+,builder {embed}$v{title: Temporary Alert}$v{delete: 1m}
+,builder {embed}$v{title: Event Announcement}$v{delete: 5m}
 ```
 
 ### Full embed examples
@@ -269,16 +279,17 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 
 ## Components V2
 
-| Component           | Example                                      |
-| ------------------- | -------------------------------------------- |
-| `container`         | `{container}` or `{container: #5865F2}`      |
-| `text`              | `{text: Hello World}`                        |
-| `content`           | `{content: Hello}` (alias of `text`)         |
-| `separator`         | `{separator}` or `{separator: large}`        |
-| `section`           | `{section}`                                  |
-| `thumbnail`         | `{thumbnail: https://...}` (after a section) |
-| `media` / `gallery` | `{media: https://a.png && https://b.png}`    |
-| `button`            | `{button: Label && https://example.com}`     |
+| Component           | Example                                                        |
+| ------------------- | -------------------------------------------------------------- |
+| `container`         | `{container}` or `{container: #5865F2}`                        |
+| `text`              | `{text: Hello World}`                                          |
+| `content`           | `{content: Hello}` (alias of `text`)                           |
+| `separator`         | `{separator}` or `{separator: large}`                          |
+| `section`           | `{section}`                                                    |
+| `thumbnail`         | `{thumbnail: https://...}` (after a section)                   |
+| `media` / `gallery` | `{media: https://a.png && https://b.png}`                      |
+| `button`            | `{button: Label && https://example.com}`                       |
+| `delete`            | `{delete: 1m}` or `{delete: 5m}` or `{delete: 10s}`            |
 
 ### How nesting works
 
@@ -354,6 +365,13 @@ Write components in order with `$v`.
 {button: Website && https://discord.com}$v
 {button: Support && https://discord.gg/discord-developers}$v
 {button: Docs && https://discord.com/developers/docs}
+```
+
+**Delete** (auto-delete message after duration)
+
+```text
+,builder {cv2}$v{container}$v{text: This message will delete in 5 minutes}$v{delete: 5m}
+,builder {cv2}$v{delete: 10s}$v{container}$v{text: Fast auto-delete}
 ```
 
 ### Full CV2 examples

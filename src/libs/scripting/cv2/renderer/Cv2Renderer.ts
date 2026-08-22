@@ -12,10 +12,15 @@ import type { Cv2Script, Cv2RenderContext } from "../types/ComponentDefinition";
 import { renderCv2Child } from "./renderChild";
 import { CV2_LIMITS } from "../../common/limits";
 
+import { parseDuration } from "@/utils/duration";
+import type { DeleteNode } from "../ast/nodes/DeleteNode";
+import { resolveValue } from "../../common/value/resolveValue";
+
 type MessageComponent = NonNullable<BaseMessageOptions["components"]>[number];
 
 export interface Cv2RenderResult {
   components: MessageComponent[];
+  deleteMs?: number;
 }
 
 export interface Cv2RenderOptions {
@@ -44,6 +49,10 @@ export class Cv2Renderer {
     };
 
     for (const root of script.roots) {
+      if (root.kind === "delete") {
+        continue;
+      }
+
       if (root.kind === "button") {
         const rendered = renderCv2Child(root, context);
         const button = Array.isArray(rendered) ? rendered[0] : rendered;
@@ -58,13 +67,29 @@ export class Cv2Renderer {
       const rendered = renderCv2Child(root, context);
       const items = Array.isArray(rendered) ? rendered : [rendered];
       for (const item of items) {
-        components.push(item as MessageComponent);
+        if (item) {
+          components.push(item as MessageComponent);
+        }
       }
     }
 
     flushButtons();
 
-    return { components };
+    const deleteNode = script.flat.find((n): n is DeleteNode => n.kind === "delete");
+    let deleteMs: number | undefined;
+    if (deleteNode) {
+      const raw = resolveValue(
+        deleteNode.value,
+        context.variables,
+        context.resolver,
+      ).trim();
+      const ms = parseDuration(raw);
+      if (ms !== null && ms > 0 && ms <= 24 * 24 * 60 * 60 * 1000) {
+        deleteMs = ms;
+      }
+    }
+
+    return { components, deleteMs };
   }
 }
 

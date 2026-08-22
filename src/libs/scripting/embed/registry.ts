@@ -12,6 +12,7 @@ import {
   timestampParameter,
   titleParameter,
   urlParameter,
+  deleteParameter,
 } from "./ast/nodes";
 
 const definitions: AnyEmbedParameterDefinition[] = [
@@ -27,6 +28,7 @@ const definitions: AnyEmbedParameterDefinition[] = [
   fieldParameter,
   buttonParameter,
   contentParameter,
+  deleteParameter,
 ];
 
 const byName = new Map<string, AnyEmbedParameterDefinition>();

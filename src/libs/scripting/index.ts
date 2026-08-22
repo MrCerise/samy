@@ -9,5 +9,7 @@ export { extractRawScript } from "./extractRawScript";
 export {
   detectScriptKind,
   mergeMessageContent,
+  extractDeleteDirective,
 } from "./detectScriptKind";
 export type { DetectedScript } from "./detectScriptKind";
+export { scheduleMessageDeletion } from "./scheduleMessageDeletion";

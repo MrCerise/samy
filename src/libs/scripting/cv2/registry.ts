@@ -7,6 +7,7 @@ import {
   separatorComponent,
   textComponent,
   thumbnailComponent,
+  deleteComponent,
 } from "./ast/nodes";
 
 const definitions: AnyCv2ComponentDefinition[] = [
@@ -17,6 +18,7 @@ const definitions: AnyCv2ComponentDefinition[] = [
   thumbnailComponent,
   mediaComponent,
   buttonComponent,
+  deleteComponent,
 ];
 
 const byName = new Map<string, AnyCv2ComponentDefinition>();

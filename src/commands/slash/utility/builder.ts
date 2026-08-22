@@ -12,6 +12,8 @@ import {
   mergeMessageContent,
 } from "@/libs/scripting/detectScriptKind";
 import { compileEmbedScript } from "@/libs/scripting/embed";
+import { isScriptError } from "@/libs/scripting/common/ScriptError";
+import { scheduleMessageDeletion } from "@/libs/scripting/scheduleMessageDeletion";
 import { replaceVariables } from "@/libs/scripting/variables";
 import errorUI from "@/ui/error";
 
@@ -46,15 +48,31 @@ export default new SlashCommand({
       guild: interaction.guild,
     });
 
-    const detected = detectScriptKind(script);
+    let detected;
+    try {
+      detected = detectScriptKind(script);
+    } catch (error) {
+      if (isScriptError(error)) {
+        await interaction.reply({
+          flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+          allowedMentions: {
+            parse: [],
+          },
+          components: [errorUI(error.message)],
+        });
+        return;
+      }
+      throw error;
+    }
 
     if (detected.kind === "text") {
-      await interaction.reply({
+      const response = await interaction.reply({
         content: detected.source,
         allowedMentions: {
           parse: [],
         },
       });
+      scheduleMessageDeletion(response, detected.deleteMs);
       return;
     }
 
@@ -110,7 +128,9 @@ export default new SlashCommand({
         compiled.result.content,
       );
 
-      await interaction.reply({
+      const deleteMs = compiled.result.deleteMs ?? detected.deleteMs;
+
+      const response = await interaction.reply({
         ...(content ? { content } : {}),
         allowedMentions: {
           parse: [],
@@ -123,6 +143,7 @@ export default new SlashCommand({
           : {}),
       });
 
+      scheduleMessageDeletion(response, deleteMs);
       return;
     }
 
@@ -156,12 +177,16 @@ export default new SlashCommand({
       return;
     }
 
-    await interaction.reply({
+    const deleteMs = compiled.result.deleteMs ?? detected.deleteMs;
+
+    const response = await interaction.reply({
       flags: MessageFlags.IsComponentsV2,
       allowedMentions: {
         parse: [],
       },
       components: compiled.result.components,
     });
+
+    scheduleMessageDeletion(response, deleteMs);
   },
 });

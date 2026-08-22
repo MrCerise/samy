@@ -4,6 +4,7 @@ import Event from "@/classes/Event";
 import { compileCv2Script } from "@/libs/scripting/cv2";
 import { detectScriptKind } from "@/libs/scripting/detectScriptKind";
 import { compileEmbedScript } from "@/libs/scripting/embed";
+import { scheduleMessageDeletion } from "@/libs/scripting/scheduleMessageDeletion";
 import { replaceVariables } from "@/libs/scripting/variables";
 
 export default new Event({
@@ -32,11 +33,22 @@ export default new Event({
         guild: member.guild,
       });
 
-      const detected = detectScriptKind(source);
+      let detected;
+      try {
+        detected = detectScriptKind(source);
+      } catch (error) {
+        client.logger.error("Failed to detect welcome script", {
+          guild: member.guild.id,
+          channel: welcome.channelId,
+          error,
+        });
+        continue;
+      }
 
       switch (detected.kind) {
         case "text": {
-          await channel.send(detected.source);
+          const sent = await channel.send(detected.source);
+          scheduleMessageDeletion(sent, detected.deleteMs);
           break;
         }
 
@@ -55,7 +67,9 @@ export default new Event({
             continue;
           }
 
-          await channel.send({
+          const deleteMs = compiled.result.deleteMs ?? detected.deleteMs;
+
+          const sent = await channel.send({
             ...(compiled.result.content
               ? {
                   content: compiled.result.content,
@@ -70,6 +84,8 @@ export default new Event({
                 }
               : {}),
           });
+
+          scheduleMessageDeletion(sent, deleteMs);
 
           break;
         }
@@ -89,10 +105,14 @@ export default new Event({
             continue;
           }
 
-          await channel.send({
+          const deleteMs = compiled.result.deleteMs ?? detected.deleteMs;
+
+          const sent = await channel.send({
             flags: MessageFlags.IsComponentsV2,
             components: compiled.result.components,
           });
+
+          scheduleMessageDeletion(sent, deleteMs);
 
           break;
         }

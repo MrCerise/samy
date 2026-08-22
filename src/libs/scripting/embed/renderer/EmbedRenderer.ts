@@ -20,6 +20,7 @@ export interface EmbedRenderResult {
   embed: EmbedBuilder;
   components: ActionRowBuilder<ButtonBuilder>[];
   content?: string;
+  deleteMs?: number;
 }
 
 export interface EmbedRenderOptions {
@@ -52,6 +53,7 @@ export class EmbedRenderer {
       embed: target.embed,
       components: chunkButtons(target.buttons),
       content: target.content,
+      deleteMs: target.deleteMs,
     };
   }
 }

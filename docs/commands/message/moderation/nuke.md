@@ -2,7 +2,7 @@
 
 `prefix` `guild only`
 
-**Requires:** ManageChannels
+**Requires:** Administrator
 
 Deletes and recreates the current channel.
 

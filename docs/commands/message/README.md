@@ -1,9 +1,11 @@
 # Message Commands
 
-11 commands across 3 categories.
+29 commands across 5 categories.
 
 | Category | Commands |
 | :-- | :--: |
-| [Utility](./utility) | 7 |
+| [Moderation](./moderation) | 9 |
 | [Server](./server) | 1 |
-| [Moderation](./moderation) | 3 |
+| [Utility](./utility) | 17 |
+| [Uncategorized](./uncategorized) | 1 |
+| [Fun](./fun) | 1 |

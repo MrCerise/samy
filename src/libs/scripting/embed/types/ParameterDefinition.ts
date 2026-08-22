@@ -11,6 +11,7 @@ import type { ScriptError } from "../../common/ScriptError";
 export interface EmbedValidationContext {
   fieldCount: number;
   buttonCount: number;
+  hasDelete?: boolean;
   errors: ScriptError[];
   addError(error: ScriptError): void;
 }
@@ -24,6 +25,7 @@ export interface EmbedRenderTarget {
   embed: EmbedBuilder;
   buttons: ButtonBuilder[];
   content?: string;
+  deleteMs?: number;
 }
 
 export interface EmbedParameterDefinition<T extends EmbedNode = EmbedNode> {

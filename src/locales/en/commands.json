@@ -70,6 +70,70 @@
     "timeout": "The confirmation timed out after 30 seconds.",
     "button": "Nuke"
   },
+  "ban": {
+    "guild_only": "This command can only be used in a server.",
+    "self": "You can't ban yourself.",
+    "bot": "I can't ban myself.",
+    "not_bannable": "I don't have permission to ban that user.",
+    "role_hierarchy": "You can't ban someone with an equal or higher role than you.",
+    "failed": "I couldn't ban that user.",
+    "user_not_found": "Please provide a user to ban.",
+    "success": "**{user}** has been banned.\n-# {reason}",
+    "success_temp": "**{user}** has been banned for **{duration}**.\n-# {reason}",
+    "dm": "You have been banned from **{guild}**.\n\n**Reason:** {reason}",
+    "dm_temp": "You have been temporarily banned from **{guild}** for **{duration}**.\n\n**Reason:** {reason}"
+  },
+  "unban": {
+    "guild_only": "This command can only be used in a server.",
+    "user_not_found": "I couldn't find that user.",
+    "not_banned": "**{user}** is not banned from this server.",
+    "failed": "I couldn't unban that user.",
+    "success": "Successfully unbanned **{user}**.\n**Reason:** {reason}",
+    "dm": "You have been unbanned from **{guild}**.\n\n**Reason:** {reason}"
+  },
+  "softban": {
+    "guild_only": "This command can only be used in a server.",
+    "self": "You can't softban yourself.",
+    "bot": "I can't softban myself.",
+    "not_bannable": "I don't have permission to softban that user.",
+    "role_hierarchy": "You can't softban someone with an equal or higher role than you.",
+    "failed": "I couldn't softban that user.",
+    "user_not_found": "Please provide a user to softban.",
+    "success": "**{user}** has been softbanned.\n-# {reason}"
+  },
+  "kick": {
+    "guild_only": "This command can only be used in a server.",
+    "self": "You can't kick yourself.",
+    "bot": "I can't kick myself.",
+    "not_in_guild": "That user isn't in this server.",
+    "not_kickable": "I don't have permission to kick that user.",
+    "role_hierarchy": "You can't kick someone with an equal or higher role than you.",
+    "failed": "I couldn't kick that user.",
+    "user_not_found": "Please provide a user to kick.",
+    "success": "**{user}** has been kicked.\n-# {reason}"
+  },
+  "timeout": {
+    "guild_only": "This command can only be used in a server.",
+    "self": "You can't timeout yourself.",
+    "bot": "I can't timeout myself.",
+    "not_in_guild": "That user isn't in this server.",
+    "not_moderatable": "I don't have permission to timeout that user.",
+    "role_hierarchy": "You can't timeout someone with an equal or higher role than you.",
+    "invalid_duration": "Invalid duration. Try something like `10m`, `1h`, or `7d` (max 28 days).",
+    "failed": "I couldn't timeout that user.",
+    "user_not_found": "Please provide a user to timeout.",
+    "success": "**{user}** has been timed out for **{duration}**.\n-# {reason}"
+  },
+  "untimeout": {
+    "guild_only": "This command can only be used in a server.",
+    "not_in_guild": "That user isn't in this server.",
+    "not_timed_out": "That user isn't timed out.",
+    "not_moderatable": "I don't have permission to remove that user's timeout.",
+    "role_hierarchy": "You can't remove the timeout of someone with an equal or higher role than you.",
+    "failed": "I couldn't remove that user's timeout.",
+    "user_not_found": "Please provide a user to remove the timeout from.",
+    "success": "**{user}**'s timeout has been removed.\n-# {reason}"
+  },
   "purge": {
     "text_channel_only": "Messages can only be purged in text channels.",
     "none": "No recent messages (under 14 days old) were found matching the criteria.",

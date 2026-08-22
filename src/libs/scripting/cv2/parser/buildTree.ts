@@ -92,7 +92,8 @@ function takeSection(
       node.kind === "container" ||
       node.kind === "section" ||
       node.kind === "separator" ||
-      node.kind === "media"
+      node.kind === "media" ||
+      node.kind === "delete"
     ) {
       break;
     }

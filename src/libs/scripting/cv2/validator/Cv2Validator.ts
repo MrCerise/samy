@@ -16,7 +16,19 @@ export class Cv2Validator {
       },
     };
 
-    if (script.roots.length > CV2_LIMITS.topLevelComponents) {
+    const deleteNodes = script.flat.filter((node) => node.kind === "delete");
+    if (deleteNodes.length > 1) {
+      context.addError(
+        new ScriptError(
+          "DUPLICATE_PARAMETER",
+          "Cannot specify multiple delete parameters.",
+          deleteNodes[1]!.token,
+        ),
+      );
+    }
+
+    const visualRoots = script.roots.filter((root) => root.kind !== "delete");
+    if (visualRoots.length > CV2_LIMITS.topLevelComponents) {
       context.addError(
         new ScriptError(
           "LIMIT_EXCEEDED",

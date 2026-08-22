@@ -7,6 +7,7 @@ import { mediaRenderer } from "./handlers/media";
 import { buttonRenderer } from "./handlers/button";
 import { sectionRenderer } from "./handlers/section";
 import { containerRenderer } from "./handlers/container";
+import { deleteRenderer } from "./handlers/delete";
 
 const renderers = new Map<string, Cv2NodeRenderer>([
   [textRenderer.kind, textRenderer as Cv2NodeRenderer],
@@ -16,6 +17,7 @@ const renderers = new Map<string, Cv2NodeRenderer>([
   [buttonRenderer.kind, buttonRenderer as Cv2NodeRenderer],
   [sectionRenderer.kind, sectionRenderer as Cv2NodeRenderer],
   [containerRenderer.kind, containerRenderer as Cv2NodeRenderer],
+  [deleteRenderer.kind, deleteRenderer as Cv2NodeRenderer],
 ]);
 
 export function renderCv2Child(

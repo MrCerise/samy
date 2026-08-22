@@ -71,11 +71,11 @@ A roadmap for Samy's development.
 
 ## Basic Moderation
 
-[ ] Ban
-[ ] Softban
-[ ] Kick
-[ ] Timeout
-[ ] Untimeout
+[x] Ban
+[x] Softban
+[x] Kick
+[x] Timeout
+[x] Untimeout
 
 ## Warnings
 

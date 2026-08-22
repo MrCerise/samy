@@ -5,3 +5,5 @@ export { separatorComponent } from "./SeparatorNode";
 export { thumbnailComponent } from "./ThumbnailNode";
 export { mediaComponent } from "./MediaNode";
 export { buttonComponent } from "./ButtonNode";
+export { deleteComponent } from "./DeleteNode";
+export type { DeleteNode } from "./DeleteNode";

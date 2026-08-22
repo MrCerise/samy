@@ -1,6 +1,7 @@
 import Event from "../classes/Event";
 import { REST, Routes } from "discord.js";
 import type Client from "@/classes/client";
+import { reconcileGuildBans } from "@/utils/guildBan";
 
 export default new Event({
   name: "clientReady",
@@ -8,6 +9,7 @@ export default new Event({
 
   async execute(client) {
     await DeployCommands(client);
+    await reconcileGuildBans(client);
     await cacheStuff(client);
     client.logger.info(`Logged in as ${client.user?.tag}`);
   },
