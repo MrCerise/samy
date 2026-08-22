@@ -20,6 +20,7 @@ function normalizeCommand(command: any) {
     "guild_id",
     "dm_permission",
     "default_member_permissions",
+    "integration_types",
     "nsfw",
   ]);
 

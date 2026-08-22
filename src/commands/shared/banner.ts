@@ -34,10 +34,12 @@ export async function Banner(
   return new Container()
     .text(
       Text(
-        `### ${client.i18n.t("commands.banner.title", { user: target.username })}`,
+        `**${client.i18n.t("commands.banner.title", { user: target.username })}**`,
       ),
     )
     .media(Media(bannerURL))
     .separator(Separator())
-    .actionRow(ActionRow(Buttons.link("Open in browser", bannerURL)));
+    .actionRow(
+      ActionRow(Buttons.link(client.i18n.t("general.browser"), bannerURL)),
+    );
 }

@@ -89,9 +89,9 @@ export function buildOverview(client: Client, userId: string, page = 0) {
   const container = new Container()
     .text(
       Text(
-        `## ${t("commands.help.overview_description", {
+        `**${t("commands.help.overview_description", {
           command: `${client.prefix}help <command>`,
-        })}`,
+        })}**`,
       ),
     )
     .separator(Separator())
@@ -151,7 +151,7 @@ export function buildCategoryView(
   const { pageItems, page: current, totalPages } = paginate(commands, page);
 
   const container = new Container()
-    .text(Text(`## ${t("commands.help.category_title", { category })}`))
+    .text(Text(`${t("commands.help.category_title", { category })}`))
     .text(
       Text(
         t("commands.help.category_description", {
@@ -228,7 +228,7 @@ export function buildCommandView(
   const prefix = client.prefix;
 
   const lines = [
-    `## ${t("commands.help.command_title", { prefix, name: command.name })}`,
+    `**${t("commands.help.command_title", { prefix, name: command.name })}**`,
     command.description || t("commands.help.no_description"),
     "",
     "```",
@@ -319,7 +319,7 @@ export function buildSubcommandView(
   const usageName = `${command.name} ${sub.name}`;
 
   const lines = [
-    `## ${t("commands.help.command_title", { prefix, name: usageName })}`,
+    `**${t("commands.help.command_title", { prefix, name: usageName })}**`,
     sub.description || t("commands.help.no_description"),
     "",
     "```",

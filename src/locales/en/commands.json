@@ -150,5 +150,58 @@
     "back_button": "Back",
     "home_button": "Home",
     "close_button": "Close"
+  },
+  "serverinfo": {
+    "title": "{name}",
+    "details": "**ID:** {id}\n**Owner:** {owner}\n**Created:** {created}\n\n**Members:** {members} ({humans} humans, {bots} bots)\n**Roles:** {roles}\n**Channels:** {textChannels} text, {voiceChannels} voice, {categories} categories\n**Emojis:** {emojis}\n**Boost tier:** {boostTier} ({boostCount} boosts)\n**Verification:** {verification}",
+    "unknown": "Unknown",
+    "fetch_error": "An error occurred while fetching server info."
+  },
+  "roleinfo": {
+    "title": "{name}",
+    "details": "**ID:** {id}\n**Color:** {color}\n**Position:** {position}\n**Members:** {members}\n**Hoisted:** {hoisted}\n**Mentionable:** {mentionable}\n**Managed:** {managed}\n**Created:** {created}",
+    "key_permissions": "**permissions:** {permissions}",
+    "yes": "Yes",
+    "no": "No",
+    "provide_role": "Please provide a role.",
+    "fetch_error": "An error occurred while fetching role info."
+  },
+  "channelinfo": {
+    "title": "{name}",
+    "details": "**ID:** {id}\n**Type:** {type}\n**Category:** {category}\n**Position:** {position}\n**Created:** {created}",
+    "topic": "**Topic:** {topic}",
+    "nsfw": "**NSFW:** Yes",
+    "slowmode": "**Slowmode:** {seconds}s",
+    "none": "None",
+    "not_found": "That channel could not be found.",
+    "fetch_error": "An error occurred while fetching channel info."
+  },
+  "emojiinfo": {
+    "title": "{name}",
+    "provide_emoji": "Please provide an emoji.",
+    "not_found": "I couldn't find information about that emoji.",
+    "fetch_error": "An error occurred while fetching emoji info."
+  },
+  "inviteinfo": {
+    "title": "{code}",
+    "details": "**Server:** {guild}\n**Channel:** {channel}\n**Inviter:** {inviter}\n**Uses:** {uses}/{maxUses}\n**Expires:** {expires}\n**Members:** {memberCount} ({presenceCount} online)",
+    "unknown": "Unknown",
+    "never": "Never",
+    "invalid": "That doesn't look like a valid invite code or link.",
+    "not_found": "That invite doesn't exist or has expired.",
+    "provide_invite": "Please provide an invite code or link.",
+    "fetch_error": "An error occurred while fetching invite info."
+  },
+  "membercount": {
+    "details": "**{guild}** has **{total}** members\n-# {humans} humans · {bots} bots",
+    "fetch_error": "An error occurred while fetching the member count."
+  },
+  "botlist": {
+    "title": "Bots in {guild} ({count})",
+    "entry": "**{bot}** - joined {joined}",
+    "none": "This server has no bots.",
+    "unknown": "Unknown",
+    "page_indicator": "Page {current}/{total}",
+    "fetch_error": "An error occurred while fetching the bot list."
   }
 }

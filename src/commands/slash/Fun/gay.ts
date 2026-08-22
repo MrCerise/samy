@@ -1,5 +1,3 @@
-import { SlashCommand } from "@/classes/Command";
-import { Container, Text } from "@/ui/components";
 import {
   ApplicationIntegrationType,
   InteractionContextType,
@@ -7,12 +5,15 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 
+import { SlashCommand } from "@/classes/Command";
+import { GayResult } from "@/commands/shared/gay";
+
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("gay")
     .setDescription("See how gay someone is.")
     .addUserOption((option) =>
-      option.setName("user").setDescription("The user to check."),
+      option.setName("user").setDescription("The user to check"),
     )
     .setIntegrationTypes(
       ApplicationIntegrationType.GuildInstall,
@@ -29,33 +30,12 @@ export default new SlashCommand({
   async execute(client, interaction) {
     const user = interaction.options.getUser("user") ?? interaction.user;
 
-    const percentage = getGay(user.id);
-
     await interaction.reply({
       flags: MessageFlags.IsComponentsV2,
       allowedMentions: {
         users: [],
       },
-      components: [
-        new Container().addTextDisplayComponents(
-          Text(
-            client.i18n.t("commands.gay.result", {
-              user: user.username,
-              percentage,
-            }),
-          ),
-        ),
-      ],
+      components: [GayResult(client, user)],
     });
   },
 });
-
-function getGay(userId: string): number {
-  let hash = 0;
-
-  for (const char of userId) {
-    hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
-  }
-
-  return hash % 102;
-}

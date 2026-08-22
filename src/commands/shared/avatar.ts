@@ -22,10 +22,12 @@ export async function Avatar(
   return new Container()
     .text(
       Text(
-        `### ${client.i18n.t("commands.avatar.title", { user: target.username })}`,
+        `**${client.i18n.t("commands.avatar.title", { user: target.username })}**`,
       ),
     )
     .media(Media(avatarURL))
     .separator(Separator())
-    .actionRow(ActionRow(Buttons.link("Open in browser", avatarURL)));
+    .actionRow(
+      ActionRow(Buttons.link(client.i18n.t("general.browser"), avatarURL)),
+    );
 }

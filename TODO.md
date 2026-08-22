@@ -48,13 +48,13 @@ A roadmap for Samy's development.
 
 ## Server
 
-[ ] Server info
-[ ] Role info
-[ ] Channel info
-[ ] Emoji info
-[ ] Invite info
-[ ] Member count
-[ ] Bot list
+[x] Server info
+[x] Role info
+[x] Channel info
+[x] Emoji info
+[x] Invite info
+[x] Member count
+[x] Bot list
 
 ## Tools
 
@@ -67,7 +67,6 @@ A roadmap for Samy's development.
 [ ] Reminders
 [ ] Color tools
 [ ] Character information
-[ ] Screenshot websites
 
 ---
 
