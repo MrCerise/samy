@@ -43,8 +43,8 @@ A roadmap for Samy's development.
 ## User
 
 [x] User info
-[ ] Avatar
-[ ] Banner
+[x] Avatar
+[x] Banner
 
 ## Server
 

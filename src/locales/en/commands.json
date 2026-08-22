@@ -124,6 +124,11 @@
     "title": "{user}'s Avatar",
     "fetch_error": "An error occurred while fetching the user's avatar."
   },
+  "banner": {
+    "title": "{user}'s Banner",
+    "no_banner": "{user} doesn't have a banner set.",
+    "fetch_error": "An error occurred while fetching the user's banner."
+  },
   "help": {
     "overview_description": "Select a category below, or run `{command}` directly.",
     "category_summary": "**{category}** - {count} {noun}",
