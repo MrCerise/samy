@@ -49,13 +49,21 @@ export default new SlashCommand({
     const detected = detectScriptKind(script);
 
     if (detected.kind === "text") {
-      await interaction.reply(detected.source);
+      await interaction.reply({
+        content: detected.source,
+        allowedMentions: {
+          parse: [],
+        },
+      });
       return;
     }
 
     if (!detected.source && !detected.content) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+        allowedMentions: {
+          parse: [],
+        },
         components: [
           errorUI(
             detected.kind === "embed"
@@ -72,6 +80,9 @@ export default new SlashCommand({
       if (!detected.source) {
         await interaction.reply({
           flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+          allowedMentions: {
+            parse: [],
+          },
           components: [
             errorUI(client.i18n.t("commands.builder.missing_embed_example")),
           ],
@@ -85,6 +96,9 @@ export default new SlashCommand({
       if (!compiled.success) {
         await interaction.reply({
           flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+          allowedMentions: {
+            parse: [],
+          },
           components: [errorUI(compiled.error.message)],
         });
 
@@ -98,6 +112,9 @@ export default new SlashCommand({
 
       await interaction.reply({
         ...(content ? { content } : {}),
+        allowedMentions: {
+          parse: [],
+        },
         embeds: [compiled.result.embed],
         ...(compiled.result.components.length > 0
           ? {
@@ -112,6 +129,9 @@ export default new SlashCommand({
     if (!detected.source) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+        allowedMentions: {
+          parse: [],
+        },
         components: [
           errorUI(client.i18n.t("commands.builder.missing_cv2_example")),
         ],
@@ -127,6 +147,9 @@ export default new SlashCommand({
     if (!compiled.success) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+        allowedMentions: {
+          parse: [],
+        },
         components: [errorUI(compiled.error.message)],
       });
 
@@ -135,6 +158,9 @@ export default new SlashCommand({
 
     await interaction.reply({
       flags: MessageFlags.IsComponentsV2,
+      allowedMentions: {
+        parse: [],
+      },
       components: compiled.result.components,
     });
   },

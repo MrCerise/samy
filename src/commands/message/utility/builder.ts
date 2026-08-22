@@ -35,6 +35,9 @@ export default new MessageCommand({
     if (!raw) {
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
+        allowedMentions: {
+          parse: [],
+        },
         components: [
           errorUI(client.i18n.t("commands.builder.provide_message")),
         ],
@@ -51,13 +54,21 @@ export default new MessageCommand({
     const detected = detectScriptKind(script);
 
     if (detected.kind === "text") {
-      await message.reply(detected.source);
+      await message.reply({
+        content: detected.source,
+        allowedMentions: {
+          parse: [],
+        },
+      });
       return;
     }
 
     if (!detected.source && !detected.content) {
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
+        allowedMentions: {
+          parse: [],
+        },
         components: [
           errorUI(
             detected.kind === "embed"
@@ -74,6 +85,9 @@ export default new MessageCommand({
       if (!detected.source) {
         await message.reply({
           flags: MessageFlags.IsComponentsV2,
+          allowedMentions: {
+            parse: [],
+          },
           components: [
             errorUI(client.i18n.t("commands.builder.missing_embed_example")),
           ],
@@ -87,6 +101,9 @@ export default new MessageCommand({
       if (!compiled.success) {
         await message.reply({
           flags: MessageFlags.IsComponentsV2,
+          allowedMentions: {
+            parse: [],
+          },
           components: [errorUI(compiled.error.message)],
         });
 
@@ -100,6 +117,9 @@ export default new MessageCommand({
 
       await message.reply({
         ...(content ? { content } : {}),
+        allowedMentions: {
+          parse: [],
+        },
         embeds: [compiled.result.embed],
         ...(compiled.result.components.length > 0
           ? {
@@ -114,6 +134,9 @@ export default new MessageCommand({
     if (!detected.source) {
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
+        allowedMentions: {
+          parse: [],
+        },
         components: [
           errorUI(client.i18n.t("commands.builder.missing_cv2_example")),
         ],
@@ -129,6 +152,9 @@ export default new MessageCommand({
     if (!compiled.success) {
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
+        allowedMentions: {
+          parse: [],
+        },
         components: [errorUI(compiled.error.message)],
       });
 
@@ -137,6 +163,9 @@ export default new MessageCommand({
 
     await message.reply({
       flags: MessageFlags.IsComponentsV2,
+      allowedMentions: {
+        parse: [],
+      },
       components: compiled.result.components,
     });
   },

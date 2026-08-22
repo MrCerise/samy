@@ -203,5 +203,12 @@
     "unknown": "Unknown",
     "page_indicator": "Page {current}/{total}",
     "fetch_error": "An error occurred while fetching the bot list."
+  },
+  "afk": {
+    "set": "You are now AFK:\n{reason}",
+    "default_reason": "Meowing at my rivals.",
+    "removed": "Welcome back! I've removed your AFK status. You were away for {duration}.",
+    "mentioned": "{user} has been AFK for {time}: {reason}",
+    "limit": "You can't have more than **256 characters** in your reason."
   }
 }

@@ -20,6 +20,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   lastfm LastFM?
+  afks   Afk[]
 }
 
 model LastFM {
@@ -47,6 +48,7 @@ model Guild {
   welcomes        Welcome[]
   leaves          Leave[]
   commandSettings CommandSetting[]
+  afks            Afk[]
 }
 
 model CommandSetting {
@@ -91,4 +93,20 @@ model Leave {
   @@unique([guildId, channelId])
   @@index([guildId])
   @@index([channelId])
+}
+
+model Afk {
+  id String @id @default(cuid())
+
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  reason    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, guildId])
+  @@index([guildId])
 }

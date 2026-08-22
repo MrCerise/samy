@@ -1,4 +1,4 @@
-import { MessageFlags, time, TimestampStyles } from "discord.js";
+import { Message, MessageFlags, time, TimestampStyles } from "discord.js";
 
 import Event from "@/classes/Event";
 import { MessageCommand, MessageSubcommand } from "@/classes/Command";
@@ -26,19 +26,138 @@ export default new Event({
 
     const prefix = client.prefix;
 
-    if (!message.content.startsWith(prefix)) return;
+    const notifyIfAfk = async () => {
+      const afkKey = `${guild.id}:${message.author.id}`;
+      const afk = client.afkUsers.get(afkKey);
+
+      if (!afk) return;
+
+      client.afkUsers.delete(afkKey);
+      try {
+        await client.prisma.afk.deleteMany({
+          where: {
+            userId: message.author.id,
+            guildId: guild.id,
+          },
+        });
+      } catch (error) {
+        client.logger.error("Failed to clear AFK record", {
+          error,
+          user: message.author.id,
+          guild: guild.id,
+        });
+        return;
+      }
+      await client.i18n.withResolvedLocale(
+        {
+          userId: message.author.id,
+          guildId: guild.id,
+        },
+        async () => {
+          await message
+            .reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(
+                  Text(
+                    client.i18n.t("commands.afk.removed", {
+                      duration: time(
+                        Math.floor(afk.createdAt.getTime() / 1000),
+                        TimestampStyles.RelativeTime,
+                      ),
+                    }),
+                  ),
+                ),
+              ],
+            })
+            .then(async (m) => {
+              deleteMsg(m);
+            });
+        },
+      );
+    };
+    const deleteMsg = async (m: Message) => {
+      await Bun.sleep(5000);
+      if (m.deletable) m.delete();
+    };
+
+    const notifyMentionedAfk = async () => {
+      const mentionedIds = new Set<string>();
+
+      for (const user of message.mentions.users.values()) {
+        mentionedIds.add(user.id);
+      }
+
+      if (message.mentions.repliedUser) {
+        mentionedIds.add(message.mentions.repliedUser.id);
+      }
+
+      mentionedIds.delete(message.author.id);
+
+      if (mentionedIds.size === 0) return;
+
+      const lines: string[] = [];
+
+      for (const userId of mentionedIds) {
+        const afk = client.afkUsers.get(`${guild.id}:${userId}`);
+
+        if (!afk) continue;
+
+        lines.push(
+          client.i18n.t("commands.afk.mentioned", {
+            user: `<@${userId}>`,
+            reason: afk.reason ?? client.i18n.t("commands.afk.default_reason"),
+            time: time(
+              Math.floor(afk.createdAt.getTime() / 1000),
+              TimestampStyles.RelativeTime,
+            ),
+          }),
+        );
+      }
+
+      if (lines.length === 0) return;
+
+      await client.i18n.withResolvedLocale(
+        {
+          userId: message.author.id,
+          guildId: guild.id,
+        },
+        async () => {
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            allowedMentions: {
+              parse: [],
+            },
+            components: [new Container().text(Text(lines.join("\n")))],
+          });
+        },
+      );
+    };
+
+    await notifyMentionedAfk();
+    await notifyIfAfk();
+
+    if (!message.content.startsWith(prefix)) {
+      return;
+    }
 
     const args = message.content.slice(prefix.length).trim().split(/\s+/);
 
     const commandName = args.shift()?.toLowerCase();
 
-    if (!commandName) return;
+    if (!commandName) {
+      await notifyIfAfk();
+      return;
+    }
 
     const command =
       client.messageCommands.get(commandName) ??
       client.messageCommands.find((cmd) => cmd.aliases.includes(commandName));
 
-    if (!command) return;
+    if (!command) {
+      await notifyIfAfk();
+      return;
+    }
 
     await client.i18n.withResolvedLocale(
       {

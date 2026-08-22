@@ -11,6 +11,7 @@ import { config } from "@/config/config";
 import ClientLastFM from "./LastFm";
 import prisma from "@/libs/prisma";
 import { I18n } from "@/libs/i18n";
+import type { AfkUser } from "@/types/afkUsers";
 
 //@ts-ignore
 Discord.DefaultWebSocketManagerOptions.identifyProperties.browser =
@@ -21,6 +22,7 @@ export default class Client extends Discord.Client {
   public slashCommands = new Discord.Collection<string, SlashCommand>();
   public cooldowns = new Discord.Collection<string, number>(); // key is `CommandType:userid:commandName:subcommands`
   public messageCommands = new Discord.Collection<string, MessageCommand>();
+  public afkUsers = new Discord.Collection<string, AfkUser>(); // key is `guildId:userId`
   public lastFm = new ClientLastFM();
   public prefix = config.defaultPrefix;
   public prisma = prisma;

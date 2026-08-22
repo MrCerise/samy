@@ -8,9 +8,34 @@ export default new Event({
 
   async execute(client) {
     await DeployCommands(client);
+    await cacheStuff(client);
     client.logger.info(`Logged in as ${client.user?.tag}`);
   },
 });
+
+async function cacheStuff(client: Client) {
+  const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
+  const cutoff = new Date(Date.now() - ONE_MONTH_MS);
+
+  await client.prisma.afk.deleteMany({
+    where: {
+      createdAt: {
+        lt: cutoff,
+      },
+    },
+  });
+
+  const afkUsers = await client.prisma.afk.findMany();
+
+  for (const afk of afkUsers) {
+    client.logger.debug(`Cached user for afk`, {
+      user: afk.userId,
+      guild: afk.guildId,
+      reason: afk.reason,
+    });
+    client.afkUsers.set(`${afk.guildId}:${afk.userId}`, afk);
+  }
+}
 
 function normalizeCommand(command: any) {
   const ignoredKeys = new Set([
