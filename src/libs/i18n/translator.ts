@@ -5,7 +5,7 @@ import type {
   TranslationVariables,
 } from "./types";
 
-export const DEFAULT_LOCALE = "en-US";
+export const DEFAULT_LOCALE = "en";
 
 export function translate(
   translations: ReadonlyMap<LocaleIdentifier, TranslationDictionary>,

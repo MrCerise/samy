@@ -95,7 +95,7 @@
   },
   "locale": {
     "current": "Your locale is set to **{locale}**.",
-    "auto": "You haven't set a locale — I'm currently using **{locale}** based on your server/Discord settings.",
+    "auto": "You haven't set a **locale**. Please use **`locale set`**.",
     "set_user": "Your locale has been set to **{locale}**.",
     "set_server": "This server's locale has been set to **{locale}**.",
     "removed": "Your locale preference has been removed.",
