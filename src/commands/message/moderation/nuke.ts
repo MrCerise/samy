@@ -19,7 +19,7 @@ export default new MessageCommand({
   description: "Deletes and recreates the current channel.",
   category: "Moderation",
   guildOnly: true,
-  userPermissions: ["ManageChannels"],
+  userPermissions: ["Administrator"],
   botPermissions: ["ManageChannels"],
 
   arguments: [

@@ -279,7 +279,7 @@ export default new SlashCommand({
               ? client.i18n.t("commands.birthday.today")
               : time(bday.nextBirthdayTimestamp, TimestampStyles.RelativeTime);
 
-          return `${name} — ${bday.mmddyyyy} (${when})`;
+          return `${name} - ${bday.mmddyyyy} (${when})`;
         });
         await interaction.editReply({
           flags: MessageFlags.IsComponentsV2,

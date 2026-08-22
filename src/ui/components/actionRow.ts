@@ -1,7 +1,10 @@
-import { ActionRowBuilder, type AnyComponentBuilder } from "discord.js";
+import {
+  ActionRowBuilder,
+  type MessageActionRowComponentBuilder,
+} from "discord.js";
 
-export function ActionRow(...components: AnyComponentBuilder[]) {
-  return new ActionRowBuilder<AnyComponentBuilder>().addComponents(
+export function ActionRow(...components: MessageActionRowComponentBuilder[]) {
+  return new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
     ...components,
   );
 }

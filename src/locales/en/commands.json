@@ -119,5 +119,31 @@
     "footer_birthday": "Birthday: {next}",
     "footer_timezone": "\n-# {timezone} · {time} · {date}",
     "fetch_error": "An error occurred while fetching user info."
+  },
+  "avatar": {
+    "title": "{user}'s Avatar",
+    "fetch_error": "An error occurred while fetching the user's avatar."
+  },
+  "help": {
+    "overview_description": "Select a category below, or run `{command}` directly.",
+    "category_summary": "**{category}** - {count} {noun}",
+    "category_title": "{category}",
+    "category_description": "{count} {noun} in this category.",
+    "command_line": "`{prefix}{name}`{description}",
+    "command_title": "{prefix}{name}",
+    "no_description": "No description provided.",
+    "aliases": "**Aliases:** {aliases}",
+    "cooldown": "**Cooldown:** {cooldown}s",
+    "guild_only": "**Server only**",
+    "owner_only": "**Owner only**",
+    "not_found": "No command found matching `{command}`.",
+    "fetch_error": "An error occurred while building the help menu.",
+    "page_indicator": "Page {current}/{total}",
+    "select_category_placeholder": "Select a category",
+    "select_command_placeholder": "Select a command",
+    "select_subcommand_placeholder": "Select a subcommand",
+    "back_button": "Back",
+    "home_button": "Home",
+    "close_button": "Close"
   }
 }

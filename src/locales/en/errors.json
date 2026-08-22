@@ -4,5 +4,6 @@
   "bot_missing_permissions": "I don't have permission to run this command.",
   "guild_only": "This command can only be used in a server.",
   "cooldown": "You may use this command {time}.",
-  "command_failed": "Something went wrong while executing this command."
+  "command_failed": "Something went wrong while executing this command.",
+  "not_your_menu": "This menu isn't for you."
 }

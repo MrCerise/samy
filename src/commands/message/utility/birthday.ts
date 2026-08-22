@@ -262,7 +262,7 @@ export default new MessageCommand({
                     TimestampStyles.RelativeTime,
                   );
 
-            return `${name} — ${bday.mmddyyyy} (${when})`;
+            return `${name} - ${bday.mmddyyyy} (${when})`;
           });
 
           await message.reply({
