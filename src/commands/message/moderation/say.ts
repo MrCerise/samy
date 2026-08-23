@@ -79,6 +79,7 @@ export default new MessageCommand({
     body = replaceVariables(body, {
       user: message.author,
       guild: message.guild!,
+      member: message.member,
     });
 
     let detected;

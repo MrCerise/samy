@@ -28,6 +28,7 @@ export default new Event({
       const result = await deliverWelcomeMessage(channel, welcome.message, {
         user: member.user,
         guild: member.guild,
+        member,
       });
 
       if (!result.success) {

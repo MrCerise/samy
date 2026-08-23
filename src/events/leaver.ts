@@ -28,6 +28,7 @@ export default new Event({
       const result = await deliverLeaveMessage(channel, leave.message, {
         user: member.user,
         guild: member.guild,
+        member,
       });
 
       if (!result.success) {

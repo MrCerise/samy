@@ -1,9 +1,11 @@
 import type {
+  Guild,
+  GuildMember,
   Message,
   MessageCreateOptions,
   MessagePayload,
+  PartialGuildMember,
   User,
-  Guild,
 } from "discord.js";
 import { MessageFlags } from "discord.js";
 
@@ -32,12 +34,25 @@ export type LeaveResult =
   | { success: true }
   | { success: false; failure: LeaveFailure };
 
+export type LeaveVariables = {
+  user: User;
+  guild: Guild;
+  member: GuildMember | PartialGuildMember;
+};
+
 export function validateLeaveMessage(rawMessage: string): LeaveResult {
   let detected;
+
   try {
     detected = detectScriptKind(rawMessage);
   } catch (error) {
-    return { success: false, failure: { kind: "detect_error", error } };
+    return {
+      success: false,
+      failure: {
+        kind: "detect_error",
+        error,
+      },
+    };
   }
 
   if (detected.kind === "text") {
@@ -46,7 +61,12 @@ export function validateLeaveMessage(rawMessage: string): LeaveResult {
 
   if (detected.kind === "embed") {
     if (!detected.source) {
-      return { success: false, failure: { kind: "missing_embed_source" } };
+      return {
+        success: false,
+        failure: {
+          kind: "missing_embed_source",
+        },
+      };
     }
 
     const compiled = compileEmbedScript(detected.source);
@@ -54,7 +74,10 @@ export function validateLeaveMessage(rawMessage: string): LeaveResult {
     if (!compiled.success) {
       return {
         success: false,
-        failure: { kind: "embed_compile_error", error: compiled.error },
+        failure: {
+          kind: "embed_compile_error",
+          error: compiled.error,
+        },
       };
     }
 
@@ -62,7 +85,12 @@ export function validateLeaveMessage(rawMessage: string): LeaveResult {
   }
 
   if (!detected.source) {
-    return { success: false, failure: { kind: "missing_cv2_source" } };
+    return {
+      success: false,
+      failure: {
+        kind: "missing_cv2_source",
+      },
+    };
   }
 
   const compiled = compileCv2Script(detected.source);
@@ -70,7 +98,10 @@ export function validateLeaveMessage(rawMessage: string): LeaveResult {
   if (!compiled.success) {
     return {
       success: false,
-      failure: { kind: "cv2_compile_error", error: compiled.error },
+      failure: {
+        kind: "cv2_compile_error",
+        error: compiled.error,
+      },
     };
   }
 
@@ -80,26 +111,40 @@ export function validateLeaveMessage(rawMessage: string): LeaveResult {
 export async function deliverLeaveMessage(
   channel: LeaveSendableChannel,
   rawMessage: string,
-  variables: { user: User; guild: Guild },
+  variables: LeaveVariables,
 ): Promise<LeaveResult> {
   const source = replaceVariables(rawMessage, variables);
 
   let detected;
+
   try {
     detected = detectScriptKind(source);
   } catch (error) {
-    return { success: false, failure: { kind: "detect_error", error } };
+    return {
+      success: false,
+      failure: {
+        kind: "detect_error",
+        error,
+      },
+    };
   }
 
   if (detected.kind === "text") {
     const sent = await channel.send(detected.source);
+
     scheduleMessageDeletion(sent, detected.deleteMs);
+
     return { success: true };
   }
 
   if (detected.kind === "embed") {
     if (!detected.source) {
-      return { success: false, failure: { kind: "missing_embed_source" } };
+      return {
+        success: false,
+        failure: {
+          kind: "missing_embed_source",
+        },
+      };
     }
 
     const compiled = compileEmbedScript(detected.source);
@@ -107,7 +152,10 @@ export async function deliverLeaveMessage(
     if (!compiled.success) {
       return {
         success: false,
-        failure: { kind: "embed_compile_error", error: compiled.error },
+        failure: {
+          kind: "embed_compile_error",
+          error: compiled.error,
+        },
       };
     }
 
@@ -122,11 +170,17 @@ export async function deliverLeaveMessage(
     });
 
     scheduleMessageDeletion(sent, deleteMs);
+
     return { success: true };
   }
 
   if (!detected.source) {
-    return { success: false, failure: { kind: "missing_cv2_source" } };
+    return {
+      success: false,
+      failure: {
+        kind: "missing_cv2_source",
+      },
+    };
   }
 
   const compiled = compileCv2Script(detected.source);
@@ -134,7 +188,10 @@ export async function deliverLeaveMessage(
   if (!compiled.success) {
     return {
       success: false,
-      failure: { kind: "cv2_compile_error", error: compiled.error },
+      failure: {
+        kind: "cv2_compile_error",
+        error: compiled.error,
+      },
     };
   }
 
@@ -146,6 +203,7 @@ export async function deliverLeaveMessage(
   });
 
   scheduleMessageDeletion(sent, deleteMs);
+
   return { success: true };
 }
 
@@ -158,14 +216,18 @@ export function leaveFailureMessage(
       return isScriptError(failure.error)
         ? failure.error.message
         : client.i18n.t("commands.leave.invalid_script");
+
     case "missing_embed_source":
       return client.i18n.t("commands.builder.missing_embed");
+
     case "missing_cv2_source":
       return client.i18n.t("commands.builder.missing_cv2");
+
     case "embed_compile_error":
       return isScriptError(failure.error)
         ? failure.error.message
         : client.i18n.t("commands.leave.invalid_embed");
+
     case "cv2_compile_error":
       return isScriptError(failure.error)
         ? failure.error.message

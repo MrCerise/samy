@@ -4,6 +4,7 @@ import type {
   Guild,
   MessagePayload,
   MessageCreateOptions,
+  GuildMember,
 } from "discord.js";
 import { MessageFlags } from "discord.js";
 
@@ -80,7 +81,7 @@ export function validateWelcomeMessage(rawMessage: string): WelcomeResult {
 export async function deliverWelcomeMessage(
   channel: WelcomeSendableChannel,
   rawMessage: string,
-  variables: { user: User; guild: Guild },
+  variables: { user: User; guild: Guild; member: GuildMember },
 ): Promise<WelcomeResult> {
   const source = replaceVariables(rawMessage, variables);
 

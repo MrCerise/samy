@@ -122,9 +122,15 @@ export default new MessageCommand({
       return;
     }
 
+    const member = message.guild
+      ? (message.guild.members.cache.get(message.author.id) ??
+        (await message.guild.members.fetch(message.author.id)))
+      : null;
+
     const script = replaceVariables(raw, {
       user: message.author,
       guild: message.guild,
+      member,
     });
 
     let detected;

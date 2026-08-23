@@ -123,7 +123,11 @@ export default new MessageCommand({
       ],
 
       async execute(client, message, args) {
-        if (!message.guildId) return;
+        if (!message.guildId || !message.guild) return;
+
+        const member =
+          message.guild.members.cache.get(message.author.id) ??
+          (await message.guild.members.fetch(message.author.id));
 
         const channel = args.getChannel("channel");
 
@@ -150,7 +154,7 @@ export default new MessageCommand({
           const failed: string[] = [];
 
           for (const leave of leaves) {
-            const target = await message.guild?.channels
+            const target = await message.guild.channels
               .fetch(leave.channelId)
               .catch(() => null);
 
@@ -161,7 +165,8 @@ export default new MessageCommand({
 
             const result = await deliverLeaveMessage(target, leave.message, {
               user: message.author,
-              guild: message.guild!,
+              guild: message.guild,
+              member,
             });
 
             if (!result.success) {
@@ -243,7 +248,8 @@ export default new MessageCommand({
 
         const result = await deliverLeaveMessage(channel, leave.message, {
           user: message.author,
-          guild: message.guild!,
+          guild: message.guild,
+          member,
         });
 
         if (!result.success) {

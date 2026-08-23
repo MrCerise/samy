@@ -6,6 +6,11 @@ import type Client from "@/classes/client";
 
 const URL_REGEX = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/i;
 
+const MAX_PURGE_AMOUNT = 500;
+const BULK_DELETE_LIMIT = 100;
+const FETCH_LIMIT = 100;
+const FOURTEEN_DAYS = 14 * 24 * 60 * 60 * 1000;
+
 async function executePurge({
   message,
   client,
@@ -17,7 +22,7 @@ async function executePurge({
   filterFn?: (msg: Message) => boolean;
   amount: number;
 }): Promise<void> {
-  const targetAmount = Math.min(Math.max(amount, 1), 100);
+  const targetAmount = Math.min(Math.max(amount, 1), MAX_PURGE_AMOUNT);
 
   if (!message.channel.isTextBased() || !("bulkDelete" in message.channel)) {
     await message.reply({
@@ -34,17 +39,57 @@ async function executePurge({
 
   await message.delete().catch(() => {});
 
-  const fetched = await message.channel.messages.fetch({ limit: 10 });
-  const fourteenDaysAgo = Date.now() - 14 * 24 * 60 * 60 * 1000;
+  const fourteenDaysAgo = Date.now() - FOURTEEN_DAYS;
+  const toDelete: Message[] = [];
 
-  const messages = fetched.filter(
-    (msg) =>
-      msg.createdTimestamp > fourteenDaysAgo &&
-      msg.id !== message.id &&
-      (!filterFn || filterFn(msg)),
-  );
+  let before: string | undefined;
 
-  const toDelete = Array.from(messages.values()).slice(0, targetAmount);
+  while (toDelete.length < targetAmount) {
+    const fetched = await message.channel.messages.fetch({
+      limit: FETCH_LIMIT,
+      ...(before ? { before } : {}),
+    });
+
+    if (fetched.size === 0) {
+      break;
+    }
+
+    for (const msg of fetched.values()) {
+      if (msg.id === message.id) {
+        continue;
+      }
+
+      if (msg.createdTimestamp <= fourteenDaysAgo) {
+        break;
+      }
+
+      if (filterFn && !filterFn(msg)) {
+        continue;
+      }
+
+      toDelete.push(msg);
+
+      if (toDelete.length >= targetAmount) {
+        break;
+      }
+    }
+
+    if (toDelete.length >= targetAmount) {
+      break;
+    }
+
+    const oldest = fetched.last();
+
+    if (!oldest || oldest.createdTimestamp <= fourteenDaysAgo) {
+      break;
+    }
+
+    before = oldest.id;
+
+    if (fetched.size < FETCH_LIMIT) {
+      break;
+    }
+  }
 
   if (toDelete.length === 0) {
     const response = await message.channel.send({
@@ -54,11 +99,22 @@ async function executePurge({
       ],
     });
 
-    setTimeout(() => response.delete().catch(() => {}), 4000);
+    setTimeout(() => {
+      response.delete().catch(() => {});
+    }, 4000);
+
     return;
   }
 
-  const deleted = await message.channel.bulkDelete(toDelete, true);
+  let deletedCount = 0;
+
+  for (let i = 0; i < toDelete.length; i += BULK_DELETE_LIMIT) {
+    const batch = toDelete.slice(i, i + BULK_DELETE_LIMIT);
+
+    const deleted = await message.channel.bulkDelete(batch, true);
+
+    deletedCount += deleted.size;
+  }
 
   const response = await message.channel.send({
     flags: MessageFlags.IsComponentsV2,
@@ -66,15 +122,17 @@ async function executePurge({
       new Container().text(
         Text(
           client.i18n.t("commands.purge.deleted", {
-            count: deleted.size,
-            noun: deleted.size === 1 ? "message" : "messages",
+            count: deletedCount,
+            noun: deletedCount === 1 ? "message" : "messages",
           }),
         ),
       ),
     ],
   });
 
-  setTimeout(() => response.delete().catch(() => {}), 4000);
+  setTimeout(() => {
+    response.delete().catch(() => {});
+  }, 4000);
 }
 
 export default new MessageCommand({
@@ -91,7 +149,7 @@ export default new MessageCommand({
       name: "amount",
       aliases: ["a", "count"],
       type: "integer",
-      description: "Number of messages to delete (1-100).",
+      description: "Number of messages to delete (1-500).",
       required: false,
       default: 10,
     },
@@ -101,7 +159,7 @@ export default new MessageCommand({
     await executePurge({
       client,
       message,
-      amount: args.getInteger("amount") ?? 10,
+      amount: Math.min(args.getInteger("amount") ?? 10, MAX_PURGE_AMOUNT),
     });
   },
 
@@ -125,18 +183,24 @@ export default new MessageCommand({
           name: "amount",
           aliases: ["a", "count"],
           type: "integer",
-          description: "Number of messages to delete.",
+          description: "Number of messages to delete (1-500).",
           required: false,
           default: 10,
         },
       ],
 
       async execute(client, message, args) {
+        const targetUser = args.getUser("user");
+
+        if (!targetUser) {
+          return;
+        }
+
         await executePurge({
           client,
           message,
-          amount: args.getInteger("amount") ?? 10,
-          filterFn: (msg) => msg.author.id === args.getUser("user")?.id,
+          amount: Math.min(args.getInteger("amount") ?? 10, MAX_PURGE_AMOUNT),
+          filterFn: (msg) => msg.author.id === targetUser.id,
         });
       },
     }),
@@ -153,7 +217,7 @@ export default new MessageCommand({
           name: "amount",
           aliases: ["a", "count"],
           type: "integer",
-          description: "Number of messages to delete.",
+          description: "Number of messages to delete (1-500).",
           required: false,
           default: 10,
         },
@@ -163,7 +227,7 @@ export default new MessageCommand({
         await executePurge({
           client,
           message,
-          amount: args.getInteger("amount") ?? 10,
+          amount: Math.min(args.getInteger("amount") ?? 10, MAX_PURGE_AMOUNT),
           filterFn: (msg) => URL_REGEX.test(msg.content),
         });
       },
@@ -181,7 +245,7 @@ export default new MessageCommand({
           name: "amount",
           aliases: ["a", "count"],
           type: "integer",
-          description: "Number of messages to delete.",
+          description: "Number of messages to delete (1-500).",
           required: false,
           default: 10,
         },
@@ -191,7 +255,7 @@ export default new MessageCommand({
         await executePurge({
           client,
           message,
-          amount: args.getInteger("amount") ?? 10,
+          amount: Math.min(args.getInteger("amount") ?? 10, MAX_PURGE_AMOUNT),
           filterFn: (msg) => msg.author.bot,
         });
       },
@@ -209,7 +273,7 @@ export default new MessageCommand({
           name: "amount",
           aliases: ["a", "count"],
           type: "integer",
-          description: "Number of messages to delete.",
+          description: "Number of messages to delete (1-500).",
           required: false,
           default: 10,
         },
@@ -219,7 +283,7 @@ export default new MessageCommand({
         await executePurge({
           client,
           message,
-          amount: args.getInteger("amount") ?? 10,
+          amount: Math.min(args.getInteger("amount") ?? 10, MAX_PURGE_AMOUNT),
           filterFn: (msg) => msg.attachments.size > 0,
         });
       },
@@ -237,7 +301,7 @@ export default new MessageCommand({
           name: "amount",
           aliases: ["a", "count"],
           type: "integer",
-          description: "Number of messages to delete.",
+          description: "Number of messages to delete (1-500).",
           required: false,
           default: 10,
         },
@@ -247,7 +311,7 @@ export default new MessageCommand({
         await executePurge({
           client,
           message,
-          amount: args.getInteger("amount") ?? 10,
+          amount: Math.min(args.getInteger("amount") ?? 10, MAX_PURGE_AMOUNT),
           filterFn: (msg) => msg.embeds.length > 0,
         });
       },

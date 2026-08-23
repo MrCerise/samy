@@ -43,9 +43,15 @@ export default new SlashCommand({
   async execute(client, interaction) {
     const raw = interaction.options.getString("script", true).trim();
 
+    const member = interaction.guild
+      ? (interaction.guild.members.cache.get(interaction.user.id) ??
+        (await interaction.guild.members.fetch(interaction.user.id)))
+      : null;
+
     const script = replaceVariables(raw, {
       user: interaction.user,
       guild: interaction.guild,
+      member,
     });
 
     let detected;
