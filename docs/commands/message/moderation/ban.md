@@ -2,8 +2,6 @@
 
 `prefix` `guild only`
 
-**Aliases:** `b`
-
 **Requires:** BanMembers
 
 Ban a user from the server, optionally for a set duration.

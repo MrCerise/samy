@@ -1,9 +1,10 @@
 # Utility
 
-> 17 commands
+> 18 commands
 
 | Command | Description |
 | :-- | :-- |
+| [`afk`](./afk.md) | Set yourself as AFK, optionally with a reason |
 | [`avatar`](./avatar.md) | Replies with a user's avatar |
 | [`banner`](./banner.md) | Replies with a user's banner |
 | [`birthday`](./birthday.md) | View, set, or list user birthdays. |

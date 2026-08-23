@@ -119,7 +119,7 @@ A roadmap for Samy's development.
 # Milestone 4 — Server Features
 
 [x] Welcome messages
-[ ] Leave messages
+[x] Leave messages
 [ ] Starboard
 [ ] Sticky roles
 [ ] Highlight notifications
@@ -188,25 +188,7 @@ A roadmap for Samy's development.
 
 ---
 
-# Milestone 8 — Auto Moderation
-
-[ ] Auto moderation
-[ ] Anti-spam
-[ ] Anti-raid
-
-## Anti-Nuke
-
-[ ] Mass bans
-[ ] Mass kicks
-[ ] Channel deletion
-[ ] Role deletion
-[ ] Webhook protection
-[ ] Bot join protection
-[ ] Permission changes
-
----
-
-# Milestone 9 — Dashboard
+# Milestone 8 — Dashboard
 
 [ ] Web dashboard
 [ ] Server management

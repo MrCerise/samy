@@ -1,25 +1,25 @@
-# `welcomer`
+# `leaver`
 
 `prefix` `guild only`
 
-**Aliases:** `welcome`, `wc`
+**Aliases:** `leave`, `lv`
 
 **Requires:** ManageGuild
 
-Set up welcome messages in one or multiple channels.
+Set up leave messages in one or multiple channels.
 
 **Usage**
 ```
-,welcomer
+,leaver
 ```
 
-## `welcomer add`
+## `leaver add`
 
 `prefix`
 
 **Requires:** ManageGuild
 
-Add a welcome message to a channel.
+Add a leave message to a channel.
 
 **Usage**
 ```
@@ -28,10 +28,10 @@ Add a welcome message to a channel.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |
-| `channel` | `c` | The channel to send the welcome message to. | false |
+| `channel` | `c` | The channel to send the leave message to. | false |
 | `message` | `m` | Plain text, an {embed} script, or a {cv2} script. | false |
 
-## `welcomer preview`
+## `leaver preview`
 
 `prefix`
 
@@ -39,7 +39,7 @@ Add a welcome message to a channel.
 
 **Requires:** ManageGuild
 
-Preview a configured welcome message, or all of them.
+Preview a configured leave message, or all of them.
 
 **Usage**
 ```
@@ -48,28 +48,28 @@ Preview a configured welcome message, or all of them.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |
-| `channel` | `c` | The welcome channel to preview. Leave empty to preview all welcomes | false |
+| `channel` | `c` | The leave channel to preview. Leave empty to preview all leave messages | false |
 
-## `welcomer list`
+## `leaver list`
 
 `prefix`
 
 **Requires:** ManageGuild
 
-List all configured welcome messages.
+List all configured leave messages.
 
 **Usage**
 ```
 ,list
 ```
 
-## `welcomer remove`
+## `leaver remove`
 
 `prefix`
 
 **Requires:** ManageGuild
 
-Remove a welcome message from a channel.
+Remove a leave message from a channel.
 
 **Usage**
 ```
@@ -78,5 +78,5 @@ Remove a welcome message from a channel.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |
-| `channel` | `c` | The channel to remove the welcome message from. | false |
+| `channel` | `c` | The channel to remove the leave message from. | false |
 
