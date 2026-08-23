@@ -15,6 +15,7 @@ export default new MessageCommand({
       description: "The reason you're going AFK",
     },
   ],
+  category: "Utility",
   async execute(client, message, args) {
     const guild = message.guild;
 

@@ -7,6 +7,11 @@ import {
   type MessageCommand,
   type SlashCommand,
 } from "../Command";
+import {
+  LoadInteractions,
+  type ButtonHandler,
+  type SelectHandler,
+} from "../Interaction";
 import { config } from "@/config/config";
 import ClientLastFM from "./LastFm";
 import prisma from "@/libs/prisma";
@@ -22,6 +27,8 @@ export default class Client extends Discord.Client {
   public slashCommands = new Discord.Collection<string, SlashCommand>();
   public cooldowns = new Discord.Collection<string, number>(); // key is `CommandType:userid:commandName:subcommands`
   public messageCommands = new Discord.Collection<string, MessageCommand>();
+  public buttonHandlers = new Discord.Collection<string, ButtonHandler>();
+  public selectHandlers = new Discord.Collection<string, SelectHandler>();
   public afkUsers = new Discord.Collection<string, AfkUser>(); // key is `guildId:userId`
   public lastFm = new ClientLastFM();
   public prefix = config.defaultPrefix;
@@ -51,6 +58,18 @@ export default class Client extends Discord.Client {
     await LoadCommands(this, "../../commands/slash", this.slashCommands);
 
     await LoadCommands(this, "../../commands/message", this.messageCommands);
+
+    await LoadInteractions(
+      this,
+      "../../interactions/buttons",
+      this.buttonHandlers,
+    );
+
+    await LoadInteractions(
+      this,
+      "../../interactions/selects",
+      this.selectHandlers,
+    );
 
     await this.login(process.env.DISCORD_TOKEN);
   }
