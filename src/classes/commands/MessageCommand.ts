@@ -105,7 +105,9 @@ export class MessageSubcommand {
   help(prefix: string): string {
     return buildHelp({ prefix, name: this.name }, this.arguments);
   }
-
+  get hasExecute() {
+    return typeof this.options.execute === "function";
+  }
   execute(client: Client, message: Message, args: ParsedArguments) {
     return this.options.execute?.(client, message, args);
   }
@@ -176,6 +178,10 @@ export class MessageCommand {
 
   help(prefix: string): string {
     return buildHelp({ prefix, name: this.name }, this.arguments);
+  }
+
+  get hasExecute() {
+    return typeof this.options.execute === "function";
   }
 
   execute(client: Client, message: Message, args: ParsedArguments) {

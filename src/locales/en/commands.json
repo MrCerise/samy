@@ -153,9 +153,12 @@
     "not_configured": "There is no welcome message configured for {channel}.",
     "invalid_embed": "The stored embed script is invalid.",
     "invalid_cv2": "The stored CV2 script is invalid.",
+    "invalid_script": "That welcome message isn't valid. Check your syntax and try again.",
     "none": "No welcome messages are configured.",
     "configured": "Welcome messages are configured in {count} {noun}:\n\n{channels}",
-    "removed": "Successfully removed the welcome message from {channel}."
+    "removed": "Successfully removed the welcome message from {channel}.",
+    "preview_all_done": "Sent {count} preview(s).",
+    "preview_all_partial": "Sent previews, but couldn't reach: {channels}"
   },
   "locale": {
     "current": "Your locale is set to **{locale}**.",
@@ -213,7 +216,8 @@
     "select_subcommand_placeholder": "Select a subcommand",
     "back_button": "Back",
     "home_button": "Home",
-    "close_button": "Close"
+    "close_button": "Close",
+    "group_no_execute": "This command has no direct action, pick a subcommand below."
   },
   "serverinfo": {
     "title": "{name}",

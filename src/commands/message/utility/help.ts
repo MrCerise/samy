@@ -1,7 +1,12 @@
 import { MessageFlags } from "discord.js";
 
 import { MessageCommand } from "@/classes/Command";
-import { buildCommandView, buildOverview } from "@/ui/help";
+import {
+  buildCommandView,
+  buildOverview,
+  buildSubcommandView,
+  resolveSubcommand,
+} from "@/ui/help";
 import errorUI from "@/ui/error";
 
 export default new MessageCommand({
@@ -21,19 +26,37 @@ export default new MessageCommand({
 
   async execute(client, message, args) {
     try {
-      const query = args.getString("command")?.toLowerCase();
+      const raw = args.getString("command")?.toLowerCase();
 
-      if (query) {
+      if (raw) {
+        const tokens = raw.split(/\s+/).filter(Boolean);
+        const commandName = tokens[0];
+        const subPath = tokens.slice(1);
+
+        if (!commandName) {
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [
+              errorUI(
+                client.i18n.t("commands.help.not_found", { command: raw }),
+              ),
+            ],
+          });
+          return;
+        }
+
         const command =
-          client.messageCommands.get(query) ??
-          client.messageCommands.find((cmd) => cmd.aliases.includes(query));
+          client.messageCommands.get(commandName) ??
+          client.messageCommands.find((cmd) =>
+            cmd.aliases.includes(commandName),
+          );
 
         if (!command) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
               errorUI(
-                client.i18n.t("commands.help.not_found", { command: query }),
+                client.i18n.t("commands.help.not_found", { command: raw }),
               ),
             ],
           });
@@ -41,11 +64,44 @@ export default new MessageCommand({
         }
 
         const category = command.options.category ?? "Uncategorized";
-        const container = buildCommandView(
+
+        if (subPath.length === 0) {
+          const container = buildCommandView(
+            client,
+            message.author.id,
+            category,
+            command.name,
+          );
+
+          if (!container) return;
+
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [container],
+          });
+          return;
+        }
+
+        const resolved = resolveSubcommand(command, subPath);
+
+        if (!resolved) {
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [
+              errorUI(
+                client.i18n.t("commands.help.not_found", { command: raw }),
+              ),
+            ],
+          });
+          return;
+        }
+
+        const container = buildSubcommandView(
           client,
           message.author.id,
           category,
           command.name,
+          resolved.canonicalPath,
         );
 
         if (!container) return;

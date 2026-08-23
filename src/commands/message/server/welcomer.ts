@@ -1,12 +1,11 @@
 import { MessageFlags } from "discord.js";
 
 import { MessageCommand, MessageSubcommand } from "@/classes/Command";
-import { compileCv2Script } from "@/libs/scripting/cv2";
-import { detectScriptKind } from "@/libs/scripting/detectScriptKind";
-import { compileEmbedScript } from "@/libs/scripting/embed";
-import { isScriptError } from "@/libs/scripting/common/ScriptError";
-import { scheduleMessageDeletion } from "@/libs/scripting/scheduleMessageDeletion";
-import { replaceVariables } from "@/libs/scripting/variables";
+import {
+  deliverWelcomeMessage,
+  validateWelcomeMessage,
+  welcomeFailureMessage,
+} from "@/commands/shared/welcomer";
 import { Container, Text } from "@/ui/components";
 
 export default new MessageCommand({
@@ -49,53 +48,19 @@ export default new MessageCommand({
 
         if (!content) return;
 
-        let detected;
-        try {
-          detected = detectScriptKind(content);
-        } catch (error) {
-          if (isScriptError(error)) {
-            await message.reply({
-              flags: MessageFlags.IsComponentsV2,
-              components: [new Container().text(Text(error.message))],
-            });
-            return;
-          }
-          throw error;
-        }
+        const validation = validateWelcomeMessage(content);
 
-        if (detected.kind !== "text") {
-          if (!detected.source) {
-            await message.reply({
-              flags: MessageFlags.IsComponentsV2,
-              components: [
-                new Container().text(
-                  Text(
-                    client.i18n.t(
-                      detected.kind === "embed"
-                        ? "commands.builder.missing_embed"
-                        : "commands.builder.missing_cv2",
-                    ),
-                  ),
-                ),
-              ],
-            });
+        if (!validation.success) {
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [
+              new Container().text(
+                Text(welcomeFailureMessage(client, validation.failure)),
+              ),
+            ],
+          });
 
-            return;
-          }
-
-          const compiled =
-            detected.kind === "embed"
-              ? compileEmbedScript(detected.source)
-              : compileCv2Script(detected.source);
-
-          if (!compiled.success) {
-            await message.reply({
-              flags: MessageFlags.IsComponentsV2,
-              components: [new Container().text(Text(compiled.error.message))],
-            });
-
-            return;
-          }
+          return;
         }
 
         await client.prisma.guild.upsert({
@@ -139,25 +104,107 @@ export default new MessageCommand({
         });
       },
     }),
+
     new MessageSubcommand({
       name: "preview",
-      description: "Preview a configured welcome message.",
+      description: "Preview a configured welcome message, or all of them.",
       userPermissions: ["ManageGuild"],
+      aliases: ["view", "test"],
 
       arguments: [
         {
           name: "channel",
           aliases: ["c"],
           type: "channel",
-          description: "The welcome channel to preview.",
-          required: true,
+          description:
+            "The welcome channel to preview. Leave empty to preview all welcomes",
+          required: false,
         },
       ],
 
       async execute(client, message, args) {
+        if (!message.guildId) return;
+
         const channel = args.getChannel("channel");
 
-        if (!channel || !message.guildId) return;
+        if (!channel) {
+          const welcomes = await client.prisma.welcome.findMany({
+            where: {
+              guildId: message.guildId,
+            },
+          });
+
+          if (welcomes.length === 0) {
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(
+                  Text(client.i18n.t("commands.welcome.none")),
+                ),
+              ],
+            });
+
+            return;
+          }
+
+          const failed: string[] = [];
+
+          for (const welcome of welcomes) {
+            const target = await message.guild?.channels
+              .fetch(welcome.channelId)
+              .catch(() => null);
+
+            if (!target || !target.isTextBased() || !("send" in target)) {
+              failed.push(`<#${welcome.channelId}>`);
+              continue;
+            }
+
+            const result = await deliverWelcomeMessage(
+              target,
+              welcome.message,
+              {
+                user: message.author,
+                guild: message.guild!,
+              },
+            );
+
+            if (!result.success) {
+              failed.push(`<#${welcome.channelId}>`);
+            }
+          }
+
+          if (failed.length > 0) {
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(
+                  Text(
+                    client.i18n.t("commands.welcome.preview_all_partial", {
+                      channels: failed.join(", "),
+                    }),
+                  ),
+                ),
+              ],
+            });
+
+            return;
+          }
+
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [
+              new Container().text(
+                Text(
+                  client.i18n.t("commands.welcome.preview_all_done", {
+                    count: welcomes.length,
+                  }),
+                ),
+              ),
+            ],
+          });
+
+          return;
+        }
 
         if (!channel.isTextBased() || !("send" in channel)) {
           await message.reply({
@@ -198,108 +245,21 @@ export default new MessageCommand({
           return;
         }
 
-        const source = replaceVariables(welcome.message, {
+        const result = await deliverWelcomeMessage(channel, welcome.message, {
           user: message.author,
           guild: message.guild!,
         });
 
-        let detected;
-        try {
-          detected = detectScriptKind(source);
-        } catch (error) {
-          if (isScriptError(error)) {
-            await message.reply({
-              flags: MessageFlags.IsComponentsV2,
-              components: [new Container().text(Text(error.message))],
-            });
-            return;
-          }
-          throw error;
-        }
-
-        if (detected.kind === "text") {
-          const sent = await channel.send(detected.source);
-          scheduleMessageDeletion(sent, detected.deleteMs);
-          return;
-        }
-
-        if (detected.kind === "embed") {
-          if (!detected.source) {
-            await message.reply({
-              flags: MessageFlags.IsComponentsV2,
-              components: [
-                new Container().text(
-                  Text(client.i18n.t("commands.welcome.invalid_embed")),
-                ),
-              ],
-            });
-
-            return;
-          }
-
-          const compiled = compileEmbedScript(detected.source);
-
-          if (!compiled.success) {
-            await message.reply({
-              flags: MessageFlags.IsComponentsV2,
-              components: [new Container().text(Text(compiled.error.message))],
-            });
-
-            return;
-          }
-
-          const deleteMs = compiled.result.deleteMs ?? detected.deleteMs;
-
-          const sent = await channel.send({
-            ...(compiled.result.content
-              ? {
-                  content: compiled.result.content,
-                }
-              : {}),
-            embeds: [compiled.result.embed],
-            ...(compiled.result.components.length > 0
-              ? {
-                  components: compiled.result.components,
-                }
-              : {}),
-          });
-
-          scheduleMessageDeletion(sent, deleteMs);
-          return;
-        }
-
-        if (!detected.source) {
+        if (!result.success) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
               new Container().text(
-                Text(client.i18n.t("commands.welcome.invalid_cv2")),
+                Text(welcomeFailureMessage(client, result.failure)),
               ),
             ],
           });
-
-          return;
         }
-
-        const compiled = compileCv2Script(detected.source);
-
-        if (!compiled.success) {
-          await message.reply({
-            flags: MessageFlags.IsComponentsV2,
-            components: [new Container().text(Text(compiled.error.message))],
-          });
-
-          return;
-        }
-
-        const deleteMs = compiled.result.deleteMs ?? detected.deleteMs;
-
-        const sent = await channel.send({
-          flags: MessageFlags.IsComponentsV2,
-          components: compiled.result.components,
-        });
-
-        scheduleMessageDeletion(sent, deleteMs);
       },
     }),
 
@@ -341,6 +301,7 @@ export default new MessageCommand({
         });
       },
     }),
+
     new MessageSubcommand({
       name: "remove",
       description: "Remove a welcome message from a channel.",

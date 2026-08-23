@@ -2,6 +2,7 @@ import { Message, MessageFlags, time, TimestampStyles } from "discord.js";
 
 import Event from "@/classes/Event";
 import { MessageCommand, MessageSubcommand } from "@/classes/Command";
+import { buildCommandView, buildSubcommandView } from "@/ui/help";
 import { buildHelp } from "@/utils/parser/HelpGenerator";
 
 import { checkCooldown, setCooldown } from "@/utils/cooldown";
@@ -199,7 +200,30 @@ export default new Event({
             current = next;
           }
 
-          if (!current.execute) {
+          if (!current.hasExecute) {
+            const category = command.options.category ?? "Uncategorized";
+            const userId = message.author.id;
+
+            const view =
+              path.length === 0
+                ? buildCommandView(client, userId, category, command.name)
+                : buildSubcommandView(
+                    client,
+                    userId,
+                    category,
+                    command.name,
+                    path,
+                  );
+
+            if (!view) {
+              return;
+            }
+
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [view],
+            });
+
             return;
           }
 
@@ -305,7 +329,6 @@ export default new Event({
           });
 
           await channel.sendTyping();
-
           await current.execute(client, message, parsed.args);
 
           client.logger.info("Message command completed", {

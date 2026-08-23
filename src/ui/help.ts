@@ -1,7 +1,7 @@
 import { ButtonStyle } from "discord.js";
 
 import type Client from "@/classes/client";
-import type { MessageCommand } from "@/classes/Command";
+import type { MessageCommand, MessageSubcommand } from "@/classes/Command";
 import { buildHelp } from "@/utils/parser/HelpGenerator";
 import {
   ActionRow,
@@ -76,6 +76,27 @@ function pageIndicator(
     style: ButtonStyle.Secondary,
     disabled: true,
   });
+}
+
+export function resolveSubcommand(
+  command: MessageCommand,
+  subPath: string[],
+): { sub: MessageSubcommand; canonicalPath: string[] } | null {
+  if (subPath.length === 0) return null;
+
+  let current: MessageCommand | MessageSubcommand = command;
+  const canonicalPath: string[] = [];
+
+  for (const name of subPath) {
+    const next = current.find(name);
+
+    if (!next) return null;
+
+    canonicalPath.push(next.name);
+    current = next;
+  }
+
+  return { sub: current as MessageSubcommand, canonicalPath };
 }
 
 export function buildOverview(client: Client, userId: string, page = 0) {
@@ -231,10 +252,17 @@ export function buildCommandView(
     `**${t("commands.help.command_title", { prefix, name: command.name })}**`,
     command.description || t("commands.help.no_description"),
     "",
-    "```",
-    buildHelp({ prefix, name: command.name }, command.arguments),
-    "```",
   ];
+
+  if (command.hasExecute) {
+    lines.push(
+      "```",
+      buildHelp({ prefix, name: command.name }, command.arguments),
+      "```",
+    );
+  } else if (command.subcommands.length > 0) {
+    lines.push(t("commands.help.group_no_execute"));
+  }
 
   if (command.aliases.length > 0) {
     lines.push(
@@ -257,7 +285,7 @@ export function buildCommandView(
     } = paginate(command.subcommands, subPage);
 
     const select = SelectMenu({
-      customId: `help::subcommands::${category}::${command.name}::${categoryPage}::${current}::${userId}`,
+      customId: `help::subcommands::${category}::${command.name}::::${current}::${userId}`,
       placeholder: t("commands.help.select_subcommand_placeholder"),
       options: pageItems.map((sub) => ({
         label: sub.name,
@@ -306,73 +334,97 @@ export function buildSubcommandView(
   userId: string,
   category: string,
   commandName: string,
-  subName: string,
+  subPath: string[],
   categoryPage = 0,
   subPage = 0,
 ) {
   const t = client.i18n.t.bind(client.i18n);
   const command = client.messageCommands.get(commandName);
-  const sub = command?.find(subName);
-  if (!command || !sub) return null;
+  if (!command) return null;
+
+  const resolved = resolveSubcommand(command, subPath);
+  if (!resolved) return null;
+
+  const { sub, canonicalPath } = resolved;
 
   const prefix = client.prefix;
-  const usageName = `${command.name} ${sub.name}`;
+  const usageName = [command.name, ...canonicalPath].join(" ");
+  const pathKey = canonicalPath.join(",");
+  const parentPathKey = canonicalPath.slice(0, -1).join(",");
 
   const lines = [
     `**${t("commands.help.command_title", { prefix, name: usageName })}**`,
     sub.description || t("commands.help.no_description"),
     "",
-    "```",
-    buildHelp({ prefix, name: usageName }, sub.arguments),
-    "```",
   ];
+
+  if (sub.hasExecute) {
+    lines.push(
+      "```",
+      buildHelp({ prefix, name: usageName }, sub.arguments),
+      "```",
+    );
+  } else if (sub.subcommands.length > 0) {
+    lines.push(t("commands.help.group_no_execute"));
+  }
+
+  if (sub.aliases.length > 0) {
+    lines.push(
+      t("commands.help.aliases", {
+        aliases: sub.aliases.map((alias) => `\`${alias}\``).join(", "),
+      }),
+    );
+  }
 
   const meta = metaLines(client, sub);
   if (meta.length > 0) lines.push(meta.join(" • "));
 
   const container = new Container().text(Text(lines.join("\n")));
 
-  const {
-    pageItems,
-    page: current,
-    totalPages,
-  } = paginate(command.subcommands, subPage);
+  if (sub.subcommands.length > 0) {
+    const {
+      pageItems,
+      page: current,
+      totalPages,
+    } = paginate(sub.subcommands, subPage);
 
-  const select = SelectMenu({
-    customId: `help::subcommands::${category}::${command.name}::${categoryPage}::${current}::${userId}`,
-    placeholder: t("commands.help.select_subcommand_placeholder"),
-    options: pageItems.map((s) => ({
-      label: s.name,
-      value: s.name,
-      description: s.description?.slice(0, 100),
-      default: s.name === sub.name,
-    })),
-  });
+    const select = SelectMenu({
+      customId: `help::subcommands::${category}::${command.name}::${pathKey}::${current}::${userId}`,
+      placeholder: t("commands.help.select_subcommand_placeholder"),
+      options: pageItems.map((s) => ({
+        label: s.name,
+        value: s.name,
+        description: s.description?.slice(0, 100),
+      })),
+    });
 
-  container.actionRow(ActionRow(select));
+    container.actionRow(ActionRow(select));
 
-  if (totalPages > 1) {
-    container.actionRow(
-      ActionRow(
-        Buttons.secondary(
-          "◀",
-          `help::subcommand::${category}::${command.name}::${sub.name}::${categoryPage}::${current - 1}::${userId}`,
-        ).setDisabled(current === 0),
-        pageIndicator(client, userId, current, totalPages),
-        Buttons.secondary(
-          "▶",
-          `help::subcommand::${category}::${command.name}::${sub.name}::${categoryPage}::${current + 1}::${userId}`,
-        ).setDisabled(current >= totalPages - 1),
-      ),
-    );
+    if (totalPages > 1) {
+      container.actionRow(
+        ActionRow(
+          Buttons.secondary(
+            "◀",
+            `help::subcommand::${category}::${command.name}::${pathKey}::${categoryPage}::${current - 1}::${userId}`,
+          ).setDisabled(current === 0),
+          pageIndicator(client, userId, current, totalPages),
+          Buttons.secondary(
+            "▶",
+            `help::subcommand::${category}::${command.name}::${pathKey}::${categoryPage}::${current + 1}::${userId}`,
+          ).setDisabled(current >= totalPages - 1),
+        ),
+      );
+    }
   }
+
+  const backCustomId =
+    canonicalPath.length > 1
+      ? `help::subcommand::${category}::${command.name}::${parentPathKey}::${categoryPage}::0::${userId}`
+      : `help::command::${category}::${command.name}::${categoryPage}::0::${userId}`;
 
   container.actionRow(
     ActionRow(
-      Buttons.secondary(
-        t("commands.help.back_button"),
-        `help::command::${category}::${command.name}::${categoryPage}::${subPage}::${userId}`,
-      ),
+      Buttons.secondary(t("commands.help.back_button"), backCustomId),
       Buttons.secondary(
         t("commands.help.home_button"),
         `help::home::0::${userId}`,
