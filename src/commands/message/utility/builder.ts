@@ -20,7 +20,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "builder",
-  aliases: ["build"],
+  aliases: ["build", "b"],
   description: "Build and send a text, embed, or Components V2 message.",
   category: "Utility",
 

@@ -279,6 +279,10 @@ function param(
   return `{${name}: ${args.map((value) => formatArg(String(value))).join("&&")}}`;
 }
 
+function escapeDelimiters(value: string): string {
+  return value.replaceAll("\\", "\\\\").replaceAll("&&", "\\&\\&");
+}
+
 function formatArg(value: string): string {
   if (value.length === 0) {
     throw new Error("Cannot decompile an empty script argument.");
@@ -290,14 +294,14 @@ function formatArg(value: string): string {
     );
   }
 
-  if (value.includes("&&") || value.includes("$v")) {
+  if (value.includes("$v")) {
     throw new Error(
       `Cannot decompile value containing a reserved script delimiter: ${JSON.stringify(value)}.`,
     );
   }
 
   assertRepresentableBraces(value);
-  return value;
+  return escapeDelimiters(value);
 }
 
 function requiredString(
