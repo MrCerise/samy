@@ -1,6 +1,11 @@
 import { MessageFlags } from "discord.js";
 
-import { MessageCommand } from "@/classes/Command";
+import { MessageCommand, MessageSubcommand } from "@/classes/Command";
+import {
+  buildBuilderCopyContainer,
+  decompileMessageForBuilder,
+  fetchBuilderCopyTarget,
+} from "@/commands/shared/builderCopy";
 import { compileCv2Script } from "@/libs/scripting/cv2";
 import {
   detectScriptKind,
@@ -27,6 +32,75 @@ export default new MessageCommand({
       description: "Plain text, an {embed} script, or a {cv2} script.",
       required: true,
     },
+  ],
+
+  subcommands: [
+    new MessageSubcommand({
+      name: "copy",
+      aliases: ["info", "source"],
+      description: "Copy a message into builder script syntax.",
+
+      arguments: [
+        {
+          name: "message",
+          aliases: ["link", "url"],
+          type: "string",
+          description:
+            "A Discord message link. You can also reply to a message.",
+          required: false,
+        },
+      ],
+
+      botPermissions: ["SendMessages", "ReadMessageHistory"],
+
+      async execute(client, message, args) {
+        const target = await fetchBuilderCopyTarget(client, {
+          link: args.getString("message"),
+          reply: message,
+          guildId: message.guildId,
+        });
+
+        if (!target) {
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            allowedMentions: {
+              parse: [],
+            },
+            components: [
+              errorUI(
+                "Reply to a message or provide a valid Discord message link.",
+              ),
+            ],
+          });
+          return;
+        }
+
+        try {
+          const script = decompileMessageForBuilder(target);
+
+          await message.reply({
+            ...buildBuilderCopyContainer(script),
+            allowedMentions: {
+              parse: [],
+            },
+          });
+        } catch (error) {
+          await message.reply({
+            flags: MessageFlags.IsComponentsV2,
+            allowedMentions: {
+              parse: [],
+            },
+            components: [
+              errorUI(
+                error instanceof Error
+                  ? error.message
+                  : "Could not copy that message.",
+              ),
+            ],
+          });
+        }
+      },
+    }),
   ],
 
   botPermissions: ["SendMessages", "EmbedLinks"],

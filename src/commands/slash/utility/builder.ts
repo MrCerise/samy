@@ -38,7 +38,7 @@ export default new SlashCommand({
     ),
 
   category: "Utility",
-  botPermissions: ["SendMessages", "EmbedLinks"],
+  botPermissions: ["SendMessages", "EmbedLinks", "ReadMessageHistory"],
 
   async execute(client, interaction) {
     const raw = interaction.options.getString("script", true).trim();

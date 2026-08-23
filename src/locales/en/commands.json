@@ -160,6 +160,19 @@
     "preview_all_done": "Sent {count} preview(s).",
     "preview_all_partial": "Sent previews, but couldn't reach: {channels}"
   },
+  "leave": {
+    "added": "Successfully added a leave message for {channel}.",
+    "channel_unavailable": "That channel cannot receive messages.",
+    "not_configured": "There is no leave message configured for {channel}.",
+    "invalid_embed": "The stored embed script is invalid.",
+    "invalid_cv2": "The stored CV2 script is invalid.",
+    "invalid_script": "That leave message isn't valid. check your syntax and try again.",
+    "none": "No leave messages are configured.",
+    "configured": "Leave messages are configured in {count} {noun}:\n\n{channels}",
+    "removed": "Successfully removed the leave message from {channel}.",
+    "preview_all_done": "Sent {count} preview(s).",
+    "preview_all_partial": "Sent previews, but couldn't reach: {channels}"
+  },
   "locale": {
     "current": "Your locale is set to **{locale}**.",
     "auto": "You haven't set a **locale**. Please use **`locale set`**.",

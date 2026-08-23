@@ -32,6 +32,8 @@ export async function LoadInteractions<T extends { name: string }>(
 
     collection.set(handler.name, handler);
 
-    client.logger.info(`Loaded ${type} handler: ${handler.name}`);
+    client.logger.info(
+      `${`[${type?.toUpperCase()}]:`.padEnd(10)} ${handler.name}`,
+    );
   }
 }

@@ -32,6 +32,8 @@ export async function LoadCommands<T extends { name: string }>(
 
     collection.set(command.name, command);
 
-    client.logger.info(`Loaded ${type} command: ${command.name}`);
+    client.logger.info(
+      `${`[${type?.toUpperCase()}]:`.padEnd(10)} ${command.name}`,
+    );
   }
 }

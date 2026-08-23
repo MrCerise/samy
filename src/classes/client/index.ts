@@ -4,6 +4,7 @@ import { LoadEvents } from "../Event";
 import Logger from "../Logger";
 import {
   LoadCommands,
+  type ContextCommand,
   type MessageCommand,
   type SlashCommand,
 } from "../Command";
@@ -25,6 +26,7 @@ Discord.DefaultWebSocketManagerOptions.identifyProperties.browser =
 export default class Client extends Discord.Client {
   public config = config;
   public slashCommands = new Discord.Collection<string, SlashCommand>();
+  public contextCommands = new Discord.Collection<string, ContextCommand>();
   public cooldowns = new Discord.Collection<string, number>(); // key is `CommandType:userid:commandName:subcommands`
   public messageCommands = new Discord.Collection<string, MessageCommand>();
   public buttonHandlers = new Discord.Collection<string, ButtonHandler>();
@@ -58,6 +60,8 @@ export default class Client extends Discord.Client {
     await LoadCommands(this, "../../commands/slash", this.slashCommands);
 
     await LoadCommands(this, "../../commands/message", this.messageCommands);
+
+    await LoadCommands(this, "../../commands/context", this.contextCommands);
 
     await LoadInteractions(
       this,

@@ -73,6 +73,7 @@ function normalizeCommand(command: any) {
             val === false ||
             val === null ||
             val === undefined ||
+            val === "" ||
             (Array.isArray(val) && val.length === 0)
           );
         })
@@ -124,26 +125,29 @@ export async function DeployCommands(client: Client) {
 
   const route = Routes.applicationCommands(client.user!.id);
 
-  const localCommands = client.slashCommands.map((command) =>
-    command.options.data.toJSON(),
-  );
+  const localCommands = [
+    ...client.slashCommands.map((command) => command.options.data.toJSON()),
+    ...client.contextCommands.map((command) => command.options.data.toJSON()),
+  ];
 
   const currentCommands = (await rest.get(route)) as any[];
 
+  const commandKey = (command: any) => `${command.type ?? 1}:${command.name}`;
+
   const localMap = new Map(
-    localCommands.map((command) => [command.name, command]),
+    localCommands.map((command) => [commandKey(command), command]),
   );
 
   const currentMap = new Map(
-    currentCommands.map((command) => [command.name, command]),
+    currentCommands.map((command) => [commandKey(command), command]),
   );
 
   const added: any[] = [];
   const updated: any[] = [];
   const removed: any[] = [];
 
-  for (const [name, command] of localMap) {
-    const existing = currentMap.get(name);
+  for (const [key, command] of localMap) {
+    const existing = currentMap.get(key);
 
     if (!existing) {
       added.push(command);
@@ -157,7 +161,7 @@ export async function DeployCommands(client: Client) {
 
       client.logger.debug(
         {
-          command: name,
+          command: command.name,
           differences,
         },
         "Slash command changes detected",
@@ -165,8 +169,8 @@ export async function DeployCommands(client: Client) {
     }
   }
 
-  for (const [name, command] of currentMap) {
-    if (!localMap.has(name)) {
+  for (const [key, command] of currentMap) {
+    if (!localMap.has(key)) {
       removed.push(command);
     }
   }

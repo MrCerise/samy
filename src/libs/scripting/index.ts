@@ -13,3 +13,9 @@ export {
 } from "./detectScriptKind";
 export type { DetectedScript } from "./detectScriptKind";
 export { scheduleMessageDeletion } from "./scheduleMessageDeletion";
+export {
+  decompileEmbedToScript,
+  decompileCv2ToScript,
+  decompileMessageToScript,
+} from "./decompile";
+export type { MessageScriptInput } from "./decompile";
