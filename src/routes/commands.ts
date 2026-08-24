@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import type Client from "@/classes/client";
+import type { ShardingManager } from "discord.js";
 import type { MessageCommand, MessageSubcommand } from "@/classes/Command";
 
 interface SerializedSubcommand {
@@ -42,55 +42,55 @@ interface SerializedCommand {
   subcommands: SerializedSubcommand[];
 }
 
-function serializeSubcommand(sub: MessageSubcommand): SerializedSubcommand {
-  return {
-    name: sub.name,
-    aliases: sub.aliases,
-    description: sub.description ?? null,
+export default (manager: ShardingManager) =>
+  new Elysia({ prefix: "/commands" }).get("/", async () => {
+    const perShard = (await manager.broadcastEval((client: any) => {
+      const serializeSubcommand = (sub: any): any => ({
+        name: sub.name,
+        aliases: sub.aliases,
+        description: sub.description ?? null,
 
-    arguments: sub.arguments,
+        arguments: sub.arguments,
 
-    cooldown: sub.cooldown ?? null,
-    guildOnly: sub.guildOnly ?? false,
-    ownerOnly: sub.ownerOnly ?? false,
+        cooldown: sub.cooldown ?? null,
+        guildOnly: sub.guildOnly ?? false,
+        ownerOnly: sub.ownerOnly ?? false,
 
-    userPermissions: sub.userPermissions ?? [],
-    botPermissions: sub.botPermissions ?? [],
+        userPermissions: sub.userPermissions ?? [],
+        botPermissions: sub.botPermissions ?? [],
 
-    hasExecute: sub.hasExecute,
+        hasExecute: sub.hasExecute,
 
-    subcommands: sub.subcommands.map(serializeSubcommand),
-  };
-}
+        subcommands: sub.subcommands.map(serializeSubcommand),
+      });
 
-function serializeCommand(command: MessageCommand): SerializedCommand {
-  return {
-    name: command.name,
-    aliases: command.aliases,
-    description: command.description ?? null,
+      const serializeCommand = (command: any): any => ({
+        name: command.name,
+        aliases: command.aliases,
+        description: command.description ?? null,
 
-    category: command.options.category ?? "Uncategorized",
+        category: command.options?.category ?? "Uncategorized",
 
-    arguments: command.arguments,
+        arguments: command.arguments,
 
-    cooldown: command.cooldown ?? null,
-    guildOnly: command.guildOnly ?? false,
-    ownerOnly: command.ownerOnly ?? false,
+        cooldown: command.cooldown ?? null,
+        guildOnly: command.guildOnly ?? false,
+        ownerOnly: command.ownerOnly ?? false,
 
-    userPermissions: command.userPermissions ?? [],
-    botPermissions: command.botPermissions ?? [],
+        userPermissions: command.userPermissions ?? [],
+        botPermissions: command.botPermissions ?? [],
 
-    hasExecute: command.hasExecute,
+        hasExecute: command.hasExecute,
 
-    subcommands: command.subcommands.map(serializeSubcommand),
-  };
-}
+        subcommands: command.subcommands.map(serializeSubcommand),
+      });
 
-export default (client: Client) =>
-  new Elysia({ prefix: "/commands" }).get("/", () => {
-    const commands = [...client.messageCommands.values()]
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(serializeCommand);
+      return [...client.messageCommands.values()].map(serializeCommand);
+    })) as SerializedCommand[][];
+
+    const commands = [
+      ...new Map(perShard.flat().map((command) => [command.name, command])).values(),
+    ].sort((a, b) => a.name.localeCompare(b.name));
 
     const categories = new Map<string, SerializedCommand[]>();
 

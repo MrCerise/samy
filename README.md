@@ -17,6 +17,18 @@ Built with:
 > You can follow planned features and progress in the [TODO.md](TODO.md) file.\
 > Have an idea, suggestion, or feature request? Please create an issue so it can be discussed and tracked.
 
+### Sharding
+
+Samy scales automatically using discord.js `ShardingManager`. `src/index.ts` is the manager: it spawns one bot process per shard (`src/bot.ts`) and runs the HTTP API once in the manager process, aggregating data across shards.
+
+- `TOTAL_SHARDS` (optional): leave unset for Discord's recommended count, or set a fixed number.
+- The API exposes `/health`, `/shards` (shard readiness), and `/status` (per-shard `shard_id`, `latency`, `member_count`, `server_count`, `uptime`, `is_ready`, `last_updated`).
+- To run a single shard directly (local dev without the manager):
+
+  ```sh
+  bun run src/bot.ts
+  ```
+
 ## Commands
 
 Command docs are generated from source into [`docs/commands`](docs/commands). Run `bun run docs` to regenerate.

@@ -1,6 +1,5 @@
 import Elysia from "elysia";
-import type Client from "@/classes/client";
-import type { Guild } from "discord.js";
+import type { ShardingManager } from "discord.js";
 
 interface SerializedServer {
   id: string;
@@ -9,31 +8,33 @@ interface SerializedServer {
   memberCount: number;
 }
 
-function serializeServer(guild: Guild): SerializedServer {
-  return {
-    id: guild.id,
-    name: guild.name,
-    icon: guild.iconURL({ size: 128 }),
-    memberCount: guild.memberCount,
-  };
-}
-
-export default (client: Client) =>
+export default (manager: ShardingManager) =>
   new Elysia({ prefix: "/servers" }).get("/", async () => {
-    const application = await client.application?.fetch();
+    let servers: SerializedServer[] = [];
+    let userInstallCount = 0;
 
-    if (!application) {
-      return {
-        servers: [],
-        totalServers: 0,
-        totalMembers: 0,
-        userInstallCount: 0,
-      };
+    try {
+      const perShard = (await manager.broadcastEval((client) =>
+        [...client.guilds.cache.values()].map((guild) => ({
+          id: guild.id,
+          name: guild.name,
+          icon: guild.iconURL({ size: 128 }),
+          memberCount: guild.memberCount,
+        })),
+      )) as SerializedServer[][];
+
+      servers = perShard
+        .flat()
+        .sort((a, b) => b.memberCount - a.memberCount);
+
+      const installs = (await manager.broadcastEval(async (client) =>
+        (await client.application?.fetch())?.approximateUserInstallCount ?? 0,
+      )) as number[];
+
+      userInstallCount = installs.find((n) => typeof n === "number" && n > 0) ?? 0;
+    } catch (error) {
+      console.error("Failed to gather server data from shards", error);
     }
-
-    const servers = [...client.guilds.cache.values()]
-      .sort((a, b) => b.memberCount - a.memberCount)
-      .map(serializeServer);
 
     const totalMembers = servers.reduce(
       (total, server) => total + server.memberCount,
@@ -44,6 +45,6 @@ export default (client: Client) =>
       servers,
       totalServers: servers.length,
       totalMembers,
-      userInstallCount: application.approximateUserInstallCount ?? 0,
+      userInstallCount,
     };
   });
