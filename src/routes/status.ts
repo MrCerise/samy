@@ -1,4 +1,4 @@
-import Elysia from "elysia";
+import { Elysia } from "elysia";
 import type { ShardingManager } from "discord.js";
 
 interface StatusEntry {

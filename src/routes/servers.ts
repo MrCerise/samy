@@ -1,4 +1,4 @@
-import Elysia from "elysia";
+import { Elysia } from "elysia";
 import type { ShardingManager } from "discord.js";
 
 interface SerializedServer {
@@ -16,22 +16,21 @@ export default (manager: ShardingManager) =>
     try {
       const perShard = (await manager.broadcastEval((client) =>
         [...client.guilds.cache.values()].map((guild) => ({
-          id: guild.id,
           name: guild.name,
           icon: guild.iconURL({ size: 128 }),
           memberCount: guild.memberCount,
         })),
       )) as SerializedServer[][];
 
-      servers = perShard
-        .flat()
-        .sort((a, b) => b.memberCount - a.memberCount);
+      servers = perShard.flat().sort((a, b) => b.memberCount - a.memberCount);
 
-      const installs = (await manager.broadcastEval(async (client) =>
-        (await client.application?.fetch())?.approximateUserInstallCount ?? 0,
+      const installs = (await manager.broadcastEval(
+        async (client) =>
+          (await client.application?.fetch())?.approximateUserInstallCount ?? 0,
       )) as number[];
 
-      userInstallCount = installs.find((n) => typeof n === "number" && n > 0) ?? 0;
+      userInstallCount =
+        installs.find((n) => typeof n === "number" && n > 0) ?? 0;
     } catch (error) {
       console.error("Failed to gather server data from shards", error);
     }
