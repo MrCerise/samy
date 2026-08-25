@@ -50,6 +50,9 @@ model Guild {
   commandSettings CommandSetting[]
   afks            Afk[]
   guildBans       GuildBan[]
+  warnings        Warning[]
+  memberNotes     MemberNote[]
+  modCases        ModerationCase[]
 }
 
 model GuildBan {
@@ -126,5 +129,63 @@ model Afk {
   createdAt DateTime @default(now())
 
   @@unique([userId, guildId])
+  @@index([guildId])
+}
+
+model Warning {
+  id         String    @id @default(cuid())
+
+  guildId    String
+  guild      Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  userId     String
+  moderatorId String
+
+  reason     String    @db.Text()
+  createdAt  DateTime  @default(now())
+
+  @@index([guildId, userId])
+  @@index([guildId])
+}
+
+model MemberNote {
+  id         String    @id @default(cuid())
+
+  guildId    String
+  guild      Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  userId     String
+  moderatorId String
+
+  content    String    @db.Text()
+  createdAt  DateTime  @default(now())
+
+  @@index([guildId, userId])
+  @@index([guildId])
+}
+
+model ModerationCase {
+  id          String    @id @default(cuid())
+
+  guildId     String
+  guild       Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  caseNumber  Int
+  type        String
+  userId      String
+  moderatorId String
+
+  reason      String?   @db.Text()
+  duration    Int?
+  expiresAt   DateTime?
+
+  resolved    Boolean   @default(false)
+  resolvedBy  String?
+  resolvedAt  DateTime?
+
+  createdAt   DateTime  @default(now())
+
+  @@unique([guildId, caseNumber])
+  @@index([guildId, userId])
   @@index([guildId])
 }

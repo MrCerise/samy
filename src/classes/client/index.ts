@@ -33,7 +33,8 @@ export default class Client extends Discord.Client {
   public selectHandlers = new Discord.Collection<string, SelectHandler>();
   public afkUsers = new Discord.Collection<string, AfkUser>(); // key is `guildId:userId`
   public lastFm = new ClientLastFM();
-  public prefix = config.defaultPrefix;
+  public prefix =
+    process.env.NODE_ENV == "development" ? ",," : config.defaultPrefix;
   public prisma = prisma;
   public i18n = new I18n(prisma);
   constructor(public readonly logger = new Logger()) {

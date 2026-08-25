@@ -101,6 +101,100 @@
     "user_not_found": "Please provide a user to softban.",
     "success": "**{user}** has been softbanned.\n-# {reason}"
   },
+  "warn": {
+    "guild_only": "This command can only be used in a server.",
+    "self": "You can't warn yourself.",
+    "bot": "I can't warn myself.",
+    "not_in_guild": "That user isn't in this server.",
+    "not_moderatable": "I don't have permission to warn that user.",
+    "role_hierarchy": "You can't warn someone with an equal or higher role than you.",
+    "failed": "I couldn't warn that user.",
+    "user_not_found": "Please provide a user to warn.",
+    "success": "**{user}** has been warned (case #{case}).\n-# {reason}",
+    "dm": "You have been warned in **{guild}**.\n\n**Reason:** {reason}"
+  },
+  "warnings": {
+    "guild_only": "This command can only be used in a server.",
+    "none": "No warnings found.",
+    "none_user": "**{user}** has no warnings.",
+    "title": "Warnings for **{user}** ({count} total)",
+    "title_user": "Warnings for **{user}** ({count} total)",
+    "entry": "**#{id}** · <t:{timestamp}:R> · {moderator}\n-# {reason}",
+    "page_indicator": "Page {current}/{total}",
+    "select_placeholder": "Select a warning to view",
+    "back": "◀ Back",
+    "detail_remove": "🗑 Remove",
+    "no_reason": "No reason provided.",
+    "not_found": "Warning not found.",
+    "remove": {
+      "user_not_found": "Please provide a user.",
+      "missing_id": "Please provide a warning ID.",
+      "not_found": "Warning not found for **{user}**.",
+      "success": "Removed warning **#{id}** for **{user}**.",
+      "failed": "I couldn't remove that warning."
+    },
+    "clear": {
+      "user_not_found": "Please provide a user.",
+      "none": "**{user}** has no warnings to clear.",
+      "success": "Cleared **{count}** warnings for **{user}**.",
+      "failed": "I couldn't clear those warnings."
+    }
+  },
+  "cases": {
+    "guild_only": "This command can only be used in a server.",
+    "none": "No moderation cases found.",
+    "none_user": "**{user}** has no moderation cases.",
+    "not_found": "Case #{case} not found.",
+    "title": "Moderation Cases ({count} total)",
+    "title_user": "Moderation Cases for **{user}** ({count} total)",
+    "entry": "**#{case}** {type} · {user} · <t:{timestamp}:R>",
+    "page_indicator": "Page {current}/{total}",
+    "select_placeholder": "Select a case to view",
+    "back": "◀ Back",
+    "no_reason": "No reason provided."
+  },
+  "notes": {
+    "guild_only": "This command can only be used in a server.",
+    "none": "No notes found.",
+    "none_user": "**{user}** has no notes.",
+    "title": "Notes for **{user}** ({count} total)",
+    "page_indicator": "Page {current}/{total}",
+    "select_placeholder": "Select a note to view",
+    "back": "◀ Back",
+    "detail_remove": "🗑 Remove",
+    "no_content": "No content provided.",
+    "not_found": "Note not found.",
+    "add": {
+      "guild_only": "This command can only be used in a server.",
+      "not_in_guild": "That user isn't in this server.",
+      "user_not_found": "Please provide a user to add a note to.",
+      "missing_content": "Please provide note content.",
+      "success": "Note added for **{user}**.",
+      "failed": "I couldn't add that note."
+    },
+    "remove": {
+      "user_not_found": "Please provide a user to remove the note from.",
+      "missing_id": "Please provide a note ID.",
+      "not_found": "Note not found for **{user}**.",
+      "success": "Removed note **#{id}** for **{user}**.",
+      "failed": "I couldn't remove that note."
+    },
+    "clear": {
+      "user_not_found": "Please provide a user to clear notes for.",
+      "none": "**{user}** has no notes to clear.",
+      "success": "Cleared **{count}** notes for **{user}**.",
+      "failed": "I couldn't clear those notes."
+    }
+  },
+  "reason": {
+    "guild_only": "This command can only be used in a server.",
+    "missing_case": "Please provide a case number.",
+    "invalid_case": "That isn't a valid case number.",
+    "not_found": "Case #{case} not found.",
+    "missing_reason": "Please provide a new reason.",
+    "success": "Updated reason for case #{case}.\n-# {reason}",
+    "failed": "I couldn't update that case."
+  },
   "kick": {
     "guild_only": "This command can only be used in a server.",
     "self": "You can't kick yourself.",

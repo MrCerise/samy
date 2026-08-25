@@ -79,11 +79,11 @@ A roadmap for Samy's development.
 
 ## Warnings
 
-[ ] Warn
-[ ] Warning history
-[ ] Moderation cases
-[ ] Member notes
-[ ] Evidence
+[x] Warn
+[x] Warning history
+[x] Moderation cases
+[x] Member notes
+[x] Evidence
 
 ## Channel Management
 

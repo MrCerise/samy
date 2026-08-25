@@ -285,7 +285,7 @@ export function buildCommandView(
     } = paginate(command.subcommands, subPage);
 
     const select = SelectMenu({
-      customId: `help::subcommands::${category}::${command.name}::::${current}::${userId}`,
+      customId: `help::subcommands::${category}::${command.name}::${categoryPage}::${current}::${userId}`,
       placeholder: t("commands.help.select_subcommand_placeholder"),
       options: pageItems.map((sub) => ({
         label: sub.name,
@@ -389,7 +389,7 @@ export function buildSubcommandView(
     } = paginate(sub.subcommands, subPage);
 
     const select = SelectMenu({
-      customId: `help::subcommands::${category}::${command.name}::${pathKey}::${current}::${userId}`,
+      customId: `help::subcommands::${category}::${command.name}::${categoryPage}::${current}::${userId}`,
       placeholder: t("commands.help.select_subcommand_placeholder"),
       options: pageItems.map((s) => ({
         label: s.name,

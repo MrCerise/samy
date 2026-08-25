@@ -17,7 +17,7 @@ export default new ButtonHandler({
       invokerId,
       category,
       commandName,
-      subName,
+      subName.split(","),
       Number(categoryPage ?? 0),
       Number(subPage ?? 0),
     );

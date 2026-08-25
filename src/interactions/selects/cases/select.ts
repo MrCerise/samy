@@ -1,34 +1,42 @@
 import { MessageFlags } from "discord.js";
 
 import { SelectHandler } from "@/classes/Interaction";
-import { buildSubcommandView } from "@/ui/help";
+import { renderCaseDetail } from "@/ui/cases";
 import errorUI from "@/ui/error";
 
 export default new SelectHandler({
-  namespace: "help",
-  action: "subcommands",
+  namespace: "cases",
+  action: "select",
 
   async execute(client, interaction, params, invokerId, value) {
-    const [category, commandName, categoryPage, subPage] = params;
-    if (!category || !commandName) return;
+    const guild = interaction.guild;
+    if (!guild) return;
 
-    const container = buildSubcommandView(
+    const caseNumber = Number(value);
+    if (!Number.isInteger(caseNumber)) return;
+
+    const page = Number(params[0] ?? 0);
+    const targetId = params[1];
+
+    const container = await renderCaseDetail(
       client,
+      guild,
       invokerId,
-      category,
-      commandName,
-      [value],
-      Number(categoryPage ?? 0),
-      Number(subPage ?? 0),
+      caseNumber,
+      page,
+      targetId,
     );
 
     if (!container) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
         components: [
-          errorUI(client.i18n.t("commands.help.not_found", { command: "" })),
+          errorUI(
+            client.i18n.t("commands.cases.not_found", { case: value }),
+          ),
         ],
       });
+
       return;
     }
 
