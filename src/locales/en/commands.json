@@ -385,5 +385,74 @@
     "removed": "Welcome back! I've removed your AFK status. You were away for {duration}.",
     "mentioned": "{user} has been AFK for {time}: {reason}",
     "limit": "You can't have more than **256 characters** in your reason."
+  },
+  "lockdown": {
+    "guild_only": "This command can only be used in a server.",
+    "no_channels": "No channels are configured for lockdown. Use `{command} channel add` to add channels.",
+    "locking": "Lockdown is now **active**. {count} {noun} are now in lockdown.",
+    "locking_exempt": "Lockdown is now **active**. {count} {noun} are in lockdown. {exempt} {exemptNoun} are exempt.",
+    "unlocking": "Lockdown is now **inactive**. {count} {noun} have been unlocked.",
+    "failed": "I couldn't toggle lockdown. Make sure I have permission to manage channel overrides.",
+    "no_roles": "No roles are configured for lockdown exemption.",
+    "no_reason": "No reason provided.",
+    "already_locked": "Lockdown is already **active**.",
+    "already_unlocked": "Lockdown is already **inactive**.",
+    "channel_locked": "This channel has been locked.\n-# {reason}",
+    "channel_unlocked": "This channel has been unlocked.\n-# {reason}",
+    "locking_roles": "Lockdown is now **active**. {count} {noun} are now in lockdown, including {roles} additional {rolesNoun}.",
+    "channel": {
+      "add": {
+        "channel_not_found": "Please provide a channel to add to the lockdown list.",
+        "already_added": "{channel} is already in the lockdown channel list.",
+        "success": "{channel} has been added to the lockdown channel list.",
+        "failed": "I couldn't add that channel to the lockdown list."
+      },
+      "list": {
+        "none": "No channels are configured for lockdown.",
+        "title": "Lockdown Channels ({count} {noun})\n{channels}",
+        "empty_channel": "Unknown channel",
+        "fetch_error": "An error occurred while fetching the lockdown channel list."
+      },
+      "remove": {
+        "channel_not_found": "Please provide a channel to remove from the lockdown list.",
+        "not_found": "{channel} is not in the lockdown channel list.",
+        "success": "{channel} has been removed from the lockdown channel list.",
+        "failed": "I couldn't remove that channel from the lockdown list."
+      }
+    },
+    "role": {
+      "add": {
+        "role_not_found": "Please provide a role to add to the lockdown list.",
+        "already_added": "{role} is already in the lockdown role list.",
+        "success": "{role} has been added to the lockdown role list.",
+        "failed": "I couldn't add that role to the lockdown list."
+      },
+      "list": {
+        "none": "No roles are configured for lockdown.",
+        "title": "Lockdown Roles ({count} {noun})\n{roles}",
+        "empty_role": "Unknown role",
+        "fetch_error": "An error occurred while fetching the lockdown role list."
+      },
+      "remove": {
+        "role_not_found": "Please provide a role to remove from the lockdown list.",
+        "not_found": "{role} is not in the lockdown role list.",
+        "success": "{role} has been removed from the lockdown role list.",
+        "failed": "I couldn't remove that role from the lockdown list."
+      }
+    }
+  },
+  "lock": {
+    "guild_only": "This command can only be used in a server.",
+    "channel_not_found": "I couldn't find that channel.",
+    "already_locked": "{channel} is already locked.",
+    "success": "{channel} has been locked.",
+    "failed": "I couldn't lock that channel. Make sure I have permission to manage channel overrides."
+  },
+  "unlock": {
+    "guild_only": "This command can only be used in a server.",
+    "channel_not_found": "I couldn't find that channel.",
+    "not_locked": "{channel} is not locked.",
+    "success": "{channel} has been unlocked.",
+    "failed": "I couldn't unlock that channel. Make sure I have permission to manage channel overrides."
   }
 }

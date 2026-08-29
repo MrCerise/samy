@@ -45,14 +45,17 @@ model Guild {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  welcomes        Welcome[]
-  leaves          Leave[]
-  commandSettings CommandSetting[]
-  afks            Afk[]
-  guildBans       GuildBan[]
-  warnings        Warning[]
-  memberNotes     MemberNote[]
-  modCases        ModerationCase[]
+   welcomes        Welcome[]
+   leaves          Leave[]
+   commandSettings CommandSetting[]
+   afks            Afk[]
+   guildBans       GuildBan[]
+   warnings        Warning[]
+   memberNotes     MemberNote[]
+   modCases        ModerationCase[]
+   lockdownChannels LockdownChannel[]
+   lockdownRoles    LockdownRole[]
+   lockdown        Lockdown?
 }
 
 model GuildBan {
@@ -185,7 +188,47 @@ model ModerationCase {
 
   createdAt   DateTime  @default(now())
 
-  @@unique([guildId, caseNumber])
-  @@index([guildId, userId])
-  @@index([guildId])
+   @@unique([guildId, caseNumber])
+   @@index([guildId, userId])
+   @@index([guildId])
+}
+
+model LockdownChannel {
+   id        String   @id @default(cuid())
+
+   guildId   String
+   guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+   channelId String
+
+   createdAt DateTime @default(now())
+
+   @@unique([guildId, channelId])
+   @@index([guildId])
+}
+
+model LockdownRole {
+   id      String   @id @default(cuid())
+
+   guildId String
+   guild   Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+   roleId  String
+
+   createdAt DateTime @default(now())
+
+   @@unique([guildId, roleId])
+   @@index([guildId])
+}
+
+model Lockdown {
+   id        String   @id @default(cuid())
+
+   guildId   String   @unique
+   guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+   active    Boolean  @default(false)
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
 }
