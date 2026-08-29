@@ -87,10 +87,10 @@ A roadmap for Samy's development.
 
 ## Channel Management
 
-[ ] Slowmode
-[ ] Lock
-[ ] Unlock
-[ ] Lockdown
+[x] Slowmode
+[x] Lock
+[x] Unlock
+[x] Lockdown
 
 ## Role Management
 

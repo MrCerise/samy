@@ -1,6 +1,6 @@
 # Moderation
 
-> 17 commands
+> 18 commands
 
 | Command | Description |
 | :-- | :-- |
@@ -14,6 +14,7 @@
 | [`purge`](./purge.md) | Purge messages from the current channel. |
 | [`reason`](./reason.md) | Edit the reason of a moderation case. |
 | [`say`](./say.md) | Sends a message, embed script, or CV2 script to a channel as the bot. |
+| [`slowmode`](./slowmode.md) | Set the slowmode delay for a channel. Use 0 to disable slowmode. |
 | [`softban`](./softban.md) | Ban and immediately unban a user, purging their messages. |
 | [`timeout`](./timeout.md) | Timeout a user, preventing them from interacting in the server. |
 | [`unban`](./unban.md) | Unban a user from the server. |

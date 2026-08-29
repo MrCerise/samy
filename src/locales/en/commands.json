@@ -454,5 +454,13 @@
     "not_locked": "{channel} is not locked.",
     "success": "{channel} has been unlocked.",
     "failed": "I couldn't unlock that channel. Make sure I have permission to manage channel overrides."
+  },
+  "slowmode": {
+    "guild_only": "This command can only be used in a server.",
+    "invalid_channel": "That channel cannot have slowmode enabled.",
+    "invalid_duration": "Please provide a valid duration. The maximum slowmode duration is 6 hours.",
+    "success": "Slowmode has been set to {duration} in {channel}.",
+    "disabled": "Slowmode has been disabled in {channel}.",
+    "failed": "I couldn't change the slowmode for that channel."
   }
 }
