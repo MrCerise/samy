@@ -101,8 +101,6 @@ async function runLockdown(
     const targets = resolveLockdownTargets(channel);
 
     try {
-      // Lock/unlock the category's own overwrite too, so channels added
-      // to it later (or synced children) inherit the correct state.
       if (isCategory) {
         await toggleChannelOverwrites(channel, guildId, roleIds, lock, reason);
       }

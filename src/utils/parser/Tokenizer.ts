@@ -29,6 +29,10 @@ export function tokenize(input: string): string[] {
       continue;
     }
 
+    if (current.length === 0 && /[,;]/.test(char)) {
+      continue;
+    }
+
     current += char;
     hasToken = true;
   }

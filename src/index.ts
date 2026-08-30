@@ -11,24 +11,31 @@ CheckEnvs(["DISCORD_TOKEN"]);
 const logger = new Logger();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const manager = new Discord.ShardingManager(join(__dirname, "bot.ts"), {
-  token: process.env.DISCORD_TOKEN,
-  totalShards: process.env.TOTAL_SHARDS
-    ? Number(process.env.TOTAL_SHARDS)
-    : "auto",
-  mode: "process",
-  respawn: true,
-});
-
-manager.on("shardCreate", (shard) => {
-  logger.info(`Launched shard ${shard.id}`);
-  shard.on("ready", () => logger.info(`Shard ${shard.id} is ready`));
-  shard.on("death", () => logger.warn(`Shard ${shard.id} died`));
-});
+const isDev = process.env.NODE_ENV === "development";
 
 let locked = false;
 
 async function main() {
+  if (isDev) {
+    await import(join(__dirname, "bot.ts"));
+    return;
+  }
+
+  const manager = new Discord.ShardingManager(join(__dirname, "bot.ts"), {
+    token: process.env.DISCORD_TOKEN,
+    totalShards: process.env.TOTAL_SHARDS
+      ? Number(process.env.TOTAL_SHARDS)
+      : "auto",
+    mode: "process",
+    respawn: true,
+  });
+
+  manager.on("shardCreate", (shard) => {
+    logger.info(`Launched shard ${shard.id}`);
+    shard.on("ready", () => logger.info(`Shard ${shard.id} is ready`));
+    shard.on("death", () => logger.warn(`Shard ${shard.id} died`));
+  });
+
   logger.info("Waiting for shard lock...");
   await acquireLock(logger);
   locked = true;
@@ -38,19 +45,30 @@ async function main() {
   api.start(Number(process.env.PORT ?? 4000));
 
   await manager.spawn({ timeout: -1 });
+
+  process.on("SIGINT", () => shutdown("SIGINT", manager));
+  process.on("SIGTERM", () => shutdown("SIGTERM", manager));
 }
 
 main().catch((err) => {
-  logger.error(`Failed to spawn shards: ${err?.stack ?? err}`);
+  logger.error(`Failed to start: ${err?.stack ?? err}`);
   process.exit(1);
 });
 
-async function shutdown(signal: string) {
+async function shutdown(signal: string, manager: Discord.ShardingManager) {
   logger.info(`${signal} received, shutting down...`);
   manager.shards.forEach((shard) => shard.kill());
   if (locked) await releaseLock();
   process.exit(0);
 }
 
-process.on("SIGINT", () => shutdown("SIGINT"));
-process.on("SIGTERM", () => shutdown("SIGTERM"));
+if (isDev) {
+  process.on("SIGINT", () => {
+    logger.info("SIGINT received, shutting down...");
+    process.exit(0);
+  });
+  process.on("SIGTERM", () => {
+    logger.info("SIGTERM received, shutting down...");
+    process.exit(0);
+  });
+}

@@ -235,9 +235,13 @@
   },
   "say": {
     "provide_message": "Provide a message to send.\nExamples:\n`,say Hello`\n`,say Hello {embed}$v{title: Hi}`\n`,say {cv2}$v{container}$v{text: Hello}`",
+    "missing_message": "You need to provide a message to send.",
+    "empty_message": "The message body cannot be empty.",
     "channel_not_found": "I couldn't find a channel with ID `{channelId}`.",
     "message_required": "You need to provide a message to send.",
     "channel_unavailable": "I can't send messages in that channel.",
+    "invalid_channel": "I can't send messages in that channel.",
+    "invalid_script": "I couldn't parse that message script.\n-# {error}",
     "missing_embed": "Provide an embed script after `{embed}`.\nExample: `,say Hello {embed}$v{title: Hi}`",
     "missing_cv2": "Provide a CV2 script after `{cv2}`.\nExample: `,say {cv2}$v{container}$v{text: Hi}`"
   },
@@ -270,6 +274,8 @@
   "locale": {
     "current": "Your locale is set to **{locale}**.",
     "auto": "You haven't set a **locale**. Please use **`locale set`**.",
+    "current_server": "This server's locale is set to **{locale}**.",
+    "auto_server": "This server doesn't have a locale set. Using **{locale}**.",
     "set_user": "Your locale has been set to **{locale}**.",
     "set_server": "This server's locale has been set to **{locale}**.",
     "removed": "Your locale preference has been removed.",
@@ -503,5 +509,68 @@
   "emit": {
     "unauthorized": "You are not authorized to use this command.",
     "emitted": "Emitted test log entry for **{event}**."
+  },
+  "alias": {
+    "added": "Alias `{alias}` added for command `{command}`.",
+    "removed": "Alias `{alias}` removed.",
+    "not_found": "Alias `{alias}` not found.",
+    "already_exists": "Alias `{alias}` already exists.",
+    "list_title": "Aliases\n\n{aliases}",
+    "none": "No aliases configured for this server."
+  },
+  "restrictcommand": {
+    "added": "Command `{command}` is now restricted to the **{role}** role.",
+    "removed": "Restriction removed.",
+    "cleared": "Cleared {count} restriction{count, plural, one {} other {s}} from `{command}`.",
+    "not_found": "Restriction not found.",
+    "list_title": "Restricted Commands\n\n{entries}",
+    "none": "No commands are restricted.",
+    "command_not_found": "Command `{command}` not found.",
+    "role_not_found": "Role `{role}` not found."
+  },
+  "enablecommand": {
+    "success": "Command `{command}` has been enabled{scope}.",
+    "command_not_found": "Command `{command}` not found."
+  },
+  "disablecommand": {
+    "success": "Command `{command}` has been disabled{scope}.",
+    "command_not_found": "Command `{command}` not found."
+  },
+  "prefix": {
+    "set_guild": "Server prefix has been set to `{prefix}`.",
+    "set_user": "Your personal prefix has been set to `{prefix}`.",
+    "removed_guild": "Server prefix has been removed.",
+    "removed_user": "Your personal prefix has been removed.",
+    "view": "**Current Prefix:** `{prefix}`\nServer prefix: `{guild_prefix}`\nYour prefix: `{user_prefix}`",
+    "view_guild_only": "**Current Prefix:** `{prefix}`\nServer prefix: `{guild_prefix}`",
+    "too_long": "Prefix must be 5 characters or less."
+  },
+  "fakepermissions": {
+    "added": "Added fake permission `{permission}` to **{role}**.",
+    "removed": "Removed fake permission `{permission}` from **{role}**.",
+    "list_title": "Fake Permissions for {target}\n\n{permissions}",
+    "list_all": "Fake Permissions\n\n{entries}",
+    "none": "No fake permissions configured.",
+    "role_not_found": "Role `{role}` not found.",
+    "usage_add": "Usage: `,fakepermissions add <role> <permission>`",
+    "usage_remove": "Usage: `,fakepermissions remove <role> <permission>`"
+  },
+  "permissions": {
+    "member_title": "Permissions for {user}\n\n{content}",
+    "channel_title": "Permissions for {channel}\n\n{content}",
+    "role_title": "Permissions for {role}\n\n{content}",
+    "disabled_commands": "Disabled Commands:\n{commands}",
+    "restricted_commands": "Restricted Commands:\n{commands}",
+    "no_disabled": "No disabled commands in this channel.",
+    "no_special": "No special permissions or restrictions.",
+    "owner_bypass": "Bot owner — all permissions bypassed.",
+    "member_not_found": "Member not found.",
+    "role_not_found": "Role not found.",
+    "channel_not_found": "Channel not found."
+  },
+  "timediff": {
+    "invalid": "Invalid snowflake ID(s). Please provide valid Discord IDs.",
+    "provide_ids": "Please provide two snowflake IDs.",
+    "result": "**Time Difference**\n\n**Earlier**\n`{id1}`\n\n**Later**\n{target}\n\n**Difference**\n**{duration}**\n\n**Timestamps**\nEarlier: <t:{earlier}:F>\nLater: <t:{later}:F>"
   }
 }

@@ -13,6 +13,10 @@ import type { ContextCommand, SlashCommand } from "@/classes/Command";
 import Event from "@/classes/Event";
 import { checkCooldown, setCooldown, type CommandType } from "@/utils/cooldown";
 import { checkPermissions } from "@/utils/permission";
+import {
+  isCommandEnabled,
+  isCommandRestricted,
+} from "@/utils/settings";
 import errorUI from "@/ui/error";
 
 async function runGuardedCommand(
@@ -186,6 +190,74 @@ export default new Event({
             .filter(Boolean)
             .join(":");
 
+          if (interaction.guild) {
+            const guildId = interaction.guildId;
+            const isOwner = client.config.devs.includes(interaction.user.id);
+
+            if (!isOwner && guildId) {
+              const commandEnabled = await isCommandEnabled(
+                guildId,
+                interaction.commandName,
+                interaction.channelId,
+                interaction.user.id,
+                client,
+              );
+
+              if (!commandEnabled) {
+                await interaction.reply({
+                  flags:
+                    MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                  components: [
+                    errorUI(
+                      client.i18n.t("errors.command_disabled", {
+                        command: interaction.commandName,
+                      }),
+                    ),
+                  ],
+                });
+
+                return;
+              }
+
+              if ((command as SlashCommand).options.ownerOnly) {
+                await interaction.reply({
+                  flags:
+                    MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                  components: [
+                    errorUI(client.i18n.t("errors.owner_only")),
+                  ],
+                });
+
+                return;
+              }
+
+              const restrictions = await isCommandRestricted(
+                guildId,
+                interaction.commandName,
+                client,
+              );
+
+              if (restrictions.length > 0 && interaction.member) {
+                const member = interaction.member as GuildMember;
+                const hasAllowedRole = restrictions.some((r) =>
+                  member.roles.cache.has(r.roleId),
+                );
+
+                if (!hasAllowedRole) {
+                  await interaction.reply({
+                    flags:
+                      MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                    components: [
+                      errorUI(client.i18n.t("errors.command_restricted")),
+                    ],
+                  });
+
+                  return;
+                }
+              }
+            }
+          }
+
           await runGuardedCommand(
             client,
             interaction,
@@ -226,6 +298,74 @@ export default new Event({
             });
 
             return;
+          }
+
+          if (interaction.guild) {
+            const guildId = interaction.guildId;
+            const isOwner = client.config.devs.includes(interaction.user.id);
+
+            if (!isOwner && guildId) {
+              const commandEnabled = await isCommandEnabled(
+                guildId,
+                interaction.commandName,
+                interaction.channelId,
+                interaction.user.id,
+                client,
+              );
+
+              if (!commandEnabled) {
+                await interaction.reply({
+                  flags:
+                    MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                  components: [
+                    errorUI(
+                      client.i18n.t("errors.command_disabled", {
+                        command: interaction.commandName,
+                      }),
+                    ),
+                  ],
+                });
+
+                return;
+              }
+
+              if ((command as ContextCommand).options.ownerOnly) {
+                await interaction.reply({
+                  flags:
+                    MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                  components: [
+                    errorUI(client.i18n.t("errors.owner_only")),
+                  ],
+                });
+
+                return;
+              }
+
+              const restrictions = await isCommandRestricted(
+                guildId,
+                interaction.commandName,
+                client,
+              );
+
+              if (restrictions.length > 0 && interaction.member) {
+                const member = interaction.member as GuildMember;
+                const hasAllowedRole = restrictions.some((r) =>
+                  member.roles.cache.has(r.roleId),
+                );
+
+                if (!hasAllowedRole) {
+                  await interaction.reply({
+                    flags:
+                      MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                    components: [
+                      errorUI(client.i18n.t("errors.command_restricted")),
+                    ],
+                  });
+
+                  return;
+                }
+              }
+            }
           }
 
           await runGuardedCommand(

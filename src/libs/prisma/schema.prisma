@@ -45,20 +45,25 @@ model Guild {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  welcomes         Welcome[]
-  leaves           Leave[]
-  commandSettings  CommandSetting[]
-  afks             Afk[]
-  guildBans        GuildBan[]
-  warnings         Warning[]
-  memberNotes      MemberNote[]
-  modCases         ModerationCase[]
-  lockdownChannels LockdownChannel[]
-  lockdownRoles    LockdownRole[]
-  lockdown         Lockdown?
-  logChannels      LogChannel[]
-  logIgnores       LogIgnore[]
-}
+  welcomes               Welcome[]
+  leaves                 Leave[]
+  commandSettings        CommandSetting[]
+  afks                   Afk[]
+  guildBans              GuildBan[]
+  warnings               Warning[]
+  memberNotes            MemberNote[]
+  modCases               ModerationCase[]
+  lockdownChannels       LockdownChannel[]
+  lockdownRoles          LockdownRole[]
+  lockdown               Lockdown?
+  logChannels            LogChannel[]
+  logIgnores             LogIgnore[]
+  commandAliases         CommandAlias[]
+  commandRestrictions    CommandRestriction[]
+   channelCommandSettings ChannelCommandSetting[]
+   memberCommandSettings  MemberCommandSetting[]
+   fakePermissions        FakePermission[]
+ }
 
 model GuildBan {
   id String @id @default(cuid())
@@ -286,4 +291,86 @@ model LogIgnore {
 
   @@unique([guildId, targetId, category])
   @@index([guildId])
+}
+
+model CommandAlias {
+  id String @id @default(cuid())
+
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  alias   String
+  command String
+
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, alias])
+  @@index([guildId])
+}
+
+model CommandRestriction {
+  id String @id @default(cuid())
+
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  command String
+  roleId  String
+
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, command, roleId])
+  @@index([guildId])
+}
+
+model ChannelCommandSetting {
+  id String @id @default(cuid())
+
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  channelId String
+  command   String
+  enabled   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([guildId, channelId, command])
+  @@index([guildId])
+  @@index([channelId])
+}
+
+model MemberCommandSetting {
+  id String @id @default(cuid())
+
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  userId  String
+  command String
+  enabled Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([guildId, userId, command])
+  @@index([guildId])
+  @@index([userId])
+}
+
+model FakePermission {
+  id String @id @default(cuid())
+
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  roleId     String
+  permission String
+
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, roleId, permission])
+  @@index([guildId])
+  @@index([roleId])
 }
