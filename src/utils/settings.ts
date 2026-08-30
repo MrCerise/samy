@@ -85,8 +85,10 @@ export async function getAlias(
 ): Promise<string | null> {
   if (client) {
     const cached = client.aliases.get(guildId);
+
     if (cached) {
       const found = cached.find((a) => a.alias === alias.toLowerCase());
+
       if (found) return found.command;
     }
   }
@@ -98,10 +100,13 @@ export async function getAlias(
         alias: alias.toLowerCase(),
       },
     },
-    select: { command: true },
+    select: {
+      command: true,
+    },
   });
 
   const value = aliasRecord?.command ?? null;
+
   return value;
 }
 
@@ -111,12 +116,17 @@ export async function getAliases(
 ): Promise<CommandAlias[]> {
   if (client) {
     const cached = client.aliases.get(guildId);
+
     if (cached) return cached;
   }
 
   const aliases = await prisma.commandAlias.findMany({
-    where: { guildId },
-    orderBy: { alias: "asc" },
+    where: {
+      guildId,
+    },
+    orderBy: {
+      alias: "asc",
+    },
   });
 
   if (client) {
@@ -129,10 +139,17 @@ export async function getAliases(
 export function resolveAlias(
   template: string,
   args: string[],
-): { commandName: string; args: string[] } {
+): {
+  commandName: string;
+  args: string[];
+} {
   if (!template.includes("$")) {
     const parts = template.trim().split(/\s+/);
-    return { commandName: parts[0]?.toLowerCase() ?? "", args: parts.slice(1) };
+
+    return {
+      commandName: parts[0]?.toLowerCase() ?? "",
+      args: parts.slice(1),
+    };
   }
 
   let resolved = template;
@@ -141,16 +158,22 @@ export function resolveAlias(
 
   for (let i = 0; i < args.length; i++) {
     const value = args[i]!;
+
     resolved = resolved.replace(new RegExp(`\\$${i + 1}`, "g"), () => value);
   }
 
   resolved = resolved.replace(/\$\d+/g, "");
 
   const parts = resolved.trim().split(/\s+/).filter(Boolean);
+
   const commandName = parts.shift()?.toLowerCase() ?? "";
+
   const newArgs = parts;
 
-  return { commandName, args: newArgs };
+  return {
+    commandName,
+    args: newArgs,
+  };
 }
 
 export async function addAlias(
@@ -169,7 +192,9 @@ export async function addAlias(
 
   if (client) {
     const existing = client.aliases.get(guildId) ?? [];
+
     existing.push(result);
+
     client.aliases.set(guildId, existing);
   }
 
@@ -190,6 +215,7 @@ export async function removeAlias(
 
   if (result.count > 0 && client) {
     const existing = client.aliases.get(guildId);
+
     if (existing) {
       client.aliases.set(
         guildId,
@@ -264,6 +290,7 @@ export async function addCommandRestriction(
 
     if (cached !== undefined) {
       cached.push(result);
+
       client.restrictions.set(guildId, cached);
     }
   }
@@ -343,8 +370,10 @@ export async function getChannelCommandSetting(
 ): Promise<ChannelCommandSetting | null> {
   if (client) {
     const cached = client.channelSettings.get(`${guildId}:${channelId}`);
+
     if (cached) {
       const found = cached.find((s) => s.command === command.toLowerCase());
+
       if (found) return found;
     }
   }
@@ -391,7 +420,9 @@ export async function setChannelCommandEnabled(
 
   if (client) {
     const key = `${guildId}:${channelId}`;
+
     const existing = client.channelSettings.get(key) ?? [];
+
     const idx = existing.findIndex((s) => s.command === command.toLowerCase());
 
     if (idx >= 0) {
@@ -413,6 +444,7 @@ export async function getChannelCommandSettings(
 ): Promise<ChannelCommandSetting[]> {
   if (client) {
     const cached = client.channelSettings.get(`${guildId}:${channelId}`);
+
     if (cached) return cached;
   }
 
@@ -438,8 +470,10 @@ export async function getMemberCommandSetting(
 ): Promise<MemberCommandSetting | null> {
   if (client) {
     const cached = client.memberSettings.get(`${guildId}:${userId}`);
+
     if (cached) {
       const found = cached.find((s) => s.command === command.toLowerCase());
+
       if (found) return found;
     }
   }
@@ -486,7 +520,9 @@ export async function setMemberCommandEnabled(
 
   if (client) {
     const key = `${guildId}:${userId}`;
+
     const existing = client.memberSettings.get(key) ?? [];
+
     const idx = existing.findIndex((s) => s.command === command.toLowerCase());
 
     if (idx >= 0) {
@@ -508,6 +544,7 @@ export async function getMemberCommandSettings(
 ): Promise<MemberCommandSetting[]> {
   if (client) {
     const cached = client.memberSettings.get(`${guildId}:${userId}`);
+
     if (cached) return cached;
   }
 
@@ -534,6 +571,7 @@ export async function isCommandEnabledForGuild(
     const cached = client.commandSettings.get(
       `${guildId}:${command.toLowerCase()}`,
     );
+
     if (cached !== undefined) return cached;
   }
 
@@ -653,12 +691,17 @@ export async function getAllFakePermissions(
 ): Promise<FakePermission[]> {
   if (client) {
     const cached = client.fakePermissions.get(guildId);
+
     if (cached) return cached;
   }
 
   const permissions = await prisma.fakePermission.findMany({
-    where: { guildId },
-    orderBy: { permission: "asc" },
+    where: {
+      guildId,
+    },
+    orderBy: {
+      permission: "asc",
+    },
   });
 
   if (client) {
@@ -677,10 +720,27 @@ export async function hasFakePermission(
 ): Promise<boolean> {
   const allFakePermissions = await getAllFakePermissions(guildId, client);
 
+  const normalizedPermission = permission.trim().toLowerCase();
+
   return allFakePermissions.some(
     (fp) =>
-      fp.permission === permission.toLowerCase() &&
+      fp.permission.toLowerCase() === normalizedPermission &&
       memberRoles.includes(fp.roleId),
+  );
+}
+
+export async function hasFakeAdministratorPermission(
+  guildId: string,
+  userId: string,
+  memberRoles: string[],
+  client?: Client,
+): Promise<boolean> {
+  return hasFakePermission(
+    guildId,
+    userId,
+    "administrator",
+    memberRoles,
+    client,
   );
 }
 
@@ -760,12 +820,17 @@ export async function getCommandSettingsForGuild(
 ): Promise<ChannelCommandSetting[]> {
   if (client) {
     const cached = client.channelSettings.get(`all:${guildId}`);
+
     if (cached) return cached;
   }
 
   const settings = await prisma.channelCommandSetting.findMany({
-    where: { guildId },
-    orderBy: { channelId: "asc" },
+    where: {
+      guildId,
+    },
+    orderBy: {
+      channelId: "asc",
+    },
   });
 
   if (client) {

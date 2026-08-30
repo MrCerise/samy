@@ -18,6 +18,7 @@ import {
   resolveAlias,
   isCommandEnabled,
   isCommandRestricted,
+  hasFakeAdministratorPermission,
 } from "@/utils/settings";
 
 import { Container, Text } from "@/ui/components";
@@ -81,6 +82,7 @@ export default new Event({
 
     const notifyIfAfk = async () => {
       const afkKey = `${guild.id}:${message.author.id}`;
+
       const afk = client.afkUsers.get(afkKey);
 
       client.logger.debug("Checking author AFK status", {
@@ -161,7 +163,9 @@ export default new Event({
         mentionedUsers: [...mentionedIds],
       });
 
-      if (mentionedIds.size === 0) return;
+      if (mentionedIds.size === 0) {
+        return;
+      }
 
       const lines: string[] = [];
 
@@ -301,10 +305,6 @@ export default new Event({
           return;
         }
 
-        /*
-         * These permissions are required just so the bot
-         * can process and respond to the command.
-         */
         if (
           !(await checkPermissions(botMember, channel, [
             "ReadMessageHistory",
@@ -322,9 +322,6 @@ export default new Event({
         const start = performance.now();
 
         try {
-          /*
-           * Resolve subcommands.
-           */
           while (args.length > 0) {
             const name = args[0];
 
@@ -382,11 +379,6 @@ export default new Event({
             isOwner,
           });
 
-          /*
-           * Command enabled check.
-           *
-           * Owners do NOT bypass this.
-           */
           const topLevelCommandName = command.name.toLowerCase();
 
           const commandEnabled = await isCommandEnabled(
@@ -431,9 +423,6 @@ export default new Event({
             return;
           }
 
-          /*
-           * Guild-only check.
-           */
           const effectiveGuildOnly =
             command.options.guildOnly === true ||
             current.options?.guildOnly === true;
@@ -453,13 +442,6 @@ export default new Event({
             return;
           }
 
-          /*
-           * Owner-only check.
-           *
-           * Only ownerOnly commands bypass normal
-           * owner restrictions. Being an owner does NOT
-           * bypass disabled/restricted/permission checks.
-           */
           const effectiveOwnerOnly =
             command.options.ownerOnly === true ||
             current.options?.ownerOnly === true;
@@ -480,11 +462,6 @@ export default new Event({
             return;
           }
 
-          /*
-           * Server command restrictions.
-           *
-           * Owners do NOT bypass restrictions.
-           */
           const restrictions = await isCommandRestricted(
             guild.id,
             commandPath,
@@ -503,6 +480,17 @@ export default new Event({
           if (restrictions.length > 0) {
             const userRoles = [...member.roles.cache.keys()];
 
+            const hasRealAdmin = member.permissions.has("Administrator");
+
+            const hasFakeAdmin = await hasFakeAdministratorPermission(
+              guild.id,
+              member.id,
+              userRoles,
+              client,
+            );
+
+            const isAdmin = hasRealAdmin || hasFakeAdmin;
+
             const hasAllowedRole = restrictions.some((restriction) =>
               member.roles.cache.has(restriction.roleId),
             );
@@ -514,14 +502,19 @@ export default new Event({
               restrictedRoles: restrictions.map(
                 (restriction) => restriction.roleId,
               ),
-              allowed: hasAllowedRole,
+              allowedRole: hasAllowedRole,
+              hasRealAdmin,
+              hasFakeAdmin,
+              isAdmin,
               isOwner,
             });
 
-            if (!hasAllowedRole) {
+            if (!isAdmin && !hasAllowedRole) {
               client.logger.debug("Command blocked by role restriction", {
                 command: commandPath,
                 user: member.id,
+                hasRealAdmin,
+                hasFakeAdmin,
                 isOwner,
               });
 
@@ -540,12 +533,18 @@ export default new Event({
 
               return;
             }
+
+            client.logger.debug("Command restriction bypassed", {
+              command: commandPath,
+              user: member.id,
+              reason: hasRealAdmin
+                ? "real_administrator"
+                : hasFakeAdmin
+                  ? "fake_administrator"
+                  : "allowed_role",
+            });
           }
 
-          /*
-           * If the command has no execute handler,
-           * show its help instead.
-           */
           if (!current.hasExecute) {
             client.logger.debug(
               "Command has no execute handler, showing help",
@@ -585,13 +584,6 @@ export default new Event({
             return;
           }
 
-          /*
-           * User permission check.
-           *
-           * getMissingPermissions also checks fake
-           * permissions, so only permissions that are
-           * actually missing are displayed.
-           */
           client.logger.debug("Checking user permissions", {
             command: commandPath,
             user: member.id,
@@ -632,9 +624,6 @@ export default new Event({
             return;
           }
 
-          /*
-           * Bot permission check.
-           */
           client.logger.debug("Checking bot permissions", {
             command: commandPath,
             permissions: effectiveBotPermissions,
@@ -718,9 +707,6 @@ export default new Event({
             return;
           }
 
-          /*
-           * Cooldown check.
-           */
           const cooldown = current.cooldown ?? client.config.defaults.cooldown;
 
           const remaining = checkCooldown(
