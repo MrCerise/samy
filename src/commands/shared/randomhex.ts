@@ -1,5 +1,5 @@
 import type Client from "@/classes/client";
-import { Container, Text } from "@/ui/components";
+import { Container, Media, Text } from "@/ui/components";
 
 export function RandomHexResult(client: Client) {
   const r = Math.floor(Math.random() * 256);
@@ -11,16 +11,18 @@ export function RandomHexResult(client: Client) {
     .join("")
     .toUpperCase()}`;
 
-  const accentColor = (r << 16) | (g << 8) | b;
+  const hexNoHash = hex.slice(1);
 
-  return new Container(accentColor).text(
-    Text(
-      client.i18n.t("commands.randomhex.result", {
-        hex,
-        r,
-        g,
-        b,
-      }),
-    ),
-  );
+  return new Container()
+    .text(
+      Text(
+        client.i18n.t("commands.randomhex.result", {
+          hex,
+          r,
+          g,
+          b,
+        }),
+      ),
+    )
+    .media(Media(`https://singlecolorimage.com/get/${hexNoHash}/128x128`));
 }
