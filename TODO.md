@@ -26,7 +26,7 @@ A roadmap for Samy's development.
 - [x] Internationalization (i18n) framework
 
 - [x] Command aliases / shortcuts system (`alias add/remove/list`)
-- [ ] Restrict command to specific role (`restrictcommand`) TO FIX
+- [x] Restrict command to specific role (`restrictcommand`) TO FIX
 - [x] Per-channel/member command & module enable/disable (`enablecommand`, `disablecommand`)
 - [x] Custom prefix (server + personal)
 - [x] Fake permissions for roles (`fakepermissions`)
