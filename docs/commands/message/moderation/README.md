@@ -1,6 +1,6 @@
 # Moderation
 
-> 18 commands
+> 19 commands
 
 | Command | Description |
 | :-- | :-- |
@@ -9,6 +9,7 @@
 | [`kick`](./kick.md) | Kick a user from the server. |
 | [`lock`](./lock.md) | Lock a channel, preventing @everyone (and any configured lockdown roles) from sending messages, reacting, or creating threads. |
 | [`lockdown`](./lockdown.md) | Manage lockdown settings. |
+| [`logs`](./logs.md) | Log events in your server. |
 | [`notes`](./notes.md) | View and manage member notes. |
 | [`nuke`](./nuke.md) | Deletes and recreates the current channel. |
 | [`purge`](./purge.md) | Purge messages from the current channel. |
