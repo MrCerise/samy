@@ -74,3 +74,20 @@ Manually emit test log events for all categories.
 | `description` | `d` | Optional description text. | false |
 | `footer` | `f` | Optional footer text. | false |
 
+## `logs setup`
+
+`prefix` `guild only`
+
+**Requires:** ManageGuild
+
+Create a logging category with a channel for every log event, and configure them automatically.
+
+**Usage**
+```
+,setup [name]
+```
+
+| Argument | Aliases | Description | Required |
+| :-- | :-- | :-- | :--: |
+| `name` | `n` | Name for the new logging category. Defaults to 'Logs'. | false |
+
