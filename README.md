@@ -1,37 +1,82 @@
+<div align="center">
+
 # Samy
 
-An open source alternative to Bleed-like Discord bots. A modern open source Discord bot built for automation, moderation, and powerful customization.
+**Discord's best open-source all-in-one app.**
 
-Built with:
+Moderation, utility, Last.fm, server management, and more, one bot for your whole server.
 
-- TypeScript
-- Bun
-- Discord.js
-- Prisma
-- PostgreSQL
+[![Website](https://img.shields.io/badge/Website-samy.zoomhub.xyz-000000?logo=googlechrome&logoColor=white)](https://samy.zoomhub.xyz/)
+[![Add to Discord](https://img.shields.io/badge/Add%20to%20Discord-5865F2?logo=discord&logoColor=white)](https://samy.zoomhub.xyz/invite)
+[![Docs](https://img.shields.io/badge/Docs-000000?logo=readthedocs&logoColor=white)](https://samy.zoomhub.xyz/docs)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPLv3-blue.svg)](LICENSE)
 
-## Development
+[Add to your server](https://samy.zoomhub.xyz/invite) · [Documentation](https://samy.zoomhub.xyz/docs) · [Support Server](https://samy.zoomhub.xyz/discord)
 
-> Samy is currently in active development. Features may change, break, or be incomplete.\
-> **Support:** https://discord.gg/SBx3mn4r8e \
-> You can follow planned features and progress in the [TODO.md](TODO.md) file.\
-> Have an idea, suggestion, or feature request? Please create an issue so it can be discussed and tracked.
+</div>
 
-### Sharding
+---
 
-Samy scales automatically using discord.js `ShardingManager`. `src/index.ts` is the manager: it spawns one bot process per shard (`src/bot.ts`) and runs the HTTP API once in the manager process, aggregating data across shards.
+## Table of Contents
 
-- `TOTAL_SHARDS` (optional): leave unset for Discord's recommended count, or set a fixed number.
-- The API exposes `/health`, `/shards` (shard readiness), and `/status` (per-shard `shard_id`, `latency`, `member_count`, `server_count`, `uptime`, `is_ready`, `last_updated`).
-- To run a single shard directly (local dev without the manager):
+- [About](#about)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Status](#status)
+- [Commands](#commands)
+- [Contributing](#contributing)
+- [License](#license)
 
-  ```sh
-  bun run src/bot.ts
-  ```
+## About
+
+Samy is a fully open source Discord bot built for automation, moderation, and powerful customization. Everything is built in the open.
+
+## Features
+
+15+ modules, all in one bot:
+
+- **Moderation** - ban, kick, timeout, warn, purge, lockdown, and a full case/logging system
+- **Server Management** - set up welcome and leave messages for your server
+- **Message Builder** - create messages, embeds, and Components V2 with ease
+- **User Utilities** - view profiles, avatars, banners, birthdays, and timezones
+- **Server Utilities** - view server, channel, role, emoji, invite, and bot information
+- **Personal Settings** - set your language, timezone, birthday, and Last.fm account
+- **Integrations** - connects to the platforms your community already uses
+  - **Discord** - slash commands, embeds, and buttons
+  - **Last.fm** - recent tracks and profile stats
+
+## Tech Stack
+
+Samy is built with:
+
+- **[TypeScript](https://www.typescriptlang.org/)** - language
+- **[Bun](https://bun.sh/)** - runtime & package manager
+- **[Discord.js](https://discord.js.org/)** - Discord API wrapper
+- **[Prisma](https://www.prisma.io/)** - ORM
+- **[PostgreSQL](https://www.postgresql.org/)** - database
+
+## Status
+
+> Samy is currently in **active development**. Features may change, break, or be incomplete.
+
+- **Website:** [samy.zoomhub.xyz](https://samy.zoomhub.xyz/)
+- **Support:** [samy.zoomhub.xyz/discord](https://samy.zoomhub.xyz/discord)
+- **Roadmap:** planned features and progress are tracked in [`TODO.md`](TODO.md)
+- **Suggestions:** have an idea, suggestion, or feature request? [Open an issue](https://github.com/TheOldZoom/samy/issues) so it can be discussed and tracked.
 
 ## Commands
 
-Command docs are generated from source into [`docs/commands`](docs/commands). Run `bun run docs` to regenerate.
+Full, up-to-date command documentation - including arguments, aliases, permissions, and subcommands - is generated directly from source into [`docs/commands`](docs/commands), and is also available online at [samy.zoomhub.xyz/commands](https://samy.zoomhub.xyz/commands). In Discord, run `,help` to browse commands or get details on a specific one.
+
+To regenerate the docs after making changes:
+
+```bash
+bun run docs
+```
+
+## Contributing
+
+Contributions, bug reports, and feature suggestions are welcome. Please open an [issue](https://github.com/TheOldZoom/samy/issues) before starting significant work so it can be discussed first.
 
 ## License
 
