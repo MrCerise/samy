@@ -4,7 +4,7 @@
 
 **Aliases:** `case`
 
-**Requires:** ManageMessages, ModerateMembers
+**Requires:** ModerateMembers
 
 View and manage moderation cases.
 

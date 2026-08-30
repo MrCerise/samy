@@ -2,7 +2,7 @@
 
 `slash`
 
-View your currently playing or last played
+View your currently playing or last played Last.fm track.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |

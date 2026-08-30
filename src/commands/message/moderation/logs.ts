@@ -143,7 +143,7 @@ function makeRemoveSubcommand(category: LogCategoryKey, description: string) {
 
 export default new MessageCommand({
   name: "logs",
-  description: "Log events in your server.",
+  description: "Configure server event logging.",
   category: "Moderation",
   guildOnly: true,
   aliases: ["logging"],

@@ -122,7 +122,7 @@ async function executeSoftban({
 
 export default new MessageCommand({
   name: "softban",
-  description: "Ban and immediately unban a user, purging their messages.",
+  description: "Ban and immediately unban a user, deleting their messages.",
   aliases: ["sb"],
   category: "Moderation",
   guildOnly: true,

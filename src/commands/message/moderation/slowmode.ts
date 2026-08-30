@@ -6,8 +6,7 @@ import { parseDuration } from "@/utils/duration";
 
 export default new MessageCommand({
   name: "slowmode",
-  description:
-    "Set the slowmode delay for a channel. Use 0 to disable slowmode.",
+  description: "Set the slowmode delay for a channel.",
   category: "Moderation",
   guildOnly: true,
   userPermissions: ["ManageChannels"],

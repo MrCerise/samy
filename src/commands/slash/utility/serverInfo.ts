@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("serverinfo")
-    .setDescription("View information about this server"),
+    .setDescription("Get information about the server."),
 
   category: "Utility",
   guildOnly: true,

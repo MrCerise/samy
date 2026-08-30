@@ -120,7 +120,7 @@ async function executeKick({
 
 export default new MessageCommand({
   name: "kick",
-  description: "Kick a user from the server.",
+  description: "Kick a user.",
   aliases: ["k"],
   category: "Moderation",
   guildOnly: true,

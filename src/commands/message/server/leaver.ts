@@ -10,7 +10,7 @@ import { Container, Text } from "@/ui/components";
 
 export default new MessageCommand({
   name: "leaver",
-  description: "Set up leave messages in one or multiple channels.",
+  description: "Configure leave messages for the server.",
   aliases: ["leave", "lv"],
   guildOnly: true,
   userPermissions: ["ManageGuild"],

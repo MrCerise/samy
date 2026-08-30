@@ -4,7 +4,7 @@
 
 **Requires:** ManageChannels
 
-Unlock a channel, restoring @everyone's (and any configured lockdown roles') ability to send messages, react, and create threads.
+Unlock a channel, restoring send permissions.
 
 **Usage**
 ```

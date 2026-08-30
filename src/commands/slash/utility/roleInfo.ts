@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("roleinfo")
-    .setDescription("View information about a role")
+    .setDescription("Get information about a role.")
     .addRoleOption((option) =>
       option
         .setName("role")

@@ -5,7 +5,7 @@ import { GayResult } from "@/commands/shared/gay";
 
 export default new MessageCommand({
   name: "gay",
-  description: "See how gay someone is.",
+  description: "Check a user's gay percentage.",
   category: "Fun",
   aliases: ["gayrate"],
 

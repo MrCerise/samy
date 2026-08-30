@@ -6,7 +6,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "banner",
-  description: "Replies with a user's banner",
+  description: "View a user's banner.",
   category: "Utility",
   aliases: ["bn"],
   arguments: [

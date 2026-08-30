@@ -10,8 +10,7 @@ import {
 
 export default new MessageCommand({
   name: "unlock",
-  description:
-    "Unlock a channel, restoring @everyone's (and any configured lockdown roles') ability to send messages, react, and create threads.",
+  description: "Unlock a channel, restoring send permissions.",
   category: "Moderation",
   guildOnly: true,
   userPermissions: ["ManageChannels"],

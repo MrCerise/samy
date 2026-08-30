@@ -6,7 +6,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "roleinfo",
-  description: "View information about a role",
+  description: "Get information about a role.",
   category: "Utility",
   aliases: ["ri"],
   guildOnly: true,

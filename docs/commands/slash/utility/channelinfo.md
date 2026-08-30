@@ -2,7 +2,7 @@
 
 `slash` `guild only`
 
-View information about a channel
+Get information about a channel.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |

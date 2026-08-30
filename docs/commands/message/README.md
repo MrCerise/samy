@@ -4,7 +4,7 @@
 
 | Category | Commands |
 | :-- | :--: |
-| [Moderation](./moderation) | 19 |
 | [Utility](./utility) | 18 |
+| [Moderation](./moderation) | 19 |
 | [Server](./server) | 2 |
 | [Fun](./fun) | 1 |

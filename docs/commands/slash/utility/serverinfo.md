@@ -2,5 +2,5 @@
 
 `slash` `guild only`
 
-View information about this server
+Get information about the server.
 

@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("channelinfo")
-    .setDescription("View information about a channel")
+    .setDescription("Get information about a channel.")
     .addChannelOption((option) =>
       option
         .setName("channel")

@@ -4,7 +4,7 @@
 
 **Aliases:** `bots`
 
-View all bots in this server
+List all bots in the server.
 
 **Usage**
 ```

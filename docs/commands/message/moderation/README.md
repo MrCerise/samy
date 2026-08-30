@@ -4,22 +4,22 @@
 
 | Command | Description |
 | :-- | :-- |
-| [`ban`](./ban.md) | Ban a user from the server, optionally for a set duration. |
+| [`ban`](./ban.md) | Ban a user, optionally with a duration. |
 | [`cases`](./cases.md) | View and manage moderation cases. |
-| [`kick`](./kick.md) | Kick a user from the server. |
-| [`lock`](./lock.md) | Lock a channel, preventing @everyone (and any configured lockdown roles) from sending messages, reacting, or creating threads. |
-| [`lockdown`](./lockdown.md) | Manage lockdown settings. |
-| [`logs`](./logs.md) | Log events in your server. |
+| [`kick`](./kick.md) | Kick a user. |
+| [`lock`](./lock.md) | Lock a channel, preventing send permissions. |
+| [`lockdown`](./lockdown.md) | Manage server-wide lockdown settings. |
+| [`logs`](./logs.md) | Configure server event logging. |
 | [`notes`](./notes.md) | View and manage member notes. |
-| [`nuke`](./nuke.md) | Deletes and recreates the current channel. |
-| [`purge`](./purge.md) | Purge messages from the current channel. |
+| [`nuke`](./nuke.md) | Delete and recreate a channel. |
+| [`purge`](./purge.md) | Delete multiple messages from a channel. |
 | [`reason`](./reason.md) | Edit the reason of a moderation case. |
-| [`say`](./say.md) | Sends a message, embed script, or CV2 script to a channel as the bot. |
-| [`slowmode`](./slowmode.md) | Set the slowmode delay for a channel. Use 0 to disable slowmode. |
-| [`softban`](./softban.md) | Ban and immediately unban a user, purging their messages. |
-| [`timeout`](./timeout.md) | Timeout a user, preventing them from interacting in the server. |
-| [`unban`](./unban.md) | Unban a user from the server. |
-| [`unlock`](./unlock.md) | Unlock a channel, restoring @everyone's (and any configured lockdown roles') ability to send messages, react, and create threads. |
+| [`say`](./say.md) | Send a message as the bot to a channel. |
+| [`slowmode`](./slowmode.md) | Set the slowmode delay for a channel. |
+| [`softban`](./softban.md) | Ban and immediately unban a user, deleting their messages. |
+| [`timeout`](./timeout.md) | Timeout a user for a specified duration. |
+| [`unban`](./unban.md) | Unban a user. |
+| [`unlock`](./unlock.md) | Unlock a channel, restoring send permissions. |
 | [`untimeout`](./untimeout.md) | Remove a user's timeout. |
-| [`warn`](./warn.md) | Warn a user in the server. |
-| [`warnings`](./warnings.md) | View and manage warning history for a user. |
+| [`warn`](./warn.md) | Warn a user. |
+| [`warnings`](./warnings.md) | View and manage user warnings. |

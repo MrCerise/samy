@@ -2,7 +2,7 @@
 
 `prefix`
 
-Set yourself as AFK, optionally with a reason
+Set your AFK status with an optional reason.
 
 **Usage**
 ```

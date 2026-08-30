@@ -4,7 +4,7 @@
 
 **Aliases:** `ei`, `emoji`
 
-View information about an emoji
+Get information about an emoji.
 
 **Usage**
 ```

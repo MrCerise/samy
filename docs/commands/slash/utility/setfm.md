@@ -2,7 +2,7 @@
 
 `slash`
 
-Link your Last.fm profile to the bot
+Link your Last.fm profile.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |

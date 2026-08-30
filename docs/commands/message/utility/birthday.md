@@ -4,7 +4,7 @@
 
 **Aliases:** `bday`, `bd`
 
-View, set, or list user birthdays.
+View, set, or list birthdays.
 
 **Usage**
 ```

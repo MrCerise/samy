@@ -4,7 +4,7 @@
 
 **Aliases:** `av`, `a`
 
-Replies with a user's avatar
+View a user's avatar.
 
 **Usage**
 ```

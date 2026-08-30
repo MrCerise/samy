@@ -4,9 +4,9 @@
 
 **Aliases:** `warninghistory`, `warns`
 
-**Requires:** ManageMessages, ModerateMembers
+**Requires:** ModerateMembers
 
-View and manage warning history for a user.
+View and manage user warnings.
 
 **Usage**
 ```
@@ -22,7 +22,7 @@ View and manage warning history for a user.
 
 `prefix`
 
-**Requires:** ManageMessages, ModerateMembers
+**Requires:** ModerateMembers
 
 Remove a specific warning from a user.
 
@@ -40,7 +40,7 @@ Remove a specific warning from a user.
 
 `prefix`
 
-**Requires:** ManageMessages, ModerateMembers
+**Requires:** ModerateMembers
 
 Clear all warnings for a user.
 

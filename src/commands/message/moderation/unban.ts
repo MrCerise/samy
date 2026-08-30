@@ -125,7 +125,7 @@ async function executeUnban({
 
 export default new MessageCommand({
   name: "unban",
-  description: "Unban a user from the server.",
+  description: "Unban a user.",
   aliases: ["ub"],
   category: "Moderation",
   guildOnly: true,

@@ -4,7 +4,7 @@
 
 **Aliases:** `ri`
 
-View information about a role
+Get information about a role.
 
 **Usage**
 ```

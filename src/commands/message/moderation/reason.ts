@@ -109,7 +109,7 @@ export default new MessageCommand({
   aliases: ["editreason", "casereason"],
   category: "Moderation",
   guildOnly: true,
-  userPermissions: ["ManageMessages", "ModerateMembers"],
+  userPermissions: ["ModerateMembers"],
 
   arguments: [
     {

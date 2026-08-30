@@ -2,7 +2,7 @@
 
 `slash`
 
-See how gay someone is.
+Check a user's gay percentage.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |

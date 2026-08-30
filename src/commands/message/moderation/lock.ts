@@ -11,8 +11,7 @@ import {
 
 export default new MessageCommand({
   name: "lock",
-  description:
-    "Lock a channel, preventing @everyone (and any configured lockdown roles) from sending messages, reacting, or creating threads.",
+  description: "Lock a channel, preventing send permissions.",
   category: "Moderation",
   guildOnly: true,
   userPermissions: ["ManageChannels"],

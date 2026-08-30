@@ -4,7 +4,7 @@
 
 **Aliases:** `gayrate`
 
-See how gay someone is.
+Check a user's gay percentage.
 
 **Usage**
 ```

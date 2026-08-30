@@ -6,7 +6,7 @@
 
 **Requires:** BanMembers
 
-Unban a user from the server.
+Unban a user.
 
 **Usage**
 ```

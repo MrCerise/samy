@@ -10,7 +10,7 @@ import { Container, Text } from "@/ui/components";
 
 export default new MessageCommand({
   name: "welcomer",
-  description: "Set up welcome messages in one or multiple channels.",
+  description: "Configure welcome messages for the server.",
   aliases: ["welcome", "wc"],
   guildOnly: true,
   userPermissions: ["ManageGuild"],

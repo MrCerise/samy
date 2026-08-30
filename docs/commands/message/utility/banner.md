@@ -4,7 +4,7 @@
 
 **Aliases:** `bn`
 
-Replies with a user's banner
+View a user's banner.
 
 **Usage**
 ```

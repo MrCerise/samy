@@ -6,7 +6,7 @@
 
 **Requires:** ModerateMembers
 
-Timeout a user, preventing them from interacting in the server.
+Timeout a user for a specified duration.
 
 **Usage**
 ```

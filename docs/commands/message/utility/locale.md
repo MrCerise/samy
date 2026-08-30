@@ -4,7 +4,7 @@
 
 **Aliases:** `lang`, `language`
 
-View or set your preferred language, or the server's.
+View or set language preferences.
 
 **Usage**
 ```

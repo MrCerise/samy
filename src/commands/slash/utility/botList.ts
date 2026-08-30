@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("botlist")
-    .setDescription("View all bots in this server"),
+    .setDescription("List all bots in the server."),
   category: "Utility",
   guildOnly: true,
 

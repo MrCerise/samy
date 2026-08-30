@@ -4,7 +4,7 @@
 
 **Aliases:** `editreason`, `casereason`
 
-**Requires:** ManageMessages, ModerateMembers
+**Requires:** ModerateMembers
 
 Edit the reason of a moderation case.
 

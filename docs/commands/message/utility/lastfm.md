@@ -4,7 +4,7 @@
 
 **Aliases:** `fm`
 
-View your Last.fm profile, recent tracks, and overall statistics
+View your currently playing or last played Last.fm track.
 
 **Usage**
 ```

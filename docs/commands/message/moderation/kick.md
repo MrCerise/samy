@@ -6,7 +6,7 @@
 
 **Requires:** KickMembers
 
-Kick a user from the server.
+Kick a user.
 
 **Usage**
 ```

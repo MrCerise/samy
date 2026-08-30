@@ -6,7 +6,7 @@
 
 **Requires:** ManageGuild
 
-Set up welcome messages in one or multiple channels.
+Configure welcome messages for the server.
 
 **Usage**
 ```

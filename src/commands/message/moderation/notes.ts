@@ -299,7 +299,7 @@ export default new MessageCommand({
   aliases: ["note"],
   category: "Moderation",
   guildOnly: true,
-  userPermissions: ["ManageMessages", "ModerateMembers"],
+  userPermissions: ["ModerateMembers"],
 
   arguments: [
     {
@@ -323,8 +323,7 @@ export default new MessageCommand({
     new MessageSubcommand({
       name: "add",
       description: "Add a note to a member.",
-      userPermissions: ["ManageMessages", "ModerateMembers"],
-      botPermissions: ["ManageMessages", "ModerateMembers"],
+      userPermissions: ["ModerateMembers"],
       arguments: [
         {
           name: "user",
@@ -345,7 +344,6 @@ export default new MessageCommand({
       async execute(client, message, args) {
         const target = args.getUser("user");
         const content = args.getString("content");
-
         if (!target) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
@@ -378,8 +376,7 @@ export default new MessageCommand({
     new MessageSubcommand({
       name: "remove",
       description: "Remove a specific note from a user.",
-      userPermissions: ["ManageMessages", "ModerateMembers"],
-      botPermissions: ["ManageMessages", "ModerateMembers"],
+      userPermissions: ["ModerateMembers"],
       arguments: [
         {
           name: "user",
@@ -433,8 +430,7 @@ export default new MessageCommand({
     new MessageSubcommand({
       name: "clear",
       description: "Clear all notes for a user.",
-      userPermissions: ["ManageMessages", "ModerateMembers"],
-      botPermissions: ["ManageMessages", "ModerateMembers"],
+      userPermissions: ["ModerateMembers"],
       arguments: [
         {
           name: "user",

@@ -4,7 +4,7 @@
 
 **Aliases:** `logging`
 
-Log events in your server.
+Configure server event logging.
 
 **Usage**
 ```

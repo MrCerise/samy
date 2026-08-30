@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "birthday",
-  description: "View, set, or list user birthdays.",
+  description: "View, set, or list birthdays.",
   category: "Utility",
   aliases: ["bday", "bd"],
 

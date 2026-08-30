@@ -4,7 +4,7 @@
 
 **Requires:** ManageChannels
 
-Lock a channel, preventing @everyone (and any configured lockdown roles) from sending messages, reacting, or creating threads.
+Lock a channel, preventing send permissions.
 
 **Usage**
 ```

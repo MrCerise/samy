@@ -4,7 +4,7 @@
 
 **Aliases:** `ci`
 
-View information about a channel
+Get information about a channel.
 
 **Usage**
 ```

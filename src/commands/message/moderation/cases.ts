@@ -10,7 +10,7 @@ export default new MessageCommand({
   aliases: ["case"],
   category: "Moderation",
   guildOnly: true,
-  userPermissions: ["ManageMessages", "ModerateMembers"],
+  userPermissions: ["ModerateMembers"],
 
   arguments: [
     {

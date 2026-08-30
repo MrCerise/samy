@@ -2,5 +2,5 @@
 
 `slash`
 
-View the bot's latency.
+Check the bot's latency and API response time.
 

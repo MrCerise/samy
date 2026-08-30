@@ -4,7 +4,7 @@
 
 **Aliases:** `mc`
 
-View this server's member count
+View the server's member count.
 
 **Usage**
 ```

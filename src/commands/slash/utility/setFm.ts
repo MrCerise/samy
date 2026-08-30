@@ -13,7 +13,7 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("setfm")
-    .setDescription("Link your Last.fm profile to the bot")
+    .setDescription("Link your Last.fm profile.")
     .addStringOption((option) =>
       option
         .setName("username")

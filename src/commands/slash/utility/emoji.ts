@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("emoji")
-    .setDescription("View information about an emoji")
+    .setDescription("Get information about an emoji.")
     .addStringOption((option) =>
       option
         .setName("emoji")

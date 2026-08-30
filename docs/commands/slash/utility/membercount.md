@@ -2,5 +2,5 @@
 
 `slash` `guild only`
 
-View this server's member count
+View the server's member count.
 

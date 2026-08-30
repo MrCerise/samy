@@ -173,7 +173,7 @@ async function executeBan({
 
 export default new MessageCommand({
   name: "ban",
-  description: "Ban a user from the server, optionally for a set duration.",
+  description: "Ban a user, optionally with a duration.",
   category: "Moderation",
   guildOnly: true,
   userPermissions: ["BanMembers"],

@@ -11,8 +11,7 @@ import { MessageFlags } from "discord.js";
 
 export default new MessageCommand({
   name: "lastfm",
-  description:
-    "View your Last.fm profile, recent tracks, and overall statistics",
+  description: "View your currently playing or last played Last.fm track.",
   category: "Utility",
   aliases: ["fm"],
   arguments: [

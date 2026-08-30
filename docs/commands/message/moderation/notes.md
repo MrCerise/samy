@@ -4,7 +4,7 @@
 
 **Aliases:** `note`
 
-**Requires:** ManageMessages, ModerateMembers
+**Requires:** ModerateMembers
 
 View and manage member notes.
 
@@ -22,7 +22,7 @@ View and manage member notes.
 
 `prefix`
 
-**Requires:** ManageMessages, ModerateMembers
+**Requires:** ModerateMembers
 
 Add a note to a member.
 
@@ -40,7 +40,7 @@ Add a note to a member.
 
 `prefix`
 
-**Requires:** ManageMessages, ModerateMembers
+**Requires:** ModerateMembers
 
 Remove a specific note from a user.
 
@@ -58,7 +58,7 @@ Remove a specific note from a user.
 
 `prefix`
 
-**Requires:** ManageMessages, ModerateMembers
+**Requires:** ModerateMembers
 
 Clear all notes for a user.
 

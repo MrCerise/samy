@@ -4,7 +4,7 @@
 
 **Requires:** ManageMessages
 
-Sends a message, embed script, or CV2 script to a channel as the bot.
+Send a message as the bot to a channel.
 
 **Usage**
 ```

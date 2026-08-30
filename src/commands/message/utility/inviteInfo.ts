@@ -6,7 +6,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "inviteinfo",
-  description: "View information about an invite",
+  description: "Get information about a Discord invite.",
   category: "Utility",
   aliases: ["ii"],
   arguments: [

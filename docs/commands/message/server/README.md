@@ -4,5 +4,5 @@
 
 | Command | Description |
 | :-- | :-- |
-| [`leaver`](./leaver.md) | Set up leave messages in one or multiple channels. |
-| [`welcomer`](./welcomer.md) | Set up welcome messages in one or multiple channels. |
+| [`leaver`](./leaver.md) | Configure leave messages for the server. |
+| [`welcomer`](./welcomer.md) | Configure welcome messages for the server. |

@@ -4,7 +4,7 @@
 
 **Aliases:** `h`, `commands`
 
-Browse commands or get details about a specific one
+Browse all commands or view details about a specific command.
 
 **Usage**
 ```

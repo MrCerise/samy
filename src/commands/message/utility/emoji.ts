@@ -6,7 +6,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "emojiinfo",
-  description: "View information about an emoji",
+  description: "Get information about an emoji.",
   category: "Utility",
   aliases: ["ei", "emoji"],
   arguments: [

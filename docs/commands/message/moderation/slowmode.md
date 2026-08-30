@@ -4,7 +4,7 @@
 
 **Requires:** ManageChannels
 
-Set the slowmode delay for a channel. Use 0 to disable slowmode.
+Set the slowmode delay for a channel.
 
 **Usage**
 ```

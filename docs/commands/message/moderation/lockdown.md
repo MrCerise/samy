@@ -4,7 +4,7 @@
 
 **Requires:** ManageGuild
 
-Manage lockdown settings.
+Manage server-wide lockdown settings.
 
 **Usage**
 ```

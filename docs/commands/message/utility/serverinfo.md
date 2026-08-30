@@ -4,7 +4,7 @@
 
 **Aliases:** `si`, `guildinfo`
 
-View information about this server
+Get information about the server.
 
 **Usage**
 ```

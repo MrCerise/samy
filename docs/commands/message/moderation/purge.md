@@ -6,7 +6,7 @@
 
 **Requires:** ManageMessages
 
-Purge messages from the current channel.
+Delete multiple messages from a channel.
 
 **Usage**
 ```

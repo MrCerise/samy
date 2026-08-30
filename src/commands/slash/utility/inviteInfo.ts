@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("inviteinfo")
-    .setDescription("View information about an invite")
+    .setDescription("Get information about a Discord invite.")
     .addStringOption((option) =>
       option
         .setName("invite")

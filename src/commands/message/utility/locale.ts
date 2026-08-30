@@ -24,7 +24,7 @@ function parseScope(input: string | null | undefined): Scope | null {
 
 export default new MessageCommand({
   name: "locale",
-  description: "View or set your preferred language, or the server's.",
+  description: "View or set language preferences.",
   category: "Utility",
   aliases: ["lang", "language"],
 

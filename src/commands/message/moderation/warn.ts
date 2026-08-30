@@ -151,11 +151,11 @@ async function executeWarn({
 
 export default new MessageCommand({
   name: "warn",
-  description: "Warn a user in the server.",
+  description: "Warn a user.",
   aliases: ["warning"],
   category: "Moderation",
   guildOnly: true,
-  userPermissions: ["ManageMessages", "ModerateMembers"],
+  userPermissions: ["ModerateMembers"],
 
   arguments: [
     {

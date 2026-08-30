@@ -2,7 +2,7 @@
 
 `slash`
 
-View information about an emoji
+Get information about an emoji.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |

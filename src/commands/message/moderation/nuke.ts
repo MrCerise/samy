@@ -16,10 +16,10 @@ import type Client from "@/classes/client";
 
 export default new MessageCommand({
   name: "nuke",
-  description: "Deletes and recreates the current channel.",
+  description: "Delete and recreate a channel.",
   category: "Moderation",
   guildOnly: true,
-  userPermissions: ["Administrator"],
+  userPermissions: ["ManageChannels"],
   botPermissions: ["ManageChannels"],
 
   arguments: [

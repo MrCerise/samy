@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 export default new MessageCommand({
   name: "help",
 
-  description: "Browse commands or get details about a specific one",
+  description: "Browse all commands or view details about a specific command.",
 
   category: "Utility",
 

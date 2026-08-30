@@ -12,7 +12,7 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("banner")
-    .setDescription("Replies with a user's banner")
+    .setDescription("View a user's banner.")
     .addUserOption((option) =>
       option
         .setName("user")

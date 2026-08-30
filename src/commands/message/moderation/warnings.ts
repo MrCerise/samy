@@ -235,11 +235,11 @@ async function executeClear({
 
 export default new MessageCommand({
   name: "warnings",
-  description: "View and manage warning history for a user.",
+  description: "View and manage user warnings.",
   aliases: ["warninghistory", "warns"],
   category: "Moderation",
   guildOnly: true,
-  userPermissions: ["ManageMessages", "ModerateMembers"],
+  userPermissions: ["ModerateMembers"],
 
   arguments: [
     {
@@ -263,7 +263,7 @@ export default new MessageCommand({
     new MessageSubcommand({
       name: "remove",
       description: "Remove a specific warning from a user.",
-      userPermissions: ["ManageMessages", "ModerateMembers"],
+      userPermissions: ["ModerateMembers"],
       arguments: [
         {
           name: "user",
@@ -317,7 +317,7 @@ export default new MessageCommand({
     new MessageSubcommand({
       name: "clear",
       description: "Clear all warnings for a user.",
-      userPermissions: ["ManageMessages", "ModerateMembers"],
+      userPermissions: ["ModerateMembers"],
       arguments: [
         {
           name: "user",

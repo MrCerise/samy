@@ -2,7 +2,7 @@
 
 `slash`
 
-Replies with a user's banner
+View a user's banner.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |

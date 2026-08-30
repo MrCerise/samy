@@ -2,7 +2,7 @@
 
 `slash` `guild only`
 
-View information about a role
+Get information about a role.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |

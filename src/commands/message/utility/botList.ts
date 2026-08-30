@@ -6,7 +6,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "botlist",
-  description: "View all bots in this server",
+  description: "List all bots in the server.",
   category: "Utility",
   aliases: ["bots"],
   guildOnly: true,

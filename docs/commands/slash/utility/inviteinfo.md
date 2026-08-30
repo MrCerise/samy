@@ -2,7 +2,7 @@
 
 `slash`
 
-View information about an invite
+Get information about a Discord invite.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |

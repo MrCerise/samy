@@ -6,7 +6,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "avatar",
-  description: "Replies with a user's avatar",
+  description: "View a user's avatar.",
   category: "Utility",
   aliases: ["av", "a"],
   arguments: [

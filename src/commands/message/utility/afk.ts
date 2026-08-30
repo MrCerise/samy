@@ -6,7 +6,7 @@ import { Container, Text } from "@/ui/components";
 export default new MessageCommand({
   name: "afk",
   aliases: [],
-  description: "Set yourself as AFK, optionally with a reason",
+  description: "Set your AFK status with an optional reason.",
   arguments: [
     {
       name: "reason",

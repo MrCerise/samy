@@ -6,7 +6,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "channelinfo",
-  description: "View information about a channel",
+  description: "Get information about a channel.",
   category: "Utility",
   aliases: ["ci"],
   guildOnly: true,

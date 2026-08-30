@@ -6,7 +6,7 @@
 
 **Requires:** BanMembers
 
-Ban and immediately unban a user, purging their messages.
+Ban and immediately unban a user, deleting their messages.
 
 **Usage**
 ```

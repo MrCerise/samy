@@ -11,7 +11,7 @@ import { GayResult } from "@/commands/shared/gay";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("gay")
-    .setDescription("See how gay someone is.")
+    .setDescription("Check a user's gay percentage.")
     .addUserOption((option) =>
       option.setName("user").setDescription("The user to check"),
     )

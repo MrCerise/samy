@@ -4,7 +4,7 @@
 
 **Requires:** BanMembers
 
-Ban a user from the server, optionally for a set duration.
+Ban a user, optionally with a duration.
 
 **Usage**
 ```

@@ -136,7 +136,7 @@ async function executeTimeout({
 export default new MessageCommand({
   name: "timeout",
   description:
-    "Timeout a user, preventing them from interacting in the server.",
+    "Timeout a user for a specified duration.",
   aliases: ["mute", "to"],
   category: "Moderation",
   guildOnly: true,

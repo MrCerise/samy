@@ -16,8 +16,7 @@ import { LEADING_CHANNEL_MENTION } from "@/utils/constants";
 
 export default new MessageCommand({
   name: "say",
-  description:
-    "Sends a message, embed script, or CV2 script to a channel as the bot.",
+  description: "Send a message as the bot to a channel.",
   category: "Moderation",
   guildOnly: true,
   botPermissions: ["SendMessages", "EmbedLinks"],

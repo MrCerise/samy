@@ -4,9 +4,9 @@
 
 **Aliases:** `warning`
 
-**Requires:** ManageMessages, ModerateMembers
+**Requires:** ModerateMembers
 
-Warn a user in the server.
+Warn a user.
 
 **Usage**
 ```

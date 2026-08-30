@@ -103,7 +103,7 @@ export default new MessageCommand({
     }),
   ],
 
-  botPermissions: ["SendMessages", "EmbedLinks"],
+  botPermissions: ["SendMessages", "EmbedLinks", "ReadMessageHistory"],
 
   async execute(client, message) {
     const raw = extractRawScript(message.content, client.prefix);

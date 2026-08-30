@@ -137,7 +137,7 @@ async function executePurge({
 
 export default new MessageCommand({
   name: "purge",
-  description: "Purge messages from the current channel.",
+  description: "Delete multiple messages from a channel.",
   aliases: ["clear", "c", "clean", "prune"],
   category: "Moderation",
   guildOnly: true,

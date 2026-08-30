@@ -6,7 +6,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "serverinfo",
-  description: "View information about this server",
+  description: "Get information about the server.",
   category: "Utility",
   aliases: ["si", "guildinfo"],
   guildOnly: true,

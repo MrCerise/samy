@@ -4,7 +4,7 @@
 
 **Aliases:** `ii`
 
-View information about an invite
+Get information about a Discord invite.
 
 **Usage**
 ```

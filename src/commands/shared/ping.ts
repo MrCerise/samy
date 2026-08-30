@@ -1,5 +1,5 @@
 export const PingCommand = {
   name: "ping",
-  description: "View the bot's latency.",
+  description: "Check the bot's latency and API response time.",
   category: "Utility",
 };

@@ -211,7 +211,7 @@ async function runLockdown(
 
 export default new MessageCommand({
   name: "lockdown",
-  description: "Manage lockdown settings.",
+  description: "Manage server-wide lockdown settings.",
   category: "Moderation",
   guildOnly: true,
   userPermissions: ["ManageGuild"],

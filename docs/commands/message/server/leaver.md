@@ -6,7 +6,7 @@
 
 **Requires:** ManageGuild
 
-Set up leave messages in one or multiple channels.
+Configure leave messages for the server.
 
 **Usage**
 ```

@@ -14,7 +14,7 @@ import LastFMNowUI from "@/ui/lastfm/now";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("fm")
-    .setDescription("View your currently playing or last played")
+    .setDescription("View your currently playing or last played Last.fm track.")
     .addUserOption((option) =>
       option
         .setName("user")

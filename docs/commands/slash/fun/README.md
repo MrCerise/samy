@@ -4,4 +4,4 @@
 
 | Command | Description |
 | :-- | :-- |
-| [`/gay`](./gay.md) | See how gay someone is. |
+| [`/gay`](./gay.md) | Check a user's gay percentage. |

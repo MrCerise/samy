@@ -2,7 +2,7 @@
 
 `slash`
 
-Replies with a user's avatar
+View a user's avatar.
 
 | Argument | Aliases | Description | Required |
 | :-- | :-- | :-- | :--: |

@@ -6,7 +6,7 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "membercount",
-  description: "View this server's member count",
+  description: "View the server's member count.",
   category: "Utility",
   aliases: ["mc"],
   guildOnly: true,
