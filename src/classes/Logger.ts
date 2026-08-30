@@ -11,17 +11,17 @@ export default class Logger {
       err: pino.stdSerializers.err,
     },
 
-    transport:
-      process.env.NODE_ENV === "development"
-        ? {
-            target: "pino-pretty",
-            options: {
-              colorize: true,
-              translateTime: "HH:MM:ss",
-              ignore: "pid,hostname",
-            },
-          }
-        : undefined,
+    transport: {
+      target: "pino-pretty",
+      options: {
+        colorize: true,
+        colorizeObjects: true,
+        translateTime: "SYS:yyyy-mm-dd HH:MM:ss",
+        levelFirst: true,
+        singleLine: true,
+        ignore: "pid,hostname",
+      },
+    },
   });
 
   private parseArgs(
