@@ -18,6 +18,13 @@ import ClientLastFM from "./LastFm";
 import prisma from "@/libs/prisma";
 import { I18n } from "@/libs/i18n";
 import type { AfkUser } from "@/types/afkUsers";
+import type {
+  CommandAlias,
+  CommandRestriction,
+  ChannelCommandSetting,
+  MemberCommandSetting,
+  FakePermission,
+} from "@prisma/client";
 
 //@ts-ignore
 Discord.DefaultWebSocketManagerOptions.identifyProperties.browser =
@@ -37,12 +44,35 @@ export default class Client extends Discord.Client {
     process.env.NODE_ENV == "development" ? ",," : config.defaultPrefix;
   public prisma = prisma;
   public i18n = new I18n(prisma);
+  public guildPrefixes = new Discord.Collection<string, string | null>();
+  public userPrefixes = new Discord.Collection<string, string | null>();
+  public aliases = new Discord.Collection<string, CommandAlias[]>();
+  public restrictions = new Discord.Collection<string, CommandRestriction[]>();
+  public commandSettings = new Discord.Collection<string, boolean>();
+  public channelSettings = new Discord.Collection<
+    string,
+    ChannelCommandSetting[]
+  >();
+  public memberSettings = new Discord.Collection<
+    string,
+    MemberCommandSetting[]
+  >();
+  public fakePermissions = new Discord.Collection<string, FakePermission[]>();
   constructor(public readonly logger = new Logger()) {
     super({
+      allowedMentions: {
+        repliedUser: false,
+      },
       intents: [
         Discord.GatewayIntentBits.Guilds,
+        Discord.GatewayIntentBits.GuildModeration,
         Discord.GatewayIntentBits.GuildMembers,
+        Discord.GatewayIntentBits.GuildEmojisAndStickers,
+        Discord.GatewayIntentBits.GuildWebhooks,
+        Discord.GatewayIntentBits.GuildInvites,
+        Discord.GatewayIntentBits.GuildVoiceStates,
         Discord.GatewayIntentBits.GuildMessages,
+        Discord.GatewayIntentBits.GuildMessageReactions,
         Discord.GatewayIntentBits.MessageContent,
       ],
       presence: {

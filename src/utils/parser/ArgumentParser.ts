@@ -185,6 +185,7 @@ export class ArgumentParser {
             code: "MISSING_REQUIRED",
             argument: definition.name,
             message: `Missing required argument: ${definition.name}`,
+            usage: `--${definition.name} <value>`,
           });
         } else if (definition.default !== undefined) {
           resolved.set(definition.name, {

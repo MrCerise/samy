@@ -7,6 +7,14 @@ import { buildHelp } from "@/utils/parser/HelpGenerator";
 
 import { checkCooldown, setCooldown } from "@/utils/cooldown";
 import { checkPermissions } from "@/utils/permission";
+import {
+  getGuildPrefix,
+  getUserPrefix,
+  getAlias,
+  resolveAlias,
+  isCommandEnabled,
+  isCommandRestricted,
+} from "@/utils/settings";
 
 import { Container, Text } from "@/ui/components";
 import errorUI from "@/ui/error";
@@ -25,15 +33,61 @@ export default new Event({
     const guild = message.guild;
     const channel = message.channel;
 
-    const prefix = client.prefix;
+    client.logger.debug("Processing message", {
+      user: message.author.id,
+      guild: guild.id,
+      channel: channel.id,
+      content: message.content,
+    });
+
+    const [guildPrefix, userPrefix] = await Promise.all([
+      getGuildPrefix(guild.id, client),
+      getUserPrefix(message.author.id, client),
+    ]);
+
+    const defaultPrefix = client.prefix;
+
+    const prefixes = Array.from(
+      new Set(
+        [userPrefix, guildPrefix, defaultPrefix].filter(
+          (p): p is string => p !== null && p !== undefined && p.length > 0,
+        ),
+      ),
+    ).sort((a, b) => b.length - a.length);
+
+    const matchedPrefix = prefixes.find((p) => message.content.startsWith(p));
+
+    client.logger.debug("Resolved message prefixes", {
+      guild: guild.id,
+      user: message.author.id,
+      prefixes,
+      matchedPrefix,
+    });
+
+    if (!matchedPrefix) return;
+
+    const deleteMsg = async (m: Message) => {
+      await Bun.sleep(5000);
+
+      if (m.deletable) {
+        await m.delete();
+      }
+    };
 
     const notifyIfAfk = async () => {
       const afkKey = `${guild.id}:${message.author.id}`;
       const afk = client.afkUsers.get(afkKey);
 
+      client.logger.debug("Checking author AFK status", {
+        user: message.author.id,
+        guild: guild.id,
+        isAfk: Boolean(afk),
+      });
+
       if (!afk) return;
 
       client.afkUsers.delete(afkKey);
+
       try {
         await client.prisma.afk.deleteMany({
           where: {
@@ -47,8 +101,15 @@ export default new Event({
           user: message.author.id,
           guild: guild.id,
         });
+
         return;
       }
+
+      client.logger.debug("Removed AFK status", {
+        user: message.author.id,
+        guild: guild.id,
+      });
+
       await client.i18n.withResolvedLocale(
         {
           userId: message.author.id,
@@ -71,15 +132,9 @@ export default new Event({
                 ),
               ],
             })
-            .then(async (m) => {
-              deleteMsg(m);
-            });
+            .then(deleteMsg);
         },
       );
-    };
-    const deleteMsg = async (m: Message) => {
-      await Bun.sleep(5000);
-      if (m.deletable) m.delete();
     };
 
     const notifyMentionedAfk = async () => {
@@ -94,6 +149,12 @@ export default new Event({
       }
 
       mentionedIds.delete(message.author.id);
+
+      client.logger.debug("Checking mentioned users for AFK", {
+        user: message.author.id,
+        guild: guild.id,
+        mentionedUsers: [...mentionedIds],
+      });
 
       if (mentionedIds.size === 0) return;
 
@@ -118,6 +179,11 @@ export default new Event({
 
       if (lines.length === 0) return;
 
+      client.logger.debug("Found mentioned AFK users", {
+        guild: guild.id,
+        users: [...mentionedIds],
+      });
+
       await client.i18n.withResolvedLocale(
         {
           userId: message.author.id,
@@ -138,27 +204,73 @@ export default new Event({
     await notifyMentionedAfk();
     await notifyIfAfk();
 
-    if (!message.content.startsWith(prefix)) {
-      return;
-    }
-
-    const args = message.content.slice(prefix.length).trim().split(/\s+/);
+    let args = message.content.slice(matchedPrefix.length).trim().split(/\s+/);
 
     const commandName = args.shift()?.toLowerCase();
 
-    if (!commandName) {
-      await notifyIfAfk();
-      return;
-    }
+    if (!commandName) return;
 
-    const command =
+    client.logger.debug("Resolving message command", {
+      commandName,
+      args,
+      user: message.author.id,
+      guild: guild.id,
+    });
+
+    let command =
       client.messageCommands.get(commandName) ??
       client.messageCommands.find((cmd) => cmd.aliases.includes(commandName));
 
+    if (command) {
+      client.logger.debug("Command resolved directly", {
+        command: command.name,
+        input: commandName,
+      });
+    }
+
     if (!command) {
-      await notifyIfAfk();
+      const aliasTemplate = await getAlias(guild.id, commandName, client);
+
+      client.logger.debug("Checking custom command alias", {
+        commandName,
+        found: Boolean(aliasTemplate),
+      });
+
+      if (aliasTemplate) {
+        const resolved = resolveAlias(aliasTemplate, args);
+
+        client.logger.debug("Resolved custom alias", {
+          alias: commandName,
+          command: resolved.commandName,
+          args: resolved.args,
+        });
+
+        command =
+          client.messageCommands.get(resolved.commandName) ??
+          client.messageCommands.find((cmd) =>
+            cmd.aliases.includes(resolved.commandName),
+          );
+
+        args = resolved.args;
+      }
+    }
+
+    if (!command) {
+      client.logger.debug("Message command not found", {
+        commandName,
+        user: message.author.id,
+        guild: guild.id,
+      });
+
       return;
     }
+
+    client.logger.debug("Message command resolved", {
+      command: command.name,
+      args,
+      user: message.author.id,
+      guild: guild.id,
+    });
 
     await client.i18n.withResolvedLocale(
       {
@@ -169,16 +281,31 @@ export default new Event({
         let current: MessageCommand | MessageSubcommand = command;
         const path: string[] = [];
 
+        const requiredUserPermissions = [...(command.userPermissions ?? [])];
+
+        const requiredBotPermissions = [...(command.botPermissions ?? [])];
+
         const botMember = guild.members.me;
 
-        if (!botMember) return;
+        if (!botMember) {
+          client.logger.debug("Bot member not found", {
+            guild: guild.id,
+          });
+
+          return;
+        }
 
         if (
-          !checkPermissions(botMember, channel, [
+          !(await checkPermissions(botMember, channel, [
             "ReadMessageHistory",
             "SendMessages",
-          ])
+          ]))
         ) {
+          client.logger.debug("Bot cannot read/send messages", {
+            guild: guild.id,
+            channel: channel.id,
+          });
+
           return;
         }
 
@@ -198,10 +325,195 @@ export default new Event({
             path.push(next.name);
 
             current = next;
+
+            client.logger.debug("Resolved subcommand", {
+              command: command.name,
+              subcommand: next.name,
+              path,
+            });
+
+            if (current.userPermissions) {
+              requiredUserPermissions.push(...current.userPermissions);
+            }
+
+            if (current.botPermissions) {
+              requiredBotPermissions.push(...current.botPermissions);
+            }
+          }
+
+          const effectiveUserPermissions = [
+            ...new Set(requiredUserPermissions),
+          ];
+
+          const effectiveBotPermissions = [...new Set(requiredBotPermissions)];
+
+          const commandPath = [command.name, ...path].join(":").toLowerCase();
+
+          const member = message.member;
+
+          if (!member) {
+            client.logger.debug("Message member unavailable", {
+              user: message.author.id,
+              guild: guild.id,
+            });
+
+            return;
+          }
+
+          const isOwner = client.config.devs.includes(member.id);
+
+          client.logger.debug("Checking command access", {
+            command: commandPath,
+            user: member.id,
+            isOwner,
+          });
+
+          const topLevelCommandName = command.name.toLowerCase();
+
+          const commandEnabled = await isCommandEnabled(
+            guild.id,
+            topLevelCommandName,
+            channel.id,
+            member.id,
+            client,
+          );
+
+          client.logger.debug("Command enabled check", {
+            command: topLevelCommandName,
+            enabled: commandEnabled,
+            guild: guild.id,
+            channel: channel.id,
+            user: member.id,
+            isOwner,
+          });
+
+          if (!commandEnabled) {
+            client.logger.debug("Command blocked because it is disabled", {
+              command: topLevelCommandName,
+              guild: guild.id,
+              channel: channel.id,
+              user: member.id,
+              isOwner,
+            });
+
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(
+                  Text(
+                    client.i18n.t("errors.command_disabled", {
+                      command: topLevelCommandName,
+                    }),
+                  ),
+                ),
+              ],
+            });
+
+            return;
+          }
+
+          const effectiveGuildOnly =
+            command.options.guildOnly === true ||
+            current.options?.guildOnly === true;
+
+          if (effectiveGuildOnly && !message.guild) {
+            client.logger.debug("Command blocked: guild only", {
+              command: commandPath,
+            });
+
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(Text(client.i18n.t("errors.guild_only"))),
+              ],
+            });
+
+            return;
+          }
+
+          const effectiveOwnerOnly =
+            command.options.ownerOnly === true ||
+            current.options?.ownerOnly === true;
+
+          if (effectiveOwnerOnly && !isOwner) {
+            client.logger.debug("Command blocked: owner only", {
+              command: commandPath,
+              user: member.id,
+            });
+
+            await message.reply({
+              flags: MessageFlags.IsComponentsV2,
+              components: [
+                new Container().text(Text(client.i18n.t("errors.owner_only"))),
+              ],
+            });
+
+            return;
+          }
+
+          const restrictions = await isCommandRestricted(
+            guild.id,
+            commandPath,
+            client,
+          );
+
+          client.logger.debug("Command restrictions resolved", {
+            command: commandPath,
+            restrictions: restrictions.map((restriction) => ({
+              id: restriction.id,
+              command: restriction.command,
+              roleId: restriction.roleId,
+            })),
+          });
+
+          if (restrictions.length > 0) {
+            const userRoles = [...member.roles.cache.keys()];
+
+            const hasAllowedRole = restrictions.some((restriction) =>
+              member.roles.cache.has(restriction.roleId),
+            );
+
+            client.logger.debug("Command restriction check", {
+              command: commandPath,
+              user: member.id,
+              userRoles,
+              restrictedRoles: restrictions.map(
+                (restriction) => restriction.roleId,
+              ),
+              allowed: hasAllowedRole,
+              isOwner,
+            });
+
+            if (!hasAllowedRole) {
+              client.logger.debug("Command blocked by role restriction", {
+                command: commandPath,
+                user: member.id,
+                isOwner,
+              });
+
+              await message.reply({
+                flags: MessageFlags.IsComponentsV2,
+                components: [
+                  new Container().text(
+                    Text(client.i18n.t("errors.command_restricted")),
+                  ),
+                ],
+              });
+
+              return;
+            }
           }
 
           if (!current.hasExecute) {
+            client.logger.debug(
+              "Command has no execute handler, showing help",
+              {
+                command: commandPath,
+              },
+            );
+
             const category = command.options.category ?? "Uncategorized";
+
             const userId = message.author.id;
 
             const view =
@@ -216,6 +528,10 @@ export default new Event({
                   );
 
             if (!view) {
+              client.logger.debug("Failed to build command help view", {
+                command: commandPath,
+              });
+
               return;
             }
 
@@ -227,11 +543,20 @@ export default new Event({
             return;
           }
 
-          const member = message.member;
+          client.logger.debug("Checking user permissions", {
+            command: commandPath,
+            user: member.id,
+            permissions: effectiveUserPermissions,
+          });
 
-          if (!member) return;
+          if (
+            !(await checkPermissions(member, channel, effectiveUserPermissions))
+          ) {
+            client.logger.debug("User missing required permissions", {
+              command: commandPath,
+              user: member.id,
+            });
 
-          if (!checkPermissions(member, channel, current.userPermissions)) {
             await message.reply({
               flags: MessageFlags.IsComponentsV2,
               components: [
@@ -244,7 +569,23 @@ export default new Event({
             return;
           }
 
-          if (!checkPermissions(botMember, channel, current.botPermissions)) {
+          client.logger.debug("Checking bot permissions", {
+            command: commandPath,
+            permissions: effectiveBotPermissions,
+          });
+
+          if (
+            !(await checkPermissions(
+              botMember,
+              channel,
+              effectiveBotPermissions,
+            ))
+          ) {
+            client.logger.debug("Bot missing required permissions", {
+              command: commandPath,
+              permissions: effectiveBotPermissions,
+            });
+
             await message.reply({
               flags: MessageFlags.IsComponentsV2,
               components: [
@@ -259,11 +600,29 @@ export default new Event({
 
           const usageName = [command.name, ...path].join(" ");
 
+          client.logger.debug("Parsing command arguments", {
+            command: commandPath,
+            input: args.join(" "),
+          });
+
           const parsed = await current.parse(client, message, args.join(" "));
 
           if (!parsed.success) {
+            client.logger.debug("Command argument parsing failed", {
+              command: commandPath,
+              errors: parsed.errors.map((error) => error.message),
+            });
+
             const errorList = parsed.errors
-              .map((error) => `• ${error.message}`)
+              .map((error) => {
+                let msg = `• ${error.message}`;
+
+                if (error.usage) {
+                  msg += `\n  Usage: \`${error.usage}\``;
+                }
+
+                return msg;
+              })
               .join("\n");
 
             await message.reply({
@@ -272,7 +631,7 @@ export default new Event({
                 errorUI(
                   `${errorList}\n\n${buildHelp(
                     {
-                      prefix,
+                      prefix: matchedPrefix,
                       name: usageName,
                     },
                     current.arguments,
@@ -296,7 +655,20 @@ export default new Event({
             },
           );
 
+          client.logger.debug("Cooldown check", {
+            command: commandPath,
+            user: message.author.id,
+            remaining,
+            cooldown,
+          });
+
           if (remaining) {
+            client.logger.debug("Command blocked by cooldown", {
+              command: commandPath,
+              user: message.author.id,
+              remaining,
+            });
+
             const retryAt = Math.floor(Date.now() / 1000) + remaining;
 
             await message.reply({
@@ -319,8 +691,6 @@ export default new Event({
             path,
           });
 
-          const commandPath = [command.name, ...path].join(":");
-
           client.logger.info("Executing message command", {
             command: commandPath,
             user: message.author.id,
@@ -329,6 +699,7 @@ export default new Event({
           });
 
           await channel.sendTyping();
+
           await current.execute(client, message, parsed.args);
 
           client.logger.info("Message command completed", {

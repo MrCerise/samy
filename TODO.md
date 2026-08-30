@@ -25,15 +25,13 @@ A roadmap for Samy's development.
 
 - [x] Internationalization (i18n) framework
 
-- [ ] Command aliases / shortcuts system (`alias add/remove/list`)
-- [ ] Restrict command to specific role (`restrictcommand`)
-- [ ] Per-channel/member command & module enable/disable (`enablecommand`, `disablecommand`, `enablemodule`, `disablemodule`, `enableevent`, `disableevent`)
-- [ ] Guild/member ignore list for command processing (`ignore add/remove/list`)
-- [ ] Custom prefix (server + personal)
-- [ ] Fake permissions for roles (`fakepermissions`)
-- [ ] Copy disabled commands/events/modules/filters from one channel to another (`copydisabled`)
-- [ ] View command permissions for a member or channel (`permissions`)
-- [ ] Time difference calculator between two Discord snowflake IDs (`timediff`)
+- [x] Command aliases / shortcuts system (`alias add/remove/list`)
+- [ ] Restrict command to specific role (`restrictcommand`) TO FIX
+- [x] Per-channel/member command & module enable/disable (`enablecommand`, `disablecommand`)
+- [x] Custom prefix (server + personal)
+- [x] Fake permissions for roles (`fakepermissions`)
+- [x] View command permissions for a member or channel (`permissions`)
+- [x] Time difference calculator between two Discord snowflake IDs (`timediff`)
 
 ## Database
 

@@ -5,5 +5,8 @@
   "guild_only": "This command can only be used in a server.",
   "cooldown": "You may use this command {time}.",
   "command_failed": "Something went wrong while executing this command.",
-  "not_your_menu": "This menu isn't for you."
+  "not_your_menu": "This menu isn't for you.",
+  "owner_only": "Only the bot owner can use this command.",
+  "command_disabled": "The **{command}** command is disabled in this server.",
+  "command_restricted": "You don't have permission to use this command."
 }

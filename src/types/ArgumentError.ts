@@ -9,4 +9,5 @@ export interface ArgumentParseError {
     | "UNEXPECTED_ARGUMENT";
   argument?: string;
   message: string;
+  usage?: string;
 }
