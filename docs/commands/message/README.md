@@ -1,10 +1,11 @@
 # Message Commands
 
-40 commands across 4 categories.
+57 commands across 5 categories.
 
 | Category | Commands |
 | :-- | :--: |
-| [Utility](./utility) | 18 |
 | [Moderation](./moderation) | 19 |
+| [Fun](./fun) | 2 |
 | [Server](./server) | 2 |
-| [Fun](./fun) | 1 |
+| [Utility](./utility) | 28 |
+| [Settings](./settings) | 6 |

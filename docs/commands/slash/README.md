@@ -1,8 +1,8 @@
 # Slash Commands
 
-18 commands across 2 categories.
+28 commands across 2 categories.
 
 | Category | Commands |
 | :-- | :--: |
-| [Fun](./fun) | 1 |
-| [Utility](./utility) | 17 |
+| [Fun](./fun) | 2 |
+| [Utility](./utility) | 26 |
