@@ -5,7 +5,7 @@ async function main() {
 
   if (count === 0) {
     console.log("No AFK instances to clear.");
-    return;
+    return; // Very useful line again :3
   }
 
   await prisma.afk.deleteMany({});
