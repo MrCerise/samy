@@ -1,6 +1,5 @@
-import { MessageFlags } from "discord.js";
+import { MessageFlags, ChannelType } from "discord.js";
 import { LogCategory } from "@prisma/client";
-
 import { MessageCommand, MessageSubcommand } from "@/classes/Command";
 import { buildLogEntry } from "@/ui/logs";
 import { sendLog } from "@/utils/logs/dispatch";
@@ -640,6 +639,102 @@ export default new MessageCommand({
           client.i18n.t("commands.emit.emitted", {
             event: categories.length === 1 ? categories[0]! : "all",
             count: categories.length,
+          }),
+        );
+      },
+    }),
+    new MessageSubcommand({
+      name: "setup",
+      description:
+        "Create a logging category with a channel for every log event, and configure them automatically.",
+      category: "Moderation",
+      guildOnly: true,
+      userPermissions: ["ManageGuild"],
+      arguments: [
+        {
+          name: "name",
+          aliases: ["n"],
+          type: "string" as const,
+          description: "Name for the new logging category. Defaults to 'Logs'.",
+          required: false,
+        },
+      ],
+
+      async execute(client, message, args) {
+        if (!message.guild) {
+          await reply(message, client.i18n.t("commands.lockdown.guild_only"));
+          return;
+        }
+
+        const guild = message.guild;
+        const categoryName = args.getString("name") || "Logs";
+
+        const me = guild.members.me;
+        if (
+          !me?.permissions.has("ManageChannels") ||
+          !me?.permissions.has("ManageRoles")
+        ) {
+          await reply(
+            message,
+            client.i18n.t("commands.logs.setup.missing_permissions"),
+          );
+          return;
+        }
+
+        await reply(message, client.i18n.t("commands.logs.setup.creating"));
+
+        let logCategory;
+        try {
+          logCategory = await guild.channels.create({
+            name: categoryName,
+            type: ChannelType.GuildCategory,
+            permissionOverwrites: [
+              {
+                id: guild.roles.everyone.id,
+                deny: ["ViewChannel"],
+              },
+            ],
+          });
+        } catch {
+          await reply(
+            message,
+            client.i18n.t("commands.logs.setup.category_failed"),
+          );
+          return;
+        }
+
+        const created: { category: LogCategoryKey; channelId: string }[] = [];
+
+        for (const category of LOG_CATEGORIES) {
+          try {
+            const channel = await guild.channels.create({
+              name: `${category}-logs`,
+              type: ChannelType.GuildText,
+              parent: logCategory.id,
+            });
+
+            await setLogChannel(client, guild.id, category, channel.id);
+            created.push({ category, channelId: channel.id });
+          } catch {
+            continue;
+          }
+        }
+
+        if (created.length === 0) {
+          await reply(message, client.i18n.t("commands.logs.setup.all_failed"));
+          return;
+        }
+
+        const lines = created.map(
+          (entry) => `- **${entry.category}** → <#${entry.channelId}>`,
+        );
+
+        await reply(
+          message,
+          client.i18n.t("commands.logs.setup.success", {
+            category: logCategory.name,
+            count: String(created.length),
+            channels: lines.join("\n"),
           }),
         );
       },

@@ -483,6 +483,13 @@
       "type_title": "Per-Log-Type Ignores ({count})\n{targets}",
       "type_add_success": "{target} is now ignored for **{category}** logs.",
       "type_remove_success": "{target} is no longer ignored for **{category}** logs."
+    },
+    "setup": {
+      "missing_permissions": "I need the **Manage Channels** and **Manage Roles** permissions to set up logging.",
+      "creating": "Setting up your logging category and channels, this may take a moment...",
+      "category_failed": "I couldn't create the logging category. Make sure I have permission to manage channels.",
+      "all_failed": "I couldn't create any logging channels. Make sure I have permission to manage channels.",
+      "success": "Created **{category}** with **{count}** logging channels:\n{channels}"
     }
   },
   "slowmode": {
