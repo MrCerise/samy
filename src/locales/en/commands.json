@@ -510,57 +510,6 @@
     "unauthorized": "You are not authorized to use this command.",
     "emitted": "Emitted test log entry for **{event}**."
   },
-  "choose": {
-    "result": "I chose **{choice}**!",
-    "provide_options": "Please provide at least two options to choose from.",
-    "fetch_error": "An error occurred while choosing."
-  },
-  "timediff": {
-    "result": "**Snowflake 1:** <t:{ts1}:f>\n**Snowflake 2:** <t:{ts2}:f>\n**Difference:** {diff}",
-    "provide": "Please provide two Discord snowflake IDs.",
-    "invalid": "`{id}` doesn't look like a valid snowflake ID.",
-    "fetch_error": "An error occurred while calculating the time difference."
-  },
-  "charinfo": {
-    "result": "**Character:** {char}\n**Codepoint:** U+{hex}\n**Decimal:** {decimal}\n**UTF-8:** {utf8}",
-    "provide": "Please provide a character to inspect.",
-    "fetch_error": "An error occurred while fetching character info."
-  },
-  "jumbo": {
-    "result": "Here's your enlarged emoji!",
-    "provide_emoji": "Please provide an emoji to enlarge.",
-    "not_found": "I couldn't find that emoji.",
-    "fetch_error": "An error occurred while enlarging the emoji."
-  },
-  "randomhex": {
-    "result": "**Random Color**\n**Hex:** {hex}\n**RGB:** {r}, {g}, {b}",
-    "fetch_error": "An error occurred while generating a random color."
-  },
-  "guildicon": {
-    "title": "{name}'s Icon",
-    "none": "This server doesn't have an icon set.",
-    "fetch_error": "An error occurred while fetching the server icon."
-  },
-  "guildbanner": {
-    "title": "{name}'s Banner",
-    "none": "This server doesn't have a banner set.",
-    "fetch_error": "An error occurred while fetching the server banner."
-  },
-  "splash": {
-    "title": "{name}'s Splash Background",
-    "none": "This server doesn't have a splash background set.",
-    "fetch_error": "An error occurred while fetching the splash background."
-  },
-  "serveravatar": {
-    "title": "{user}'s Server Avatar",
-    "none": "{user} doesn't have a server-specific avatar in this server.",
-    "fetch_error": "An error occurred while fetching the server avatar."
-  },
-  "serverbanner": {
-    "title": "{user}'s Server Banner",
-    "none": "{user} doesn't have a server-specific banner in this server.",
-    "fetch_error": "An error occurred while fetching the server banner."
-  },
   "alias": {
     "added": "Alias `{alias}` added for command `{command}`.",
     "removed": "Alias `{alias}` removed.",
@@ -620,8 +569,54 @@
     "channel_not_found": "Channel not found."
   },
   "timediff": {
-    "invalid": "Invalid snowflake ID(s). Please provide valid Discord IDs.",
-    "provide_ids": "Please provide two snowflake IDs.",
-    "result": "**Time Difference**\n\n**Earlier**\n`{id1}`\n\n**Later**\n{target}\n\n**Difference**\n**{duration}**\n\n**Timestamps**\nEarlier: <t:{earlier}:F>\nLater: <t:{later}:F>"
+    "result": "**Snowflake 1:** <t:{ts1}:f>\n**Snowflake 2:** <t:{ts2}:f>\n**Difference:** {diff}",
+    "provide": "Please provide two Discord snowflake IDs.",
+    "invalid": "`{id}` doesn't look like a valid snowflake ID.",
+    "fetch_error": "An error occurred while calculating the time difference."
+  },
+  "choose": {
+    "result": "I chose **{choice}**!",
+    "provide_options": "Please provide at least two options to choose from.",
+    "fetch_error": "An error occurred while choosing."
+  },
+  "charinfo": {
+    "result": "**Character:** {char}\n**Codepoint:** U+{hex}\n**Decimal:** {decimal}\n**UTF-8:** {utf8}",
+    "provide": "Please provide a character to inspect.",
+    "fetch_error": "An error occurred while fetching character info."
+  },
+  "jumbo": {
+    "result": "Here's your enlarged emoji!",
+    "provide_emoji": "Please provide an emoji to enlarge.",
+    "not_found": "I couldn't find that emoji.",
+    "fetch_error": "An error occurred while enlarging the emoji."
+  },
+  "randomhex": {
+    "result": "**Random Color**\n**Hex:** {hex}\n**RGB:** {r}, {g}, {b}",
+    "fetch_error": "An error occurred while generating a random color."
+  },
+  "guildicon": {
+    "title": "{name}'s Icon",
+    "none": "This server doesn't have an icon set.",
+    "fetch_error": "An error occurred while fetching the server icon."
+  },
+  "guildbanner": {
+    "title": "{name}'s Banner",
+    "none": "This server doesn't have a banner set.",
+    "fetch_error": "An error occurred while fetching the server banner."
+  },
+  "splash": {
+    "title": "{name}'s Splash Background",
+    "none": "This server doesn't have a splash background set.",
+    "fetch_error": "An error occurred while fetching the splash background."
+  },
+  "serveravatar": {
+    "title": "{user}'s Server Avatar",
+    "none": "{user} doesn't have a server-specific avatar in this server.",
+    "fetch_error": "An error occurred while fetching the server avatar."
+  },
+  "serverbanner": {
+    "title": "{user}'s Server Banner",
+    "none": "{user} doesn't have a server-specific banner in this server.",
+    "fetch_error": "An error occurred while fetching the server banner."
   }
 }

@@ -54,7 +54,7 @@ A roadmap for Samy's development.
 - [x] Avatar
 - [x] Banner
 
-- [ ] Server-specific avatar/banner (`serveravatar`, `serverbanner`)
+- [x] Server-specific avatar/banner (`serveravatar`, `serverbanner`)
 - [ ] Username/nickname history (`names`/`namehistory`)
 - [ ] Last seen tracker (`seen`)
 
@@ -68,7 +68,7 @@ A roadmap for Samy's development.
 - [x] Member count
 - [x] Bot list
 
-- [ ] Server icon / banner / splash viewer (`guildicon`, `guildbanner`, `splash`)
+- [x] Server icon / banner / splash viewer (`guildicon`, `guildbanner`, `splash`)
 - [ ] Guild name change history (`gnames`)
 - [ ] List all roles / all emotes in server
 - [ ] List members in a role (`members`/`inrole`)
@@ -95,17 +95,17 @@ A roadmap for Samy's development.
 - [ ] Quick poll / timed poll (`poll`, `quickpoll`)
 - [ ] Message quoting (`quote`)
 - [ ] Screenshot a website (`screenshot`)
-- [ ] Character/symbol info (`charinfo`)
-- [ ] Random hex / dominant color from image (`randomhex`, `hex`/`dominant`)
+- [x] Character/symbol info (`charinfo`)
+- [x] Random hex / dominant color from image (`randomhex`, `hex`/`dominant`)
 - [ ] Copy an embed from a message link into builder syntax (`embed copy`)
 - [ ] Pagination system for multi-page embeds (`pagination`)
 - [ ] Sticky messages per channel (`stickymessage`)
 - [ ] Timed nuke / scheduled channel recreation (`nuke add/remove/list/view`)
 - [ ] Firstmessage / pin / unpin / pin archival system
 - [ ] Repeating scheduled messages / auto-message timers per channel (`timer add/remove/list/view`)
-- [ ] Emoji management suite: add/remove/rename emote, bulk add/remove, remove duplicates, usage stats, jumbo/enlarge (`jumbo`/`enlarge`)
+- [x] Emoji management suite: add/remove/rename emote, bulk add/remove, remove duplicates, usage stats, jumbo/enlarge (`jumbo`/`enlarge`)
 - [ ] Sticker management suite: add/remove/rename sticker, cleanup names, tag with server vanity
-- [ ] Random choice helper (`choose`)
+- [x] Random choice helper (`choose`)
 - [ ] Brainly answer lookup (`brainly`)
 - [ ] Convert video to audio file (`makemp3`)
 - [ ] Stored embed library: list, create, edit, delete, preview named embeds
