@@ -58,7 +58,7 @@ export async function LoadEvents(client: Client) {
   for (const file of files) {
     const event = (await import(file)).default as Event<keyof ClientEvents>;
 
-    client.logger.info(`Loaded event: ${event.name}`);
+    client.logger.info(`${`[EVENT]:`.padEnd(10)} ${event.name}`);
 
     if (event.once) {
       client.once(event.name, (...args) => event.execute(client, ...args));
