@@ -2,11 +2,15 @@ import { Message, MessageFlags, time, TimestampStyles } from "discord.js";
 
 import Event from "@/classes/Event";
 import { MessageCommand, MessageSubcommand } from "@/classes/Command";
+
 import { buildCommandView, buildSubcommandView } from "@/ui/help";
+
 import { buildHelp } from "@/utils/parser/HelpGenerator";
 
 import { checkCooldown, setCooldown } from "@/utils/cooldown";
-import { checkPermissions } from "@/utils/permission";
+
+import { checkPermissions, getMissingPermissions } from "@/utils/permission";
+
 import {
   getGuildPrefix,
   getUserPrefix,
@@ -17,6 +21,7 @@ import {
 } from "@/utils/settings";
 
 import { Container, Text } from "@/ui/components";
+
 import errorUI from "@/ui/error";
 
 export default new Event({
@@ -279,6 +284,7 @@ export default new Event({
       },
       async () => {
         let current: MessageCommand | MessageSubcommand = command;
+
         const path: string[] = [];
 
         const requiredUserPermissions = [...(command.userPermissions ?? [])];
@@ -295,6 +301,10 @@ export default new Event({
           return;
         }
 
+        /*
+         * These permissions are required just so the bot
+         * can process and respond to the command.
+         */
         if (
           !(await checkPermissions(botMember, channel, [
             "ReadMessageHistory",
@@ -312,6 +322,9 @@ export default new Event({
         const start = performance.now();
 
         try {
+          /*
+           * Resolve subcommands.
+           */
           while (args.length > 0) {
             const name = args[0];
 
@@ -322,6 +335,7 @@ export default new Event({
             if (!next) break;
 
             args.shift();
+
             path.push(next.name);
 
             current = next;
@@ -368,6 +382,11 @@ export default new Event({
             isOwner,
           });
 
+          /*
+           * Command enabled check.
+           *
+           * Owners do NOT bypass this.
+           */
           const topLevelCommandName = command.name.toLowerCase();
 
           const commandEnabled = await isCommandEnabled(
@@ -412,6 +431,9 @@ export default new Event({
             return;
           }
 
+          /*
+           * Guild-only check.
+           */
           const effectiveGuildOnly =
             command.options.guildOnly === true ||
             current.options?.guildOnly === true;
@@ -431,6 +453,13 @@ export default new Event({
             return;
           }
 
+          /*
+           * Owner-only check.
+           *
+           * Only ownerOnly commands bypass normal
+           * owner restrictions. Being an owner does NOT
+           * bypass disabled/restricted/permission checks.
+           */
           const effectiveOwnerOnly =
             command.options.ownerOnly === true ||
             current.options?.ownerOnly === true;
@@ -451,6 +480,11 @@ export default new Event({
             return;
           }
 
+          /*
+           * Server command restrictions.
+           *
+           * Owners do NOT bypass restrictions.
+           */
           const restrictions = await isCommandRestricted(
             guild.id,
             commandPath,
@@ -495,7 +529,11 @@ export default new Event({
                 flags: MessageFlags.IsComponentsV2,
                 components: [
                   new Container().text(
-                    Text(client.i18n.t("errors.command_restricted")),
+                    Text(
+                      client.i18n.t("errors.command_restricted", {
+                        command: commandPath,
+                      }),
+                    ),
                   ),
                 ],
               });
@@ -504,6 +542,10 @@ export default new Event({
             }
           }
 
+          /*
+           * If the command has no execute handler,
+           * show its help instead.
+           */
           if (!current.hasExecute) {
             client.logger.debug(
               "Command has no execute handler, showing help",
@@ -543,25 +585,46 @@ export default new Event({
             return;
           }
 
+          /*
+           * User permission check.
+           *
+           * getMissingPermissions also checks fake
+           * permissions, so only permissions that are
+           * actually missing are displayed.
+           */
           client.logger.debug("Checking user permissions", {
             command: commandPath,
             user: member.id,
             permissions: effectiveUserPermissions,
           });
 
-          if (
-            !(await checkPermissions(member, channel, effectiveUserPermissions))
-          ) {
+          const missingUserPermissions = await getMissingPermissions(
+            member,
+            channel,
+            effectiveUserPermissions,
+          );
+
+          if (missingUserPermissions.length > 0) {
             client.logger.debug("User missing required permissions", {
               command: commandPath,
               user: member.id,
+              permissions: effectiveUserPermissions,
+              missing: missingUserPermissions,
             });
+
+            const permissionList = missingUserPermissions
+              .map((permission) => `• \`${String(permission)}\``)
+              .join("\n");
 
             await message.reply({
               flags: MessageFlags.IsComponentsV2,
               components: [
                 new Container().text(
-                  Text(client.i18n.t("errors.missing_permissions")),
+                  Text(
+                    client.i18n.t("errors.missing_permissions", {
+                      permissions: permissionList,
+                    }),
+                  ),
                 ),
               ],
             });
@@ -569,28 +632,40 @@ export default new Event({
             return;
           }
 
+          /*
+           * Bot permission check.
+           */
           client.logger.debug("Checking bot permissions", {
             command: commandPath,
             permissions: effectiveBotPermissions,
           });
 
-          if (
-            !(await checkPermissions(
-              botMember,
-              channel,
-              effectiveBotPermissions,
-            ))
-          ) {
+          const missingBotPermissions = await getMissingPermissions(
+            botMember,
+            channel,
+            effectiveBotPermissions,
+          );
+
+          if (missingBotPermissions.length > 0) {
             client.logger.debug("Bot missing required permissions", {
               command: commandPath,
               permissions: effectiveBotPermissions,
+              missing: missingBotPermissions,
             });
+
+            const permissionList = missingBotPermissions
+              .map((permission) => `• \`${String(permission)}\``)
+              .join("\n");
 
             await message.reply({
               flags: MessageFlags.IsComponentsV2,
               components: [
                 new Container().text(
-                  Text(client.i18n.t("errors.bot_missing_permissions")),
+                  Text(
+                    client.i18n.t("errors.bot_missing_permissions", {
+                      permissions: permissionList,
+                    }),
+                  ),
                 ),
               ],
             });
@@ -643,6 +718,9 @@ export default new Event({
             return;
           }
 
+          /*
+           * Cooldown check.
+           */
           const cooldown = current.cooldown ?? client.config.defaults.cooldown;
 
           const remaining = checkCooldown(

@@ -3,30 +3,33 @@ import {
   type PermissionResolvable,
   type GuildTextBasedChannel,
 } from "discord.js";
+
 import { hasFakePermission } from "@/utils/settings";
 
-export async function checkPermissions(
+export async function getMissingPermissions(
   member: GuildMember,
   channel: GuildTextBasedChannel,
   permissions?: PermissionResolvable[],
-) {
-  if (!permissions || permissions.length === 0) return true;
+): Promise<PermissionResolvable[]> {
+  if (!permissions || permissions.length === 0) {
+    return [];
+  }
 
   const channelPermissions = channel.permissionsFor(member);
 
-  if (!channelPermissions) return false;
-
-  const hasReal = permissions.every((permission) =>
-    channelPermissions.has(permission),
-  );
-
-  if (hasReal) return true;
+  if (!channelPermissions) {
+    return permissions;
+  }
 
   const missing = permissions.filter(
     (permission) => !channelPermissions.has(permission),
   );
 
-  const memberRoles = member.roles.cache.map((r) => r.id);
+  if (missing.length === 0) {
+    return [];
+  }
+
+  const memberRoles = member.roles.cache.map((role) => role.id);
 
   const fakeChecks = await Promise.all(
     missing.map((permission) =>
@@ -39,5 +42,15 @@ export async function checkPermissions(
     ),
   );
 
-  return fakeChecks.every((result) => result);
+  return missing.filter((_, index) => !fakeChecks[index]);
+}
+
+export async function checkPermissions(
+  member: GuildMember,
+  channel: GuildTextBasedChannel,
+  permissions?: PermissionResolvable[],
+) {
+  const missing = await getMissingPermissions(member, channel, permissions);
+
+  return missing.length === 0;
 }
