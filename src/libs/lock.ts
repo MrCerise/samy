@@ -1,19 +1,19 @@
-import prisma from "@/libs/prisma";
+import { Client } from "pg";
 
-const LOCK_KEY = 7825551234n;
-
-type LockResult = { pg_try_advisory_lock: boolean };
+let client: Client | null = null;
+const LOCK_KEY = 1234567890;
 
 export async function acquireLock(logger: { info: (msg: string) => void }) {
+  client = new Client({ connectionString: process.env.DATABASE_URL });
+  await client.connect();
+
   while (true) {
-    const result = await prisma.$queryRaw<
-      LockResult[]
-    >`SELECT pg_try_advisory_lock(${LOCK_KEY})`;
+    const result = await client.query<{ pg_try_advisory_lock: boolean }>(
+      "SELECT pg_try_advisory_lock($1)",
+      [LOCK_KEY],
+    );
 
-    const row = result[0];
-    if (!row) throw new Error("pg_try_advisory_lock returned no rows");
-
-    if (row.pg_try_advisory_lock) return;
+    if (result.rows[0]?.pg_try_advisory_lock) return;
 
     logger.info("Another instance holds the shard lock, waiting...");
     await new Promise((r) => setTimeout(r, 2000));
@@ -21,5 +21,8 @@ export async function acquireLock(logger: { info: (msg: string) => void }) {
 }
 
 export async function releaseLock() {
-  await prisma.$executeRaw`SELECT pg_advisory_unlock(${LOCK_KEY})`;
+  if (!client) return;
+  await client.query("SELECT pg_advisory_unlock($1)", [LOCK_KEY]);
+  await client.end();
+  client = null;
 }

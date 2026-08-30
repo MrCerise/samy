@@ -21,6 +21,7 @@ function categorize(client: Client) {
   for (const command of client.messageCommands.values()) {
     const category = command.options.category ?? "Uncategorized";
     const list = categories.get(category) ?? [];
+
     list.push(command);
     categories.set(category, list);
   }
@@ -42,16 +43,22 @@ function metaLines(
 ) {
   return [
     entity.cooldown
-      ? client.i18n.t("commands.help.cooldown", { cooldown: entity.cooldown })
+      ? client.i18n.t("commands.help.cooldown", {
+          cooldown: entity.cooldown,
+        })
       : null,
+
     entity.guildOnly ? client.i18n.t("commands.help.guild_only") : null,
+
     entity.ownerOnly ? client.i18n.t("commands.help.owner_only") : null,
   ].filter((line): line is string => line !== null);
 }
 
 function paginate<T>(items: T[], page: number, pageSize = PAGE_SIZE) {
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+
   const current = Math.min(Math.max(page, 0), totalPages - 1);
+
   const start = current * pageSize;
 
   return {
@@ -72,7 +79,9 @@ function pageIndicator(
       current: page + 1,
       total: totalPages,
     }),
+
     customId: `help::noop::${userId}`,
+
     style: ButtonStyle.Secondary,
     disabled: true,
   });
@@ -81,8 +90,13 @@ function pageIndicator(
 export function resolveSubcommand(
   command: MessageCommand,
   subPath: string[],
-): { sub: MessageSubcommand; canonicalPath: string[] } | null {
-  if (subPath.length === 0) return null;
+): {
+  sub: MessageSubcommand;
+  canonicalPath: string[];
+} | null {
+  if (subPath.length === 0) {
+    return null;
+  }
 
   let current: MessageCommand | MessageSubcommand = command;
   const canonicalPath: string[] = [];
@@ -90,17 +104,23 @@ export function resolveSubcommand(
   for (const name of subPath) {
     const next = current.find(name);
 
-    if (!next) return null;
+    if (!next) {
+      return null;
+    }
 
     canonicalPath.push(next.name);
     current = next;
   }
 
-  return { sub: current as MessageSubcommand, canonicalPath };
+  return {
+    sub: current as MessageSubcommand,
+    canonicalPath,
+  };
 }
 
 export function buildOverview(client: Client, userId: string, page = 0) {
   const t = client.i18n.t.bind(client.i18n);
+
   const categories = [...categorize(client).entries()].sort(([a], [b]) =>
     a.localeCompare(b),
   );
@@ -132,11 +152,15 @@ export function buildOverview(client: Client, userId: string, page = 0) {
 
   const select = SelectMenu({
     customId: `help::categories::${current}::${userId}`,
+
     placeholder: t("commands.help.select_category_placeholder"),
+
     options: pageItems.map(([category, commands]) => ({
       label: category,
       value: category,
-      description: `${commands.length} ${commands.length === 1 ? "command" : "commands"}`,
+      description: `${commands.length} ${
+        commands.length === 1 ? "command" : "commands"
+      }`,
     })),
   });
 
@@ -148,7 +172,9 @@ export function buildOverview(client: Client, userId: string, page = 0) {
         "◀",
         `help::home::${current - 1}::${userId}`,
       ).setDisabled(current === 0),
+
       pageIndicator(client, userId, current, totalPages),
+
       Buttons.secondary(
         "▶",
         `help::home::${current + 1}::${userId}`,
@@ -166,13 +192,23 @@ export function buildCategoryView(
   page = 0,
 ) {
   const t = client.i18n.t.bind(client.i18n);
+
   const commands = categorize(client).get(category);
-  if (!commands) return null;
+
+  if (!commands) {
+    return null;
+  }
 
   const { pageItems, page: current, totalPages } = paginate(commands, page);
 
   const container = new Container()
-    .text(Text(`${t("commands.help.category_title", { category })}`))
+    .text(
+      Text(
+        `${t("commands.help.category_title", {
+          category,
+        })}`,
+      ),
+    )
     .text(
       Text(
         t("commands.help.category_description", {
@@ -198,7 +234,9 @@ export function buildCategoryView(
 
   const select = SelectMenu({
     customId: `help::commands::${category}::${current}::${userId}`,
+
     placeholder: t("commands.help.select_command_placeholder"),
+
     options: pageItems.map((cmd) => ({
       label: cmd.name,
       value: cmd.name,
@@ -214,7 +252,9 @@ export function buildCategoryView(
         "◀",
         `help::category::${category}::${current - 1}::${userId}`,
       ).setDisabled(current === 0),
+
       pageIndicator(client, userId, current, totalPages),
+
       Buttons.secondary(
         "▶",
         `help::category::${category}::${current + 1}::${userId}`,
@@ -243,21 +283,38 @@ export function buildCommandView(
   subPage = 0,
 ) {
   const t = client.i18n.t.bind(client.i18n);
+
   const command = client.messageCommands.get(commandName);
-  if (!command) return null;
+
+  if (!command) {
+    return null;
+  }
 
   const prefix = client.prefix;
 
   const lines = [
-    `**${t("commands.help.command_title", { prefix, name: command.name })}**`,
+    `**${t("commands.help.command_title", {
+      prefix,
+      name: command.name,
+    })}**`,
+
     command.description || t("commands.help.no_description"),
+
     "",
   ];
 
   if (command.hasExecute) {
     lines.push(
       "```",
-      buildHelp({ prefix, name: command.name }, command.arguments),
+
+      buildHelp(
+        {
+          prefix,
+          name: command.name,
+        },
+        command.arguments,
+      ),
+
       "```",
     );
   } else if (command.subcommands.length > 0) {
@@ -273,7 +330,10 @@ export function buildCommandView(
   }
 
   const meta = metaLines(client, command);
-  if (meta.length > 0) lines.push(meta.join(" • "));
+
+  if (meta.length > 0) {
+    lines.push(meta.join(" • "));
+  }
 
   const container = new Container().text(Text(lines.join("\n")));
 
@@ -285,8 +345,10 @@ export function buildCommandView(
     } = paginate(command.subcommands, subPage);
 
     const select = SelectMenu({
-      customId: `help::subcommands::${category}::${command.name}::${categoryPage}::${current}::${userId}`,
+      customId: `help::subcommands::${category}::${command.name}::-::${categoryPage}::${current}::${userId}`,
+
       placeholder: t("commands.help.select_subcommand_placeholder"),
+
       options: pageItems.map((sub) => ({
         label: sub.name,
         value: sub.name,
@@ -303,7 +365,9 @@ export function buildCommandView(
             "◀",
             `help::command::${category}::${command.name}::${categoryPage}::${current - 1}::${userId}`,
           ).setDisabled(current === 0),
+
           pageIndicator(client, userId, current, totalPages),
+
           Buttons.secondary(
             "▶",
             `help::command::${category}::${command.name}::${categoryPage}::${current + 1}::${userId}`,
@@ -319,6 +383,7 @@ export function buildCommandView(
         t("commands.help.back_button"),
         `help::category::${category}::${categoryPage}::${userId}`,
       ),
+
       Buttons.secondary(
         t("commands.help.home_button"),
         `help::home::0::${userId}`,
@@ -339,29 +404,52 @@ export function buildSubcommandView(
   subPage = 0,
 ) {
   const t = client.i18n.t.bind(client.i18n);
+
   const command = client.messageCommands.get(commandName);
-  if (!command) return null;
+
+  if (!command) {
+    return null;
+  }
 
   const resolved = resolveSubcommand(command, subPath);
-  if (!resolved) return null;
+
+  if (!resolved) {
+    return null;
+  }
 
   const { sub, canonicalPath } = resolved;
 
   const prefix = client.prefix;
+
   const usageName = [command.name, ...canonicalPath].join(" ");
+
   const pathKey = canonicalPath.join(",");
+
   const parentPathKey = canonicalPath.slice(0, -1).join(",");
 
   const lines = [
-    `**${t("commands.help.command_title", { prefix, name: usageName })}**`,
+    `**${t("commands.help.command_title", {
+      prefix,
+      name: usageName,
+    })}**`,
+
     sub.description || t("commands.help.no_description"),
+
     "",
   ];
 
   if (sub.hasExecute) {
     lines.push(
       "```",
-      buildHelp({ prefix, name: usageName }, sub.arguments),
+
+      buildHelp(
+        {
+          prefix,
+          name: usageName,
+        },
+        sub.arguments,
+      ),
+
       "```",
     );
   } else if (sub.subcommands.length > 0) {
@@ -377,7 +465,10 @@ export function buildSubcommandView(
   }
 
   const meta = metaLines(client, sub);
-  if (meta.length > 0) lines.push(meta.join(" • "));
+
+  if (meta.length > 0) {
+    lines.push(meta.join(" • "));
+  }
 
   const container = new Container().text(Text(lines.join("\n")));
 
@@ -389,12 +480,14 @@ export function buildSubcommandView(
     } = paginate(sub.subcommands, subPage);
 
     const select = SelectMenu({
-      customId: `help::subcommands::${category}::${command.name}::${categoryPage}::${current}::${userId}`,
+      customId: `help::subcommands::${category}::${command.name}::${pathKey}::${categoryPage}::${current}::${userId}`,
+
       placeholder: t("commands.help.select_subcommand_placeholder"),
-      options: pageItems.map((s) => ({
-        label: s.name,
-        value: s.name,
-        description: s.description?.slice(0, 100),
+
+      options: pageItems.map((child) => ({
+        label: child.name,
+        value: child.name,
+        description: child.description?.slice(0, 100),
       })),
     });
 
@@ -407,7 +500,9 @@ export function buildSubcommandView(
             "◀",
             `help::subcommand::${category}::${command.name}::${pathKey}::${categoryPage}::${current - 1}::${userId}`,
           ).setDisabled(current === 0),
+
           pageIndicator(client, userId, current, totalPages),
+
           Buttons.secondary(
             "▶",
             `help::subcommand::${category}::${command.name}::${pathKey}::${categoryPage}::${current + 1}::${userId}`,
@@ -425,6 +520,7 @@ export function buildSubcommandView(
   container.actionRow(
     ActionRow(
       Buttons.secondary(t("commands.help.back_button"), backCustomId),
+
       Buttons.secondary(
         t("commands.help.home_button"),
         `help::home::0::${userId}`,

@@ -9,6 +9,7 @@ export default new ButtonHandler({
 
   async execute(client, interaction, params, invokerId) {
     const page = Number(params[0] ?? 0);
+
     const container = buildOverview(client, invokerId, page);
 
     await interaction.update({

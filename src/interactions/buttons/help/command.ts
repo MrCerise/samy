@@ -10,7 +10,10 @@ export default new ButtonHandler({
 
   async execute(client, interaction, params, invokerId) {
     const [category, commandName, categoryPage, subPage] = params;
-    if (!category || !commandName) return;
+
+    if (!category || !commandName) {
+      return;
+    }
 
     const container = buildCommandView(
       client,
@@ -24,10 +27,16 @@ export default new ButtonHandler({
     if (!container) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+
         components: [
-          errorUI(client.i18n.t("commands.help.not_found", { command: "" })),
+          errorUI(
+            client.i18n.t("commands.help.not_found", {
+              command: commandName,
+            }),
+          ),
         ],
       });
+
       return;
     }
 

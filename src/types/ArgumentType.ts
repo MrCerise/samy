@@ -1,7 +1,9 @@
-import type { Message } from "discord.js";
-import type Client from "../classes/client";
+import type { Channel, GuildMember, Role, User } from "discord.js";
 
-export type BuiltInArgumentTypeName =
+import type Client from "@/classes/client";
+import type { Message } from "discord.js";
+
+export type ArgumentTypeName =
   | "string"
   | "number"
   | "integer"
@@ -9,9 +11,8 @@ export type BuiltInArgumentTypeName =
   | "user"
   | "member"
   | "role"
-  | "channel";
-
-export type ArgumentTypeName = BuiltInArgumentTypeName | (string & {});
+  | "channel"
+  | "channelLike";
 
 export interface ArgumentResolverContext {
   client: Client;
@@ -19,15 +20,22 @@ export interface ArgumentResolverContext {
   raw: string;
 }
 
-export type ArgumentResolveResult<T = unknown> =
-  | { success: true; value: T }
-  | { success: false; error: string };
+export type ArgumentResolveResult<T> =
+  | {
+      success: true;
+      value: T;
+    }
+  | {
+      success: false;
+      error: string;
+    };
 
-export interface ArgumentTypeDefinition<T = unknown> {
+export interface ArgumentTypeDefinition<T> {
   name: ArgumentTypeName;
-  description?: string;
-  resolve: (
+  description: string;
+
+  resolve(
     raw: string,
     context: ArgumentResolverContext,
-  ) => Promise<ArgumentResolveResult<T>> | ArgumentResolveResult<T>;
+  ): Promise<ArgumentResolveResult<T>> | ArgumentResolveResult<T>;
 }

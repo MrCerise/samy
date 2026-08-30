@@ -455,6 +455,43 @@
     "success": "{channel} has been unlocked.",
     "failed": "I couldn't unlock that channel. Make sure I have permission to manage channel overrides."
   },
+  "logs": {
+    "guild_only": "This command can only be used in a server.",
+    "channel_not_found": "Please provide a valid channel, thread, or forum post.",
+    "forum_parent_error": "You can't log directly to a forum or media channel — mention a post inside it instead, or a regular text channel.",
+    "invalid_channel_type": "That channel type can't be used for logging.",
+    "invalid_category": "That's not a valid log category. Choose one of: {categories}",
+    "add": {
+      "success": "Logging for **{category}** events has been set to {channel}.",
+      "all_success": "All logging events have been set to {channel}."
+    },
+    "remove": {
+      "success": "Logging for **{category}** events has been disabled.",
+      "all_success": "Logging has been disabled for all events."
+    },
+    "list": {
+      "none": "No logging channels are configured. Use `logs add` to set one up.",
+      "title": "Logging Channels ({count})\n{channels}"
+    },
+    "ignore": {
+      "target_not_found": "I couldn't find that user, role, channel, thread, or forum.",
+      "add_success": "{target} has been added to the logging ignore list.",
+      "remove_success": "{target} has been removed from the logging ignore list.",
+      "none": "No users, roles, or channels are on the logging ignore list.",
+      "title": "Logging Ignore List ({count})\n{targets}",
+      "type_none": "No per-log-type ignores are configured.",
+      "type_title": "Per-Log-Type Ignores ({count})\n{targets}",
+      "type_add_success": "{target} is now ignored for **{category}** logs.",
+      "type_remove_success": "{target} is no longer ignored for **{category}** logs."
+    },
+    "route": {
+      "add_success": "**{category}** logs from {source} will now be routed to {target}.",
+      "remove_success": "The **{category}** route for {source} has been removed.",
+      "clear_success": "All routes for {source} have been cleared.",
+      "none": "No log routes are configured.",
+      "title": "Log Routes ({count})\n{routes}"
+    }
+  },
   "slowmode": {
     "guild_only": "This command can only be used in a server.",
     "invalid_channel": "That channel cannot have slowmode enabled.",
@@ -462,5 +499,9 @@
     "success": "Slowmode has been set to {duration} in {channel}.",
     "disabled": "Slowmode has been disabled in {channel}.",
     "failed": "I couldn't change the slowmode for that channel."
+  },
+  "emit": {
+    "unauthorized": "You are not authorized to use this command.",
+    "emitted": "Emitted test log entry for **{event}**."
   }
 }

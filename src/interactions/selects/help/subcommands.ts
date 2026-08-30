@@ -9,26 +9,40 @@ export default new SelectHandler({
   action: "subcommands",
 
   async execute(client, interaction, params, invokerId, value) {
-    const [category, commandName, categoryPage, subPage] = params;
-    if (!category || !commandName) return;
+    const [category, commandName, currentPath, categoryPage, subPage] = params;
+
+    if (!category || !commandName || !value) {
+      return;
+    }
+
+    const path =
+      !currentPath || currentPath === "-"
+        ? [value]
+        : [...currentPath.split(","), value];
 
     const container = buildSubcommandView(
       client,
       invokerId,
       category,
       commandName,
-      [value],
+      path,
       Number(categoryPage ?? 0),
-      Number(subPage ?? 0),
+      0,
     );
 
     if (!container) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+
         components: [
-          errorUI(client.i18n.t("commands.help.not_found", { command: "" })),
+          errorUI(
+            client.i18n.t("commands.help.not_found", {
+              command: [commandName, ...path].join(" "),
+            }),
+          ),
         ],
       });
+
       return;
     }
 

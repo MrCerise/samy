@@ -10,7 +10,10 @@ export default new ButtonHandler({
 
   async execute(client, interaction, params, invokerId) {
     const [category, page] = params;
-    if (!category) return;
+
+    if (!category) {
+      return;
+    }
 
     const container = buildCategoryView(
       client,
@@ -22,10 +25,16 @@ export default new ButtonHandler({
     if (!container) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+
         components: [
-          errorUI(client.i18n.t("commands.help.not_found", { command: "" })),
+          errorUI(
+            client.i18n.t("commands.help.not_found", {
+              command: "",
+            }),
+          ),
         ],
       });
+
       return;
     }
 

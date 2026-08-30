@@ -25,15 +25,38 @@ export default class Event<K extends keyof ClientEvents> {
   }
 }
 
+async function getEventFiles(directory: string): Promise<string[]> {
+  const entries = await readdir(directory, {
+    withFileTypes: true,
+  });
+
+  const files: string[] = [];
+
+  for (const entry of entries) {
+    const path = join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...(await getEventFiles(path)));
+      continue;
+    }
+
+    if (
+      entry.isFile() &&
+      (entry.name.endsWith(".ts") || entry.name.endsWith(".js"))
+    ) {
+      files.push(path);
+    }
+  }
+
+  return files;
+}
+
 export async function LoadEvents(client: Client) {
-  const files = await readdir(join(import.meta.dir, "../events"));
+  const eventsDirectory = join(import.meta.dir, "../events");
+  const files = await getEventFiles(eventsDirectory);
 
   for (const file of files) {
-    if (!file.endsWith(".ts") && !file.endsWith(".js")) continue;
-
-    const event = (await import(`../events/${file}`)).default as Event<
-      keyof ClientEvents
-    >;
+    const event = (await import(file)).default as Event<keyof ClientEvents>;
 
     client.logger.info(`Loaded event: ${event.name}`);
 

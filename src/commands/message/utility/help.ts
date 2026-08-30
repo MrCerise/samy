@@ -11,9 +11,13 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "help",
+
   description: "Browse commands or get details about a specific one",
+
   category: "Utility",
+
   aliases: ["h", "commands"],
+
   arguments: [
     {
       name: "command",
@@ -30,36 +34,45 @@ export default new MessageCommand({
 
       if (raw) {
         const tokens = raw.split(/\s+/).filter(Boolean);
+
         const commandName = tokens[0];
         const subPath = tokens.slice(1);
 
         if (!commandName) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
+
             components: [
               errorUI(
-                client.i18n.t("commands.help.not_found", { command: raw }),
+                client.i18n.t("commands.help.not_found", {
+                  command: raw,
+                }),
               ),
             ],
           });
+
           return;
         }
 
         const command =
           client.messageCommands.get(commandName) ??
           client.messageCommands.find((cmd) =>
-            cmd.aliases.includes(commandName),
+            cmd.aliases.some((alias) => alias.toLowerCase() === commandName),
           );
 
         if (!command) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
+
             components: [
               errorUI(
-                client.i18n.t("commands.help.not_found", { command: raw }),
+                client.i18n.t("commands.help.not_found", {
+                  command: raw,
+                }),
               ),
             ],
           });
+
           return;
         }
 
@@ -73,12 +86,16 @@ export default new MessageCommand({
             command.name,
           );
 
-          if (!container) return;
+          if (!container) {
+            return;
+          }
 
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
+
             components: [container],
           });
+
           return;
         }
 
@@ -87,12 +104,16 @@ export default new MessageCommand({
         if (!resolved) {
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
+
             components: [
               errorUI(
-                client.i18n.t("commands.help.not_found", { command: raw }),
+                client.i18n.t("commands.help.not_found", {
+                  command: raw,
+                }),
               ),
             ],
           });
+
           return;
         }
 
@@ -104,12 +125,16 @@ export default new MessageCommand({
           resolved.canonicalPath,
         );
 
-        if (!container) return;
+        if (!container) {
+          return;
+        }
 
         await message.reply({
           flags: MessageFlags.IsComponentsV2,
+
           components: [container],
         });
+
         return;
       }
 
@@ -117,6 +142,7 @@ export default new MessageCommand({
 
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
+
         components: [container],
       });
     } catch (error) {
@@ -127,6 +153,7 @@ export default new MessageCommand({
 
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
+
         components: [errorUI(client.i18n.t("commands.help.fetch_error"))],
       });
     }

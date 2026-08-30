@@ -1,4 +1,11 @@
-import type { Channel, GuildMember, Role, User } from "discord.js";
+import type {
+  Channel,
+  GuildBasedChannel,
+  GuildMember,
+  Role,
+  User,
+} from "discord.js";
+
 import type { ArgumentTypeName } from "../../types/ArgumentType";
 
 export interface ResolvedArgumentValue {
@@ -49,5 +56,9 @@ export class ParsedArguments {
 
   getChannel(name: string): Channel | undefined {
     return this.get<Channel>(name);
+  }
+
+  getChannelLike(name: string): GuildBasedChannel | undefined {
+    return this.get<GuildBasedChannel>(name);
   }
 }

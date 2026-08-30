@@ -9,15 +9,20 @@ export default new ButtonHandler({
   action: "subcommand",
 
   async execute(client, interaction, params, invokerId) {
-    const [category, commandName, subName, categoryPage, subPage] = params;
-    if (!category || !commandName || !subName) return;
+    const [category, commandName, subPath, categoryPage, subPage] = params;
+
+    if (!category || !commandName || !subPath) {
+      return;
+    }
+
+    const path = subPath.split(",").filter(Boolean);
 
     const container = buildSubcommandView(
       client,
       invokerId,
       category,
       commandName,
-      subName.split(","),
+      path,
       Number(categoryPage ?? 0),
       Number(subPage ?? 0),
     );
@@ -25,10 +30,16 @@ export default new ButtonHandler({
     if (!container) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+
         components: [
-          errorUI(client.i18n.t("commands.help.not_found", { command: "" })),
+          errorUI(
+            client.i18n.t("commands.help.not_found", {
+              command: [commandName, ...path].join(" "),
+            }),
+          ),
         ],
       });
+
       return;
     }
 

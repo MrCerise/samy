@@ -14,10 +14,16 @@ export default new SelectHandler({
     if (!container) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+
         components: [
-          errorUI(client.i18n.t("commands.help.not_found", { command: "" })),
+          errorUI(
+            client.i18n.t("commands.help.not_found", {
+              command: "",
+            }),
+          ),
         ],
       });
+
       return;
     }
 
