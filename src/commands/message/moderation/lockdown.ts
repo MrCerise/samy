@@ -1,4 +1,4 @@
-import { GuildChannel, MessageFlags } from "discord.js";
+import { ChannelType, GuildChannel, MessageFlags } from "discord.js";
 
 import { MessageCommand, MessageSubcommand } from "@/classes/Command";
 import { Container, Text } from "@/ui/components";
@@ -8,6 +8,7 @@ import {
   toggleChannelOverwrites,
   ensureBotCanAnnounce,
   announceChannelState,
+  resolveLockdownTargets,
 } from "@/commands/shared/lockdown";
 
 interface RunLockdownOptions {
@@ -96,17 +97,34 @@ async function runLockdown(
       continue;
     }
 
+    const isCategory = channel.type === ChannelType.GuildCategory;
+    const targets = resolveLockdownTargets(channel);
+
     try {
-      if (botMember) {
-        await ensureBotCanAnnounce(channel, botMember.id, reason);
+      // Lock/unlock the category's own overwrite too, so channels added
+      // to it later (or synced children) inherit the correct state.
+      if (isCategory) {
+        await toggleChannelOverwrites(channel, guildId, roleIds, lock, reason);
       }
 
-      if (lock) {
-        await announceChannelState(client, channel, true, reason);
-        await toggleChannelOverwrites(channel, guildId, roleIds, true, reason);
-      } else {
-        await toggleChannelOverwrites(channel, guildId, roleIds, false, reason);
-        await announceChannelState(client, channel, false, reason);
+      for (const target of targets) {
+        if (botMember) {
+          await ensureBotCanAnnounce(target, botMember.id, reason);
+        }
+
+        if (lock) {
+          await announceChannelState(client, target, true, reason);
+          await toggleChannelOverwrites(target, guildId, roleIds, true, reason);
+        } else {
+          await toggleChannelOverwrites(
+            target,
+            guildId,
+            roleIds,
+            false,
+            reason,
+          );
+          await announceChannelState(client, target, false, reason);
+        }
       }
 
       successes++;

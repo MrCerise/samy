@@ -1,4 +1,6 @@
 import {
+  CategoryChannel,
+  ChannelType,
   GuildChannel,
   PermissionFlagsBits,
   type PermissionOverwriteOptions,
@@ -168,4 +170,25 @@ export function isChannelLocked(
 
   const sendBit = PermissionFlagsBits.SendMessages;
   return (overwrite.deny.bitfield & sendBit) === sendBit;
+}
+
+export function isLockableChannel(channel: GuildChannel): boolean {
+  return (
+    channel.type !== ChannelType.GuildCategory &&
+    channel.type !== ChannelType.GuildForum &&
+    channel.type !== ChannelType.GuildMedia &&
+    channel.isTextBased()
+  );
+}
+
+export function resolveLockdownTargets(channel: GuildChannel): GuildChannel[] {
+  if (channel instanceof CategoryChannel) {
+    const children = channel.children.cache.filter(
+      (child) => child instanceof GuildChannel && isLockableChannel(child),
+    );
+
+    return [...children.values()] as GuildChannel[];
+  }
+
+  return isLockableChannel(channel) ? [channel] : [];
 }
