@@ -2,6 +2,7 @@ import Event from "../classes/Event";
 import { REST, Routes } from "discord.js";
 import type Client from "@/classes/client";
 import { reconcileGuildBans } from "@/utils/guildBan";
+import { ensureGuild } from "@/utils/guild";
 
 export default new Event({
   name: "clientReady",
@@ -10,10 +11,17 @@ export default new Event({
   async execute(client) {
     await DeployCommands(client);
     await reconcileGuildBans(client);
+    await registerGuilds(client);
     await cacheStuff(client);
     client.logger.info(`Logged in as ${client.user?.tag}`);
   },
 });
+
+async function registerGuilds(client: Client) {
+  for (const guild of client.guilds.cache.values()) {
+    await ensureGuild(guild.id);
+  }
+}
 
 async function cacheStuff(client: Client) {
   const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;

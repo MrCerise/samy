@@ -1,16 +1,8 @@
-import {
-  Message,
-  MessageFlags,
-} from "discord.js";
+import { Message, MessageFlags } from "discord.js";
 import { MessageCommand, MessageSubcommand } from "@/classes/Command";
 import { Container, Text } from "@/ui/components";
 import type Client from "@/classes/client";
-import {
-  addAlias,
-  getAlias,
-  getAliases,
-  removeAlias,
-} from "@/utils/settings";
+import { addAlias, getAlias, getAliases, removeAlias } from "@/utils/settings";
 
 export default new MessageCommand({
   name: "alias",
@@ -18,14 +10,13 @@ export default new MessageCommand({
   category: "Settings",
   guildOnly: true,
   userPermissions: ["ManageGuild"],
-  botPermissions: ["SendMessages", "EmbedLinks"],
 
   subcommands: [
     new MessageSubcommand({
       name: "add",
-      description: "Add a new alias for a command. Use $1, $2, etc. for arguments, $* for all.",
+      description:
+        "Add a new alias for a command. Use $1, $2, etc. for arguments, $* for all.",
       userPermissions: ["ManageGuild"],
-      botPermissions: ["SendMessages", "EmbedLinks"],
 
       arguments: [
         {
@@ -37,7 +28,8 @@ export default new MessageCommand({
         {
           name: "command",
           type: "string",
-          description: "The command template. Use $1, $2, etc. for arguments, $* for all.",
+          description:
+            "The command template. Use $1, $2, etc. for arguments, $* for all.",
           required: true,
         },
       ],
@@ -66,9 +58,7 @@ export default new MessageCommand({
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
-              new Container().text(
-                Text(`Command \`${command}\` not found.`),
-              ),
+              new Container().text(Text(`Command \`${command}\` not found.`)),
             ],
           });
 
@@ -119,7 +109,8 @@ export default new MessageCommand({
               ),
             ],
           });
-        } catch {
+        } catch (e) {
+          console.log(e);
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
@@ -136,7 +127,6 @@ export default new MessageCommand({
       name: "remove",
       description: "Remove an alias.",
       userPermissions: ["ManageGuild"],
-      botPermissions: ["SendMessages", "EmbedLinks"],
 
       arguments: [
         {
@@ -154,9 +144,7 @@ export default new MessageCommand({
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
-              new Container().text(
-                Text("Usage: `,alias remove <alias>`"),
-              ),
+              new Container().text(Text("Usage: `,alias remove <alias>`")),
             ],
           });
 
@@ -193,7 +181,6 @@ export default new MessageCommand({
       name: "list",
       description: "List all aliases for this server.",
       userPermissions: ["ManageGuild"],
-      botPermissions: ["SendMessages", "EmbedLinks"],
 
       async execute(client, message) {
         const aliases = await getAliases(message.guild!.id, client);
@@ -202,9 +189,7 @@ export default new MessageCommand({
           await message.reply({
             flags: MessageFlags.IsComponentsV2,
             components: [
-              new Container().text(
-                Text(client.i18n.t("commands.alias.none")),
-              ),
+              new Container().text(Text(client.i18n.t("commands.alias.none"))),
             ],
           });
 
@@ -219,7 +204,9 @@ export default new MessageCommand({
           flags: MessageFlags.IsComponentsV2,
           components: [
             new Container().text(
-              Text(client.i18n.t("commands.alias.list_title", { aliases: lines })),
+              Text(
+                client.i18n.t("commands.alias.list_title", { aliases: lines }),
+              ),
             ),
           ],
         });

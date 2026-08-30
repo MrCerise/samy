@@ -3,6 +3,7 @@ import { MessageFlags, type Message, type User } from "discord.js";
 import { MessageCommand } from "@/classes/Command";
 import { Container, Text } from "@/ui/components";
 import type Client from "@/classes/client";
+import { ensureGuild } from "@/utils/guild";
 
 async function executeWarn({
   message,
@@ -89,6 +90,8 @@ async function executeWarn({
   const caseNumber = (lastCase?.caseNumber ?? 0) + 1;
 
   try {
+    await ensureGuild(guildId);
+
     await client.prisma.warning.create({
       data: {
         guildId,

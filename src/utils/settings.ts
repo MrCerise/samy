@@ -7,6 +7,7 @@ import type {
   FakePermission,
 } from "@prisma/client";
 import prisma from "@/libs/prisma";
+import { ensureGuild } from "@/utils/guild";
 
 export type SettingsGuildId = string;
 export type SettingsChannelId = string;
@@ -182,6 +183,8 @@ export async function addAlias(
   command: string,
   client?: Client,
 ): Promise<CommandAlias> {
+  await ensureGuild(guildId);
+
   const result = await prisma.commandAlias.create({
     data: {
       guildId,
@@ -275,6 +278,8 @@ export async function addCommandRestriction(
   roleId: string,
   client?: Client,
 ): Promise<CommandRestriction> {
+  await ensureGuild(guildId);
+
   const commandName = command.trim().toLowerCase();
 
   const result = await prisma.commandRestriction.create({
@@ -398,6 +403,8 @@ export async function setChannelCommandEnabled(
   enabled: boolean,
   client?: Client,
 ): Promise<ChannelCommandSetting> {
+  await ensureGuild(guildId);
+
   const result = await prisma.channelCommandSetting.upsert({
     where: {
       guildId_channelId_command: {
@@ -498,6 +505,8 @@ export async function setMemberCommandEnabled(
   enabled: boolean,
   client?: Client,
 ): Promise<MemberCommandSetting> {
+  await ensureGuild(guildId);
+
   const result = await prisma.memberCommandSetting.upsert({
     where: {
       guildId_userId_command: {
@@ -599,6 +608,8 @@ export async function setCommandEnabledForGuild(
   enabled: boolean,
   client?: Client,
 ): Promise<void> {
+  await ensureGuild(guildId);
+
   await prisma.commandSetting.upsert({
     where: {
       guildId_command: {
@@ -758,6 +769,8 @@ export async function addFakePermission(
   permission: string,
   client?: Client,
 ): Promise<FakePermission> {
+  await ensureGuild(guildId);
+
   const result = await prisma.fakePermission.create({
     data: {
       guildId,

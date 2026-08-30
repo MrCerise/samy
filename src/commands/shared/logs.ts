@@ -6,6 +6,7 @@ import {
 } from "discord.js";
 import { LogCategory } from "@prisma/client";
 import type Client from "@/classes/client";
+import { ensureGuild } from "@/utils/guild";
 import { findChannelLike, CHANNEL_LIKE_TYPES } from "@/utils/parser/Resolver";
 
 export const LOG_CATEGORIES = [
@@ -27,14 +28,6 @@ export function isLogCategory(value: string): value is LogCategoryKey {
 
 export function toEnumCategory(category: LogCategoryKey): LogCategory {
   return category.toUpperCase() as LogCategory;
-}
-
-async function ensureGuild(client: Client, guildId: string) {
-  await client.prisma.guild.upsert({
-    where: { id: guildId },
-    update: {},
-    create: { id: guildId },
-  });
 }
 
 async function createLogWebhook(
@@ -135,7 +128,7 @@ export async function setLogChannel(
   category: LogCategoryKey,
   channelId: string,
 ) {
-  await ensureGuild(client, guildId);
+  await ensureGuild(guildId);
 
   let webhookId: string | undefined;
   let webhookToken: string | undefined;
@@ -181,7 +174,7 @@ export async function setAllLogChannels(
   guildId: string,
   channelId: string,
 ) {
-  await ensureGuild(client, guildId);
+  await ensureGuild(guildId);
   await Promise.all(
     LOG_CATEGORIES.map((category) =>
       setLogChannel(client, guildId, category, channelId),
@@ -315,7 +308,7 @@ export async function addGlobalIgnore(
   guildId: string,
   target: ResolvedTarget,
 ) {
-  await ensureGuild(client, guildId);
+  await ensureGuild(guildId);
   return client.prisma.logIgnore.upsert({
     where: {
       guildId_targetId_category: {
@@ -358,7 +351,7 @@ export async function addTypeIgnore(
   target: ResolvedTarget,
   category: LogCategoryKey,
 ) {
-  await ensureGuild(client, guildId);
+  await ensureGuild(guildId);
   return client.prisma.logIgnore.upsert({
     where: {
       guildId_targetId_category: {

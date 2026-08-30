@@ -3,6 +3,7 @@ import { MessageFlags } from "discord.js";
 import type Client from "@/classes/client";
 import { Container, Text } from "@/ui/components";
 import prisma from "@/libs/prisma";
+import { ensureGuild } from "@/utils/guild";
 
 const MAX_TIMER_MS = 2_147_000_000;
 
@@ -137,6 +138,8 @@ export async function createGuildBan({
   durationMs: number;
 }): Promise<void> {
   const expiresAt = new Date(Date.now() + durationMs);
+
+  await ensureGuild(guildId);
 
   const guildBan = await prisma.guildBan.upsert({
     where: {

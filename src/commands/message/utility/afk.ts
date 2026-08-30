@@ -2,6 +2,7 @@ import { MessageFlags } from "discord.js";
 
 import { MessageCommand } from "@/classes/Command";
 import { Container, Text } from "@/ui/components";
+import { ensureGuild, ensureUser } from "@/utils/guild";
 
 export default new MessageCommand({
   name: "afk",
@@ -40,6 +41,9 @@ export default new MessageCommand({
       reason,
       createdAt: new Date(),
     });
+
+    await ensureGuild(guild.id);
+    await ensureUser(message.author.id);
 
     await client.prisma.afk.upsert({
       where: {
