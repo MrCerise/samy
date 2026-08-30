@@ -483,13 +483,6 @@
       "type_title": "Per-Log-Type Ignores ({count})\n{targets}",
       "type_add_success": "{target} is now ignored for **{category}** logs.",
       "type_remove_success": "{target} is no longer ignored for **{category}** logs."
-    },
-    "route": {
-      "add_success": "**{category}** logs from {source} will now be routed to {target}.",
-      "remove_success": "The **{category}** route for {source} has been removed.",
-      "clear_success": "All routes for {source} have been cleared.",
-      "none": "No log routes are configured.",
-      "title": "Log Routes ({count})\n{routes}"
     }
   },
   "slowmode": {

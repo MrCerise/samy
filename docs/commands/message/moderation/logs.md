@@ -74,14 +74,3 @@ Manually emit test log events for all categories.
 | `description` | `d` | Optional description text. | false |
 | `footer` | `f` | Optional footer text. | false |
 
-## `logs route`
-
-`prefix` `guild only`
-
-Route logs from a specific source channel to a different log channel.
-
-**Usage**
-```
-,route
-```
-

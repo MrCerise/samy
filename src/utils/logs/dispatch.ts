@@ -20,7 +20,9 @@ async function isIgnored(
   category: LogCategoryKey,
   targets: (string | null | undefined)[],
 ): Promise<boolean> {
-  const targetIds = targets.filter((id): id is string => typeof id === "string");
+  const targetIds = targets.filter(
+    (id): id is string => typeof id === "string",
+  );
 
   if (targetIds.length === 0) return false;
 
@@ -39,23 +41,8 @@ async function resolveDestination(
   client: Client,
   guildId: string,
   category: LogCategoryKey,
-  sourceChannelId: string | null | undefined,
 ): Promise<string | null> {
   const enumCategory = toEnumCategory(category);
-
-  if (sourceChannelId) {
-    const route = await client.prisma.logRoute.findUnique({
-      where: {
-        guildId_sourceChannelId_category: {
-          guildId,
-          sourceChannelId,
-          category: enumCategory,
-        },
-      },
-    });
-
-    if (route) return route.targetChannelId;
-  }
 
   const logChannel = await client.prisma.logChannel.findUnique({
     where: {
@@ -68,7 +55,11 @@ async function resolveDestination(
 
 async function resolveWebhook(
   client: Client,
-  logChannel: { channelId: string; webhookId?: string | null; webhookToken?: string | null },
+  logChannel: {
+    channelId: string;
+    webhookId?: string | null;
+    webhookToken?: string | null;
+  },
 ) {
   if (!logChannel.webhookId || !logChannel.webhookToken) return null;
 
@@ -103,12 +94,7 @@ export async function sendLog(
       return;
     }
 
-    const destinationId = await resolveDestination(
-      client,
-      guildId,
-      category,
-      sourceChannelId,
-    );
+    const destinationId = await resolveDestination(client, guildId, category);
 
     if (!destinationId) return;
 

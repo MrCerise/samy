@@ -61,7 +61,7 @@ export default (manager: ShardingManager) =>
 
         hasExecute: sub.hasExecute,
 
-        subcommands: sub.subcommands.map(serializeSubcommand),
+        subcommands: (sub.subcommands ?? []).map(serializeSubcommand),
       });
 
       const serializeCommand = (command: any): any => ({
@@ -82,14 +82,16 @@ export default (manager: ShardingManager) =>
 
         hasExecute: command.hasExecute,
 
-        subcommands: command.subcommands.map(serializeSubcommand),
+        subcommands: (command.subcommands ?? []).map(serializeSubcommand),
       });
 
       return [...client.messageCommands.values()].map(serializeCommand);
     })) as SerializedCommand[][];
 
     const commands = [
-      ...new Map(perShard.flat().map((command) => [command.name, command])).values(),
+      ...new Map(
+        perShard.flat().map((command) => [command.name, command]),
+      ).values(),
     ].sort((a, b) => a.name.localeCompare(b.name));
 
     const categories = new Map<string, SerializedCommand[]>();
@@ -101,11 +103,7 @@ export default (manager: ShardingManager) =>
       categories.set(command.category, list);
     }
 
-    return {
-      commands,
-
-      categories: Object.fromEntries(
-        [...categories.entries()].sort(([a], [b]) => a.localeCompare(b)),
-      ),
-    };
+    return Object.fromEntries(
+      [...categories.entries()].sort(([a], [b]) => a.localeCompare(b)),
+    );
   });
