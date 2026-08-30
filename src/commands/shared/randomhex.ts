@@ -11,7 +11,9 @@ export function RandomHexResult(client: Client) {
     .join("")
     .toUpperCase()}`;
 
-  return new Container().text(
+  const accentColor = (r << 16) | (g << 8) | b;
+
+  return new Container(accentColor).text(
     Text(
       client.i18n.t("commands.randomhex.result", {
         hex,
