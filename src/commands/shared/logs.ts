@@ -1,4 +1,9 @@
-import { ChannelType, type Guild as DiscordGuild, type TextChannel, WebhookClient } from "discord.js";
+import {
+  ChannelType,
+  type Guild as DiscordGuild,
+  type TextChannel,
+  WebhookClient,
+} from "discord.js";
 import { LogCategory } from "@prisma/client";
 import type Client from "@/classes/client";
 import { findChannelLike, CHANNEL_LIKE_TYPES } from "@/utils/parser/Resolver";
@@ -217,7 +222,11 @@ export async function removeLogChannel(
   });
 
   if (logChannel) {
-    await deleteLogWebhook(client, logChannel.webhookId, logChannel.webhookToken);
+    await deleteLogWebhook(
+      client,
+      logChannel.webhookId,
+      logChannel.webhookToken,
+    );
   }
 
   await client.prisma.logChannel
@@ -235,7 +244,11 @@ export async function removeAllLogChannels(client: Client, guildId: string) {
   });
 
   for (const logChannel of logChannels) {
-    await deleteLogWebhook(client, logChannel.webhookId, logChannel.webhookToken);
+    await deleteLogWebhook(
+      client,
+      logChannel.webhookId,
+      logChannel.webhookToken,
+    );
   }
 
   await client.prisma.logChannel.deleteMany({ where: { guildId } });
@@ -381,66 +394,4 @@ export async function removeTypeIgnore(
       },
     })
     .catch(() => null);
-}
-
-export async function addRoute(
-  client: Client,
-  guildId: string,
-  sourceChannelId: string,
-  targetChannelId: string,
-  category: LogCategoryKey,
-) {
-  await ensureGuild(client, guildId);
-  return client.prisma.logRoute.upsert({
-    where: {
-      guildId_sourceChannelId_category: {
-        guildId,
-        sourceChannelId,
-        category: toEnumCategory(category),
-      },
-    },
-    update: { targetChannelId },
-    create: {
-      guildId,
-      sourceChannelId,
-      targetChannelId,
-      category: toEnumCategory(category),
-    },
-  });
-}
-
-export async function removeRoute(
-  client: Client,
-  guildId: string,
-  sourceChannelId: string,
-  category: LogCategoryKey,
-) {
-  return client.prisma.logRoute
-    .delete({
-      where: {
-        guildId_sourceChannelId_category: {
-          guildId,
-          sourceChannelId,
-          category: toEnumCategory(category),
-        },
-      },
-    })
-    .catch(() => null);
-}
-
-export async function clearRoutesForSource(
-  client: Client,
-  guildId: string,
-  sourceChannelId: string,
-) {
-  return client.prisma.logRoute.deleteMany({
-    where: { guildId, sourceChannelId },
-  });
-}
-
-export async function listRoutes(client: Client, guildId: string) {
-  return client.prisma.logRoute.findMany({
-    where: { guildId },
-    orderBy: { sourceChannelId: "asc" },
-  });
 }
