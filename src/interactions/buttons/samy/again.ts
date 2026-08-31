@@ -1,4 +1,4 @@
-import { MessageFlags } from "discord.js";
+import { MessageFlags, PermissionFlagsBits } from "discord.js";
 
 import { ButtonHandler } from "@/classes/Interaction";
 import { SamyResult } from "@/commands/shared/samy";
@@ -8,7 +8,27 @@ export default new ButtonHandler({
   action: "again",
   invokerOnly: false,
 
-  async execute(client, interaction) {
+  async execute(client, interaction, params, invokerId) {
+    const originalWasEphemeral = interaction.message.flags.has(
+      MessageFlags.Ephemeral,
+    );
+
+    const botInGuild = interaction.guildId
+      ? !!client.guilds.cache.get(interaction.guildId)?.members.me
+      : false;
+    const isOriginalInvoker = interaction.user.id === invokerId;
+
+    const canUseCommands = botInGuild
+      ? (interaction.memberPermissions?.has(
+          PermissionFlagsBits.UseApplicationCommands,
+        ) ?? false)
+      : true;
+
+    const sendEphemeral =
+      originalWasEphemeral ||
+      (!botInGuild && !isOriginalInvoker) ||
+      !canUseCommands;
+
     const container = await SamyResult(
       client,
       interaction.user.id,
@@ -16,7 +36,9 @@ export default new ButtonHandler({
     );
 
     await interaction.reply({
-      flags: MessageFlags.IsComponentsV2,
+      flags: sendEphemeral
+        ? MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral
+        : MessageFlags.IsComponentsV2,
       components: [container],
     });
   },
