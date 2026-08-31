@@ -31,7 +31,6 @@ export function JumboResult(client: Client, raw: string, guild?: Guild | null) {
     const url = `https://cdn.discordapp.com/emojis/${id}.${extension}?size=256`;
 
     return new Container()
-      .text(Text(client.i18n.t("commands.jumbo.result")))
       .media(Media(url))
       .separator(Separator())
       .actionRow(

@@ -8,7 +8,7 @@ export default new MessageCommand({
   name: "jumbo",
   description: "Enlarge a custom emoji.",
   category: "Utility",
-  aliases: ["enlarge", "bigemoji", "jumboemoji"],
+  aliases: ["enlarge", "bigemoji", "jumboemoji", "emoji", "e"],
   arguments: [
     {
       name: "emoji",
