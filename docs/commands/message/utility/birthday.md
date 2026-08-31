@@ -7,13 +7,14 @@
 View, set, or list birthdays.
 
 **Usage**
+
 ```
 ,birthday [target]
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `target` | `u`, `user` | The user whose birthday you want to view. | false |
+| Argument | Aliases     | Description                               | Required |
+| :------- | :---------- | :---------------------------------------- | :------: |
+| `target` | `u`, `user` | The user whose birthday you want to view. |  false   |
 
 ## `birthday set`
 
@@ -22,13 +23,14 @@ View, set, or list birthdays.
 Set your birthday.
 
 **Usage**
+
 ```
 ,set <date>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `date` | `d` | Your date of birth (MM/DD/YYYY, MM/DD, or May 15). | false |
+| Argument | Aliases | Description                                        | Required |
+| :------- | :------ | :------------------------------------------------- | :------: |
+| `date`   | `d`     | Your date of birth (MM/DD/YYYY, MM/DD, or May 15). |  false   |
 
 ## `birthday unset`
 
@@ -39,6 +41,7 @@ Set your birthday.
 Remove your saved birthday.
 
 **Usage**
+
 ```
 ,unset
 ```
@@ -52,6 +55,7 @@ Remove your saved birthday.
 List upcoming birthdays in the server.
 
 **Usage**
+
 ```
 ,list
 ```
@@ -63,11 +67,11 @@ List upcoming birthdays in the server.
 View birthday of a user.
 
 **Usage**
+
 ```
 ,get [target]
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `target` | `u`, `user` | The user to view birthday for. | false |
-
+| Argument | Aliases     | Description                    | Required |
+| :------- | :---------- | :----------------------------- | :------: |
+| `target` | `u`, `user` | The user to view birthday for. |  false   |

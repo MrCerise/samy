@@ -30,8 +30,7 @@ export type WelcomeFailure =
   | { kind: "cv2_compile_error"; error: unknown };
 
 export type WelcomeResult =
-  | { success: true }
-  | { success: false; failure: WelcomeFailure };
+  { success: true } | { success: false; failure: WelcomeFailure };
 
 export function validateWelcomeMessage(rawMessage: string): WelcomeResult {
   let detected;

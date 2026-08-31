@@ -4,7 +4,6 @@
 
 Enlarge a custom emoji.
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `emoji` | — | The emoji to enlarge. | true |
-
+| Argument | Aliases | Description           | Required |
+| :------- | :------ | :-------------------- | :------: |
+| `emoji`  | —       | The emoji to enlarge. |   true   |

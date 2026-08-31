@@ -1,10 +1,7 @@
 import { TokenKind } from "../../common/Token";
 import { Tokenizer } from "../../common/Tokenizer";
 import { ScriptError } from "../../common/ScriptError";
-import {
-  parseArgumentList,
-  TokenCursor,
-} from "../../common/value/parseValue";
+import { parseArgumentList, TokenCursor } from "../../common/value/parseValue";
 import type { AnyEmbedNode, EmbedScript } from "../ast/EmbedNode";
 import { getEmbedParameter } from "../registry";
 

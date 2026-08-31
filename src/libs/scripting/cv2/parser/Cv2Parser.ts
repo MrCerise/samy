@@ -1,10 +1,7 @@
 import { TokenKind } from "../../common/Token";
 import { Tokenizer } from "../../common/Tokenizer";
 import { ScriptError } from "../../common/ScriptError";
-import {
-  parseArgumentList,
-  TokenCursor,
-} from "../../common/value/parseValue";
+import { parseArgumentList, TokenCursor } from "../../common/value/parseValue";
 import type { Cv2Node, Cv2Script } from "../types/ComponentDefinition";
 import { getCv2Component } from "../registry";
 import type { ContainerNode } from "../ast/nodes/ContainerNode";
@@ -78,7 +75,9 @@ export class Cv2Parser {
 
     const nameToken = cursor.advance();
     const rawName = nameToken.value.trim();
-    const nameMatch = rawName.match(/^([A-Za-z_][A-Za-z0-9_]*)(?:\s+([\s\S]+))?$/);
+    const nameMatch = rawName.match(
+      /^([A-Za-z_][A-Za-z0-9_]*)(?:\s+([\s\S]+))?$/,
+    );
 
     if (!nameMatch) {
       throw new ScriptError(

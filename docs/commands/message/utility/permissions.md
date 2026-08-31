@@ -5,6 +5,7 @@
 View real and fake permissions for a member or role.
 
 **Usage**
+
 ```
 ,permissions
 ```
@@ -16,13 +17,14 @@ View real and fake permissions for a member or role.
 View permissions for a member.
 
 **Usage**
+
 ```
 ,member [member]
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `member` | — | The member to check. | false |
+| Argument | Aliases | Description          | Required |
+| :------- | :------ | :------------------- | :------: |
+| `member` | —       | The member to check. |  false   |
 
 ## `permissions role`
 
@@ -31,11 +33,11 @@ View permissions for a member.
 View permissions granted by a role.
 
 **Usage**
+
 ```
 ,role <role>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `role` | — | The role to check. | false |
-
+| Argument | Aliases | Description        | Required |
+| :------- | :------ | :----------------- | :------: |
+| `role`   | —       | The role to check. |  false   |

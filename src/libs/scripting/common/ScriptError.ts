@@ -1,5 +1,3 @@
-
-
 export type ScriptErrorCode =
   | "SYNTAX"
   | "UNKNOWN_PARAMETER"

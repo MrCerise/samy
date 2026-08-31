@@ -7,7 +7,7 @@
 Generate a random hex color.
 
 **Usage**
+
 ```
 ,randomhex
 ```
-

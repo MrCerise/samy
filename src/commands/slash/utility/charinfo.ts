@@ -12,7 +12,9 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("charinfo")
-    .setDescription("Get information about a character (codepoint, UTF-8, etc.).")
+    .setDescription(
+      "Get information about a character (codepoint, UTF-8, etc.).",
+    )
     .addStringOption((option) =>
       option
         .setName("character")

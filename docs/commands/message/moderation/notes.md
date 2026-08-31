@@ -9,14 +9,15 @@
 View and manage member notes.
 
 **Usage**
+
 ```
 ,notes [user] [page]
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `user` | `u`, `member`, `target` | The user to view notes for. | false |
-| `page` | `p` | Page number. | false |
+| Argument | Aliases                 | Description                 | Required |
+| :------- | :---------------------- | :-------------------------- | :------: |
+| `user`   | `u`, `member`, `target` | The user to view notes for. |  false   |
+| `page`   | `p`                     | Page number.                |  false   |
 
 ## `notes add`
 
@@ -27,14 +28,15 @@ View and manage member notes.
 Add a note to a member.
 
 **Usage**
+
 ```
 ,add <user> <content>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `user` | `u`, `member`, `target` | The member to add a note to. | false |
-| `content` | `c`, `note` | The note content. | false |
+| Argument  | Aliases                 | Description                  | Required |
+| :-------- | :---------------------- | :--------------------------- | :------: |
+| `user`    | `u`, `member`, `target` | The member to add a note to. |  false   |
+| `content` | `c`, `note`             | The note content.            |  false   |
 
 ## `notes remove`
 
@@ -45,14 +47,15 @@ Add a note to a member.
 Remove a specific note from a user.
 
 **Usage**
+
 ```
 ,remove <user> <note_id>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `user` | `u`, `member`, `target` | The user to remove the note from. | false |
-| `note_id` | `note`, `id` | The note ID to remove. | false |
+| Argument  | Aliases                 | Description                       | Required |
+| :-------- | :---------------------- | :-------------------------------- | :------: |
+| `user`    | `u`, `member`, `target` | The user to remove the note from. |  false   |
+| `note_id` | `note`, `id`            | The note ID to remove.            |  false   |
 
 ## `notes clear`
 
@@ -63,11 +66,11 @@ Remove a specific note from a user.
 Clear all notes for a user.
 
 **Usage**
+
 ```
 ,clear <user>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `user` | `u`, `member`, `target` | The user to clear notes for. | false |
-
+| Argument | Aliases                 | Description                  | Required |
+| :------- | :---------------------- | :--------------------------- | :------: |
+| `user`   | `u`, `member`, `target` | The user to clear notes for. |  false   |

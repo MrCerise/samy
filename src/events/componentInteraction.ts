@@ -1,7 +1,4 @@
-import {
-  MessageFlags,
-  type InteractionReplyOptions,
-} from "discord.js";
+import { MessageFlags, type InteractionReplyOptions } from "discord.js";
 
 import Event from "@/classes/Event";
 import { parseCustomId } from "@/classes/Interaction";
@@ -134,13 +131,7 @@ export default new Event({
           const value = interaction.values[0];
           if (!value) return;
 
-          await handler.execute(
-            client,
-            interaction,
-            params,
-            invokerId,
-            value,
-          );
+          await handler.execute(client, interaction, params, invokerId, value);
 
           client.logger.info("Component handler completed", {
             handler: handlerName,

@@ -7,11 +7,11 @@
 View a user's server-specific avatar.
 
 **Usage**
+
 ```
 ,serveravatar [user]
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `user` | `u` | The user to get the server avatar from | false |
-
+| Argument | Aliases | Description                            | Required |
+| :------- | :------ | :------------------------------------- | :------: |
+| `user`   | `u`     | The user to get the server avatar from |  false   |

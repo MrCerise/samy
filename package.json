@@ -8,7 +8,7 @@
     "docs": "NODE_ENV=production bun run scripts/genDocs.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
+    "format": "prettier --write",
     "format:check": "prettier --check ."
   },
   "devDependencies": {

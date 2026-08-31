@@ -7,6 +7,7 @@
 Manage command aliases for this server.
 
 **Usage**
+
 ```
 ,alias
 ```
@@ -20,14 +21,15 @@ Manage command aliases for this server.
 Add a new alias for a command. Use $1, $2, etc. for arguments, $* for all.
 
 **Usage**
+
 ```
 ,add <alias> <command>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `alias` | — | The alias to add. | false |
-| `command` | — | The command template. Use $1, $2, etc. for arguments, $* for all. | false |
+| Argument  | Aliases | Description                                                       | Required |
+| :-------- | :------ | :---------------------------------------------------------------- | :------: |
+| `alias`   | —       | The alias to add.                                                 |  false   |
+| `command` | —       | The command template. Use $1, $2, etc. for arguments, $* for all. |  false   |
 
 ## `alias remove`
 
@@ -38,13 +40,14 @@ Add a new alias for a command. Use $1, $2, etc. for arguments, $* for all.
 Remove an alias.
 
 **Usage**
+
 ```
 ,remove <alias>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `alias` | — | The alias to remove. | false |
+| Argument | Aliases | Description          | Required |
+| :------- | :------ | :------------------- | :------: |
+| `alias`  | —       | The alias to remove. |  false   |
 
 ## `alias list`
 
@@ -55,7 +58,7 @@ Remove an alias.
 List all aliases for this server.
 
 **Usage**
+
 ```
 ,list
 ```
-

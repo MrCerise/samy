@@ -1,10 +1,6 @@
 import { TokenKind, tokenLabel, type Token } from "../Token";
 import { ScriptError } from "../ScriptError";
-import {
-  emptyValue,
-  type ScriptValue,
-  type ValuePart,
-} from "./ValueNode";
+import { emptyValue, type ScriptValue, type ValuePart } from "./ValueNode";
 
 const VARIABLE_SEGMENT = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
@@ -41,7 +37,8 @@ export class TokenCursor {
     if (this.current.kind !== kind) {
       throw new ScriptError(
         "SYNTAX",
-        message ?? `Expected ${tokenLabel(kind)}, found ${tokenLabel(this.current.kind)}.`,
+        message ??
+          `Expected ${tokenLabel(kind)}, found ${tokenLabel(this.current.kind)}.`,
         this.current,
       );
     }
@@ -49,7 +46,10 @@ export class TokenCursor {
   }
 
   skipWhitespaceText(): void {
-    while (this.current.kind === TokenKind.Text && this.current.value.trim() === "") {
+    while (
+      this.current.kind === TokenKind.Text &&
+      this.current.value.trim() === ""
+    ) {
       this.advance();
     }
   }
@@ -99,10 +99,7 @@ export function parseArgumentList(cursor: TokenCursor): ScriptValue[] {
       );
     }
 
-    if (
-      token.kind === TokenKind.Text ||
-      token.kind === TokenKind.Colon
-    ) {
+    if (token.kind === TokenKind.Text || token.kind === TokenKind.Colon) {
       current.parts.push({ type: "text", value: token.value });
       cursor.advance();
       continue;
@@ -148,7 +145,10 @@ function parseVariable(cursor: TokenCursor): ValuePart {
   cursor.expect(TokenKind.RBrace, "Expected } to close variable.");
 
   const path = raw.split(".");
-  if (path.length === 0 || path.some((segment) => !VARIABLE_SEGMENT.test(segment))) {
+  if (
+    path.length === 0 ||
+    path.some((segment) => !VARIABLE_SEGMENT.test(segment))
+  ) {
     throw new ScriptError(
       "SYNTAX",
       `Invalid variable "{${raw}}". Variables must look like {user} or {guild.name}.`,

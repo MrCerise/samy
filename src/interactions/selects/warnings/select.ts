@@ -27,9 +27,7 @@ export default new SelectHandler({
     if (!container) {
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
-        components: [
-          errorUI(client.i18n.t("commands.warnings.not_found")),
-        ],
+        components: [errorUI(client.i18n.t("commands.warnings.not_found"))],
       });
 
       return;

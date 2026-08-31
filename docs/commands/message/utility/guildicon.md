@@ -7,7 +7,7 @@
 View the server's icon.
 
 **Usage**
+
 ```
 ,guildicon
 ```
-

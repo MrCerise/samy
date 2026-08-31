@@ -1,9 +1,5 @@
 export type LastFMImageSize =
-  | "small"
-  | "medium"
-  | "large"
-  | "extralarge"
-  | "mega";
+  "small" | "medium" | "large" | "extralarge" | "mega";
 
 export interface LastFMImage {
   "#text": string;

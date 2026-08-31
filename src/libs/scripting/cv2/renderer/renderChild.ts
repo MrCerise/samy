@@ -1,4 +1,8 @@
-import type { Cv2Node, Cv2RenderContext, Cv2Renderable } from "../types/ComponentDefinition";
+import type {
+  Cv2Node,
+  Cv2RenderContext,
+  Cv2Renderable,
+} from "../types/ComponentDefinition";
 import type { Cv2NodeRenderer } from "./handlers/types";
 import { textRenderer } from "./handlers/text";
 import { separatorRenderer } from "./handlers/separator";

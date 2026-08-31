@@ -1,8 +1,4 @@
-import {
-  ActionRowBuilder,
-  EmbedBuilder,
-  type ButtonBuilder,
-} from "discord.js";
+import { ActionRowBuilder, EmbedBuilder, type ButtonBuilder } from "discord.js";
 import {
   passthroughVariableResolver,
   type VariableContext,

@@ -7,7 +7,7 @@
 View the server's splash background.
 
 **Usage**
+
 ```
 ,splash
 ```
-

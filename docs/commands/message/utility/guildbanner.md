@@ -7,7 +7,7 @@
 View the server's banner.
 
 **Usage**
+
 ```
 ,guildbanner
 ```
-

@@ -7,7 +7,7 @@
 List all bots in the server.
 
 **Usage**
+
 ```
 ,botlist
 ```
-

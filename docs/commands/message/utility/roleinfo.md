@@ -7,11 +7,11 @@
 Get information about a role.
 
 **Usage**
+
 ```
 ,roleinfo <role>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `role` | `r` | The role to get information about | false |
-
+| Argument | Aliases | Description                       | Required |
+| :------- | :------ | :-------------------------------- | :------: |
+| `role`   | `r`     | The role to get information about |  false   |

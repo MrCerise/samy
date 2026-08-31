@@ -7,7 +7,7 @@
 Get information about the server.
 
 **Usage**
+
 ```
 ,serverinfo
 ```
-

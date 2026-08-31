@@ -10,7 +10,10 @@ import {
 
 export type { EmbedScript, EmbedNode, AnyEmbedNode } from "./ast/EmbedNode";
 export { EmbedParser, parseEmbedScript } from "./parser/EmbedParser";
-export { EmbedValidator, validateEmbedScript } from "./validator/EmbedValidator";
+export {
+  EmbedValidator,
+  validateEmbedScript,
+} from "./validator/EmbedValidator";
 export {
   EmbedRenderer,
   renderEmbedScript,

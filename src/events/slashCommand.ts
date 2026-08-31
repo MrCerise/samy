@@ -13,10 +13,7 @@ import type { ContextCommand, SlashCommand } from "@/classes/Command";
 import Event from "@/classes/Event";
 import { checkCooldown, setCooldown, type CommandType } from "@/utils/cooldown";
 import { checkPermissions } from "@/utils/permission";
-import {
-  isCommandEnabled,
-  isCommandRestricted,
-} from "@/utils/settings";
+import { isCommandEnabled, isCommandRestricted } from "@/utils/settings";
 import errorUI from "@/ui/error";
 
 async function runGuardedCommand(
@@ -205,8 +202,7 @@ export default new Event({
 
               if (!commandEnabled) {
                 await interaction.reply({
-                  flags:
-                    MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                  flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
                   components: [
                     errorUI(
                       client.i18n.t("errors.command_disabled", {
@@ -221,11 +217,8 @@ export default new Event({
 
               if ((command as SlashCommand).options.ownerOnly) {
                 await interaction.reply({
-                  flags:
-                    MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
-                  components: [
-                    errorUI(client.i18n.t("errors.owner_only")),
-                  ],
+                  flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                  components: [errorUI(client.i18n.t("errors.owner_only"))],
                 });
 
                 return;
@@ -245,8 +238,7 @@ export default new Event({
 
                 if (!hasAllowedRole) {
                   await interaction.reply({
-                    flags:
-                      MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                    flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
                     components: [
                       errorUI(client.i18n.t("errors.command_restricted")),
                     ],
@@ -315,8 +307,7 @@ export default new Event({
 
               if (!commandEnabled) {
                 await interaction.reply({
-                  flags:
-                    MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                  flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
                   components: [
                     errorUI(
                       client.i18n.t("errors.command_disabled", {
@@ -331,11 +322,8 @@ export default new Event({
 
               if ((command as ContextCommand).options.ownerOnly) {
                 await interaction.reply({
-                  flags:
-                    MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
-                  components: [
-                    errorUI(client.i18n.t("errors.owner_only")),
-                  ],
+                  flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                  components: [errorUI(client.i18n.t("errors.owner_only"))],
                 });
 
                 return;
@@ -355,8 +343,7 @@ export default new Event({
 
                 if (!hasAllowedRole) {
                   await interaction.reply({
-                    flags:
-                      MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+                    flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
                     components: [
                       errorUI(client.i18n.t("errors.command_restricted")),
                     ],

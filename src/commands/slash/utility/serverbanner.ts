@@ -55,7 +55,9 @@ export default new SlashCommand({
 
       await interaction.editReply({
         flags: MessageFlags.IsComponentsV2,
-        components: [errorUI(client.i18n.t("commands.serverbanner.fetch_error"))],
+        components: [
+          errorUI(client.i18n.t("commands.serverbanner.fetch_error")),
+        ],
       });
     }
   },

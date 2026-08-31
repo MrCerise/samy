@@ -7,6 +7,7 @@
 View or set language preferences.
 
 **Usage**
+
 ```
 ,locale
 ```
@@ -18,14 +19,15 @@ View or set language preferences.
 Set your preferred language, or the server's language.
 
 **Usage**
+
 ```
 ,set <scope> <locale>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `scope` | `s` | Whether to set your own locale or the server's (user or server). | false |
-| `locale` | `l` | Locale identifier (en-US, es-ES, fr-FR, etc). | false |
+| Argument | Aliases | Description                                                      | Required |
+| :------- | :------ | :--------------------------------------------------------------- | :------: |
+| `scope`  | `s`     | Whether to set your own locale or the server's (user or server). |  false   |
+| `locale` | `l`     | Locale identifier (en-US, es-ES, fr-FR, etc).                    |  false   |
 
 ## `locale unset`
 
@@ -36,11 +38,11 @@ Set your preferred language, or the server's language.
 Reset your language, or the server's, back to automatic detection.
 
 **Usage**
+
 ```
 ,unset [scope]
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `scope` | `s` | Whether to reset your own locale or the server's (user or server). Defaults to user. | false |
-
+| Argument | Aliases | Description                                                                          | Required |
+| :------- | :------ | :----------------------------------------------------------------------------------- | :------: |
+| `scope`  | `s`     | Whether to reset your own locale or the server's (user or server). Defaults to user. |  false   |

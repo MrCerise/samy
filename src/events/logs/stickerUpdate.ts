@@ -10,8 +10,7 @@ export default new Event({
 
   async execute(client, oldSticker, newSticker) {
     const guild =
-      newSticker.guild ??
-      client.guilds.cache.get(newSticker.guildId ?? "");
+      newSticker.guild ?? client.guilds.cache.get(newSticker.guildId ?? "");
 
     if (!guild) return;
 

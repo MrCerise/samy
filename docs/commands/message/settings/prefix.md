@@ -5,6 +5,7 @@
 View or manage the server and user prefix.
 
 **Usage**
+
 ```
 ,prefix
 ```
@@ -16,6 +17,7 @@ View or manage the server and user prefix.
 Set a custom prefix.
 
 **Usage**
+
 ```
 ,add
 ```
@@ -27,6 +29,7 @@ Set a custom prefix.
 Remove a custom prefix.
 
 **Usage**
+
 ```
 ,remove
 ```
@@ -38,7 +41,7 @@ Remove a custom prefix.
 View the current prefix.
 
 **Usage**
+
 ```
 ,view
 ```
-

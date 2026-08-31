@@ -6,7 +6,8 @@ import errorUI from "@/ui/error";
 
 export default new MessageCommand({
   name: "timediff",
-  description: "Calculate the time difference between two Discord snowflake IDs.",
+  description:
+    "Calculate the time difference between two Discord snowflake IDs.",
   category: "Utility",
   aliases: ["snowdiff", "timebetween"],
   arguments: [

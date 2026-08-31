@@ -31,9 +31,7 @@ export default new SelectHandler({
       await interaction.reply({
         flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
         components: [
-          errorUI(
-            client.i18n.t("commands.cases.not_found", { case: value }),
-          ),
+          errorUI(client.i18n.t("commands.cases.not_found", { case: value })),
         ],
       });
 

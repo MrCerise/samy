@@ -7,6 +7,7 @@
 Restrict a command to specific roles.
 
 **Usage**
+
 ```
 ,restrictcommand
 ```
@@ -20,14 +21,15 @@ Restrict a command to specific roles.
 Add a role restriction to a command.
 
 **Usage**
+
 ```
 ,add <command> <role>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `command` | — | The command to restrict. Use command:subcommand for subcommands. | false |
-| `role` | — | The role to restrict to. | false |
+| Argument  | Aliases | Description                                                      | Required |
+| :-------- | :------ | :--------------------------------------------------------------- | :------: |
+| `command` | —       | The command to restrict. Use command:subcommand for subcommands. |  false   |
+| `role`    | —       | The role to restrict to.                                         |  false   |
 
 ## `restrictcommand remove`
 
@@ -38,14 +40,15 @@ Add a role restriction to a command.
 Remove a role restriction from a command.
 
 **Usage**
+
 ```
 ,remove <command> <role>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `command` | — | The command to unrestrict. Use command:subcommand for subcommands. | false |
-| `role` | — | The role to remove. | false |
+| Argument  | Aliases | Description                                                        | Required |
+| :-------- | :------ | :----------------------------------------------------------------- | :------: |
+| `command` | —       | The command to unrestrict. Use command:subcommand for subcommands. |  false   |
+| `role`    | —       | The role to remove.                                                |  false   |
 
 ## `restrictcommand clear`
 
@@ -56,13 +59,14 @@ Remove a role restriction from a command.
 Clear all restrictions from a command.
 
 **Usage**
+
 ```
 ,clear <command>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `command` | — | The command to clear restrictions from. | false |
+| Argument  | Aliases | Description                             | Required |
+| :-------- | :------ | :-------------------------------------- | :------: |
+| `command` | —       | The command to clear restrictions from. |  false   |
 
 ## `restrictcommand list`
 
@@ -73,7 +77,7 @@ Clear all restrictions from a command.
 List all restricted commands.
 
 **Usage**
+
 ```
 ,list
 ```
-

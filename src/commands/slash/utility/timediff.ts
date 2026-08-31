@@ -12,7 +12,9 @@ import errorUI from "@/ui/error";
 export default new SlashCommand({
   data: new SlashCommandBuilder()
     .setName("timediff")
-    .setDescription("Calculate the time difference between two Discord snowflake IDs.")
+    .setDescription(
+      "Calculate the time difference between two Discord snowflake IDs.",
+    )
     .addStringOption((option) =>
       option
         .setName("snowflake1")

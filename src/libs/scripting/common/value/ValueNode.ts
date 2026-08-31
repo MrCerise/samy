@@ -1,8 +1,5 @@
-
-
 export type ValuePart =
-  | { type: "text"; value: string }
-  | { type: "variable"; path: string[] };
+  { type: "text"; value: string } | { type: "variable"; path: string[] };
 
 export interface ScriptValue {
   parts: ValuePart[];

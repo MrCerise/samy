@@ -1,10 +1,10 @@
 # Commands
 
-85 commands total.
+87 commands total.
 
-| Type | Commands |
-| :-- | :--: |
-| [Message](./message) | 57 |
-| [Slash](./slash) | 28 |
+| Type                 | Commands |
+| :------------------- | :------: |
+| [Message](./message) |    58    |
+| [Slash](./slash)     |    29    |
 
-<sub>Generated 2026-08-30T23:27:07.481Z — do not edit by hand, run `bun run docs` instead.</sub>
+<sub>Generated 2026-08-31T15:00:17.576Z — do not edit by hand, run `bun run docs` instead.</sub>

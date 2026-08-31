@@ -9,6 +9,7 @@
 Configure welcome messages for the server.
 
 **Usage**
+
 ```
 ,welcomer
 ```
@@ -22,14 +23,15 @@ Configure welcome messages for the server.
 Add a welcome message to a channel.
 
 **Usage**
+
 ```
 ,add <channel> <message>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `channel` | `c` | The channel to send the welcome message to. | false |
-| `message` | `m` | Plain text, an {embed} script, or a {cv2} script. | false |
+| Argument  | Aliases | Description                                       | Required |
+| :-------- | :------ | :------------------------------------------------ | :------: |
+| `channel` | `c`     | The channel to send the welcome message to.       |  false   |
+| `message` | `m`     | Plain text, an {embed} script, or a {cv2} script. |  false   |
 
 ## `welcomer preview`
 
@@ -42,13 +44,14 @@ Add a welcome message to a channel.
 Preview a configured welcome message, or all of them.
 
 **Usage**
+
 ```
 ,preview [channel]
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `channel` | `c` | The welcome channel to preview. Leave empty to preview all welcomes | false |
+| Argument  | Aliases | Description                                                         | Required |
+| :-------- | :------ | :------------------------------------------------------------------ | :------: |
+| `channel` | `c`     | The welcome channel to preview. Leave empty to preview all welcomes |  false   |
 
 ## `welcomer list`
 
@@ -59,6 +62,7 @@ Preview a configured welcome message, or all of them.
 List all configured welcome messages.
 
 **Usage**
+
 ```
 ,list
 ```
@@ -72,11 +76,11 @@ List all configured welcome messages.
 Remove a welcome message from a channel.
 
 **Usage**
+
 ```
 ,remove <channel>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `channel` | `c` | The channel to remove the welcome message from. | false |
-
+| Argument  | Aliases | Description                                     | Required |
+| :-------- | :------ | :---------------------------------------------- | :------: |
+| `channel` | `c`     | The channel to remove the welcome message from. |  false   |

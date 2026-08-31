@@ -1,8 +1,9 @@
 # Fun
 
-> 2 commands
+> 3 commands
 
-| Command | Description |
-| :-- | :-- |
+| Command                 | Description                             |
+| :---------------------- | :-------------------------------------- |
 | [`choose`](./choose.md) | Randomly choose one of several options. |
-| [`gay`](./gay.md) | Check a user's gay percentage. |
+| [`gay`](./gay.md)       | Check a user's gay percentage.          |
+| [`samy`](./samy.md)     | Get a random picture of Samy.           |

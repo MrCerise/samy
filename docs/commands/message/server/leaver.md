@@ -9,6 +9,7 @@
 Configure leave messages for the server.
 
 **Usage**
+
 ```
 ,leaver
 ```
@@ -22,14 +23,15 @@ Configure leave messages for the server.
 Add a leave message to a channel.
 
 **Usage**
+
 ```
 ,add <channel> <message>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `channel` | `c` | The channel to send the leave message to. | false |
-| `message` | `m` | Plain text, an {embed} script, or a {cv2} script. | false |
+| Argument  | Aliases | Description                                       | Required |
+| :-------- | :------ | :------------------------------------------------ | :------: |
+| `channel` | `c`     | The channel to send the leave message to.         |  false   |
+| `message` | `m`     | Plain text, an {embed} script, or a {cv2} script. |  false   |
 
 ## `leaver preview`
 
@@ -42,13 +44,14 @@ Add a leave message to a channel.
 Preview a configured leave message, or all of them.
 
 **Usage**
+
 ```
 ,preview [channel]
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `channel` | `c` | The leave channel to preview. Leave empty to preview all leave messages | false |
+| Argument  | Aliases | Description                                                             | Required |
+| :-------- | :------ | :---------------------------------------------------------------------- | :------: |
+| `channel` | `c`     | The leave channel to preview. Leave empty to preview all leave messages |  false   |
 
 ## `leaver list`
 
@@ -59,6 +62,7 @@ Preview a configured leave message, or all of them.
 List all configured leave messages.
 
 **Usage**
+
 ```
 ,list
 ```
@@ -72,11 +76,11 @@ List all configured leave messages.
 Remove a leave message from a channel.
 
 **Usage**
+
 ```
 ,remove <channel>
 ```
 
-| Argument | Aliases | Description | Required |
-| :-- | :-- | :-- | :--: |
-| `channel` | `c` | The channel to remove the leave message from. | false |
-
+| Argument  | Aliases | Description                                   | Required |
+| :-------- | :------ | :-------------------------------------------- | :------: |
+| `channel` | `c`     | The channel to remove the leave message from. |  false   |

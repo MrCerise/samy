@@ -294,6 +294,16 @@ async function main() {
   await writeFile(join(OUTPUT_DIR, "README.md"), readme);
 
   console.log(`Generated docs for ${totalCommands} commands.`);
+
+  console.log("Formatting generated docs...");
+  const format = Bun.spawnSync(["bun", "run", "format", OUTPUT_DIR]);
+
+  if (format.exitCode !== 0) {
+    console.error(format.stderr.toString());
+    process.exit(1);
+  }
+
+  console.log("Docs formatted.");
 }
 
 main().catch((err) => {

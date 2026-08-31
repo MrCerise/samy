@@ -57,12 +57,6 @@ export class SelectHandler {
     invokerId: string,
     value: string,
   ) {
-    return this.options.execute(
-      client,
-      interaction,
-      params,
-      invokerId,
-      value,
-    );
+    return this.options.execute(client, interaction, params, invokerId, value);
   }
 }
