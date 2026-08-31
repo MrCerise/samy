@@ -35,11 +35,7 @@ export const contentParameter: EmbedParameterDefinition<ContentNode> = {
   },
 
   render(node, target, context) {
-    const text = resolveValue(
-      node.value,
-      context.variables,
-      context.resolver,
-    );
+    const text = resolveValue(node.value, context.variables, context.resolver);
     target.content = target.content ? `${target.content}\n${text}` : text;
   },
 };

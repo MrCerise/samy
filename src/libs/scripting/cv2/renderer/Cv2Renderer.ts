@@ -75,7 +75,9 @@ export class Cv2Renderer {
 
     flushButtons();
 
-    const deleteNode = script.flat.find((n): n is DeleteNode => n.kind === "delete");
+    const deleteNode = script.flat.find(
+      (n): n is DeleteNode => n.kind === "delete",
+    );
     let deleteMs: number | undefined;
     if (deleteNode) {
       const raw = resolveValue(

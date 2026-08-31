@@ -13,9 +13,7 @@ export default new Event({
       category: "voice",
       title: "Stage instance deleted",
       description: `**${stageInstance.topic}**`,
-      fields: [
-        { name: "Channel", value: stageInstance.channel.toString() },
-      ],
+      fields: [{ name: "Channel", value: stageInstance.channel.toString() }],
       footer: `Stage ID: ${stageInstance.id}`,
     });
 

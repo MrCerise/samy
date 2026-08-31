@@ -66,17 +66,17 @@ Samy is built with:
 
 ## Commands
 
-Full, up-to-date command documentation - including arguments, aliases, permissions, and subcommands - is generated directly from source into [`docs/commands`](docs/commands), and is also available online at [samy.zoomhub.xyz/commands](https://samy.zoomhub.xyz/commands). In Discord, run `,help` to browse commands or get details on a specific one.
+Run `,help` in Discord to browse available commands or get details on a specific command.
 
-To regenerate the docs after making changes:
-
-```bash
-bun run docs
-```
+For the full, up-to-date command documentation, visit the [Samy command documentation](https://samy.zoomhub.xyz/commands).
 
 ## Contributing
 
-Contributions, bug reports, and feature suggestions are welcome. Please open an [issue](https://github.com/TheOldZoom/samy/issues) before starting significant work so it can be discussed first.
+Contributions, bug reports, and feature suggestions are welcome.
+
+Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) before contributing. It covers the development workflow, branch structure, commit conventions, pull requests, testing, formatting, and deployment process.
+
+For questions, help, or general support, visit the [Samy Support Server](https://samy.zoomhub.xyz/discord).
 
 ## License
 

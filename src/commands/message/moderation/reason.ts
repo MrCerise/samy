@@ -19,9 +19,7 @@ async function executeReason({
     await message.reply({
       flags: MessageFlags.IsComponentsV2,
       components: [
-        new Container().text(
-          Text(client.i18n.t("commands.reason.guild_only")),
-        ),
+        new Container().text(Text(client.i18n.t("commands.reason.guild_only"))),
       ],
     });
 

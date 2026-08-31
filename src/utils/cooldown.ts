@@ -11,10 +11,7 @@ import type {
 } from "@/classes/Command";
 
 type Command =
-  | SlashCommand
-  | MessageCommand
-  | MessageSubcommand
-  | ContextCommand;
+  SlashCommand | MessageCommand | MessageSubcommand | ContextCommand;
 export type CommandType = "slash" | "message" | "context";
 
 function getCooldownKey(

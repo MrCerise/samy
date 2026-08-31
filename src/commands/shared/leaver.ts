@@ -31,8 +31,7 @@ export type LeaveFailure =
   | { kind: "cv2_compile_error"; error: unknown };
 
 export type LeaveResult =
-  | { success: true }
-  | { success: false; failure: LeaveFailure };
+  { success: true } | { success: false; failure: LeaveFailure };
 
 export type LeaveVariables = {
   user: User;

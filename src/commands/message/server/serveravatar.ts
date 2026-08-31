@@ -38,7 +38,9 @@ export default new MessageCommand({
 
       await message.reply({
         flags: MessageFlags.IsComponentsV2,
-        components: [errorUI(client.i18n.t("commands.serveravatar.fetch_error"))],
+        components: [
+          errorUI(client.i18n.t("commands.serveravatar.fetch_error")),
+        ],
       });
     }
   },

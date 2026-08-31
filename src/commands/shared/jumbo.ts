@@ -1,16 +1,19 @@
 import type { Guild } from "discord.js";
 
 import type Client from "@/classes/client";
-import { ActionRow, Buttons, Container, Media, Separator, Text } from "@/ui/components";
+import {
+  ActionRow,
+  Buttons,
+  Container,
+  Media,
+  Separator,
+  Text,
+} from "@/ui/components";
 import errorUI from "@/ui/error";
 
 const CUSTOM_EMOJI = /^<(a)?:(\w+):(\d{15,20})>$/;
 
-export function JumboResult(
-  client: Client,
-  raw: string,
-  guild?: Guild | null,
-) {
+export function JumboResult(client: Client, raw: string, guild?: Guild | null) {
   const mentionMatch = raw.match(CUSTOM_EMOJI);
 
   let id: string | undefined;
@@ -31,7 +34,9 @@ export function JumboResult(
       .text(Text(client.i18n.t("commands.jumbo.result")))
       .media(Media(url))
       .separator(Separator())
-      .actionRow(ActionRow(Buttons.link(client.i18n.t("general.browser"), url)));
+      .actionRow(
+        ActionRow(Buttons.link(client.i18n.t("general.browser"), url)),
+      );
   }
 
   return errorUI(client.i18n.t("commands.jumbo.not_found"));

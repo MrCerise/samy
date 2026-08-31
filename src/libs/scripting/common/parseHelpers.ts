@@ -1,5 +1,3 @@
-
-
 export function parseColor(raw: string): number | undefined {
   if (/^#([0-9A-Fa-f]{6})$/.test(raw)) {
     return Number.parseInt(raw.slice(1), 16);

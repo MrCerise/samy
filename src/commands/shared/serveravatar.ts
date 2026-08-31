@@ -1,7 +1,14 @@
 import type { GuildMember, User } from "discord.js";
 
 import type Client from "@/classes/client";
-import { ActionRow, Buttons, Container, Media, Separator, Text } from "@/ui/components";
+import {
+  ActionRow,
+  Buttons,
+  Container,
+  Media,
+  Separator,
+  Text,
+} from "@/ui/components";
 import errorUI from "@/ui/error";
 
 export function ServerAvatar(
@@ -26,6 +33,8 @@ export function ServerAvatar(
     .media(Media(serverAvatarURL))
     .separator(Separator())
     .actionRow(
-      ActionRow(Buttons.link(client.i18n.t("general.browser"), serverAvatarURL)),
+      ActionRow(
+        Buttons.link(client.i18n.t("general.browser"), serverAvatarURL),
+      ),
     );
 }

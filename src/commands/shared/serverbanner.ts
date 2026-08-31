@@ -1,7 +1,14 @@
 import type { GuildMember, User } from "discord.js";
 
 import type Client from "@/classes/client";
-import { ActionRow, Buttons, Container, Media, Separator, Text } from "@/ui/components";
+import {
+  ActionRow,
+  Buttons,
+  Container,
+  Media,
+  Separator,
+  Text,
+} from "@/ui/components";
 import errorUI from "@/ui/error";
 
 export async function ServerBanner(
@@ -27,6 +34,8 @@ export async function ServerBanner(
     .media(Media(serverBannerURL))
     .separator(Separator())
     .actionRow(
-      ActionRow(Buttons.link(client.i18n.t("general.browser"), serverBannerURL)),
+      ActionRow(
+        Buttons.link(client.i18n.t("general.browser"), serverBannerURL),
+      ),
     );
 }

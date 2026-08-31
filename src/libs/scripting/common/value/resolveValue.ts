@@ -1,7 +1,6 @@
 import type { ScriptValue, ValuePart } from "./ValueNode";
 
 export interface VariableContext {
-
   data?: Record<string, unknown>;
 }
 
@@ -18,7 +17,9 @@ export function resolveValue(
   context: VariableContext = {},
   resolver: VariableResolver = passthroughVariableResolver,
 ): string {
-  return value.parts.map((part) => resolvePart(part, context, resolver)).join("");
+  return value.parts
+    .map((part) => resolvePart(part, context, resolver))
+    .join("");
 }
 
 function resolvePart(

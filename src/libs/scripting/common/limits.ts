@@ -1,5 +1,3 @@
-
-
 export const EMBED_LIMITS = {
   title: 256,
   description: 4096,

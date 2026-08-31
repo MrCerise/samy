@@ -279,17 +279,17 @@ You can also put variables in values, like `{user}` or `{guild.name}`. They are 
 
 ## Components V2
 
-| Component           | Example                                                        |
-| ------------------- | -------------------------------------------------------------- |
-| `container`         | `{container}` or `{container: #5865F2}`                        |
-| `text`              | `{text: Hello World}`                                          |
-| `content`           | `{content: Hello}` (alias of `text`)                           |
-| `separator`         | `{separator}` or `{separator: large}`                          |
-| `section`           | `{section}`                                                    |
-| `thumbnail`         | `{thumbnail: https://...}` (after a section)                   |
-| `media` / `gallery` | `{media: https://a.png && https://b.png}`                      |
-| `button`            | `{button: Label && https://example.com}`                       |
-| `delete`            | `{delete: 1m}` or `{delete: 5m}` or `{delete: 10s}`            |
+| Component           | Example                                             |
+| ------------------- | --------------------------------------------------- |
+| `container`         | `{container}` or `{container: #5865F2}`             |
+| `text`              | `{text: Hello World}`                               |
+| `content`           | `{content: Hello}` (alias of `text`)                |
+| `separator`         | `{separator}` or `{separator: large}`               |
+| `section`           | `{section}`                                         |
+| `thumbnail`         | `{thumbnail: https://...}` (after a section)        |
+| `media` / `gallery` | `{media: https://a.png && https://b.png}`           |
+| `button`            | `{button: Label && https://example.com}`            |
+| `delete`            | `{delete: 1m}` or `{delete: 5m}` or `{delete: 10s}` |
 
 ### How nesting works
 

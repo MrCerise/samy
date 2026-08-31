@@ -124,7 +124,6 @@ export class Cv2Validator {
     }
 
     if (node.kind === "button" && parent === "root") {
-
       return;
     }
 

@@ -1,7 +1,14 @@
 import type { Guild } from "discord.js";
 
 import type Client from "@/classes/client";
-import { ActionRow, Buttons, Container, Media, Separator, Text } from "@/ui/components";
+import {
+  ActionRow,
+  Buttons,
+  Container,
+  Media,
+  Separator,
+  Text,
+} from "@/ui/components";
 import errorUI from "@/ui/error";
 
 export function Splash(client: Client, guild: Guild) {
@@ -12,11 +19,7 @@ export function Splash(client: Client, guild: Guild) {
   }
 
   return new Container()
-    .text(
-      Text(
-        client.i18n.t("commands.splash.title", { name: guild.name }),
-      ),
-    )
+    .text(Text(client.i18n.t("commands.splash.title", { name: guild.name })))
     .media(Media(splashURL))
     .separator(Separator())
     .actionRow(

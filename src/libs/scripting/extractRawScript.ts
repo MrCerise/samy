@@ -1,8 +1,4 @@
-
-export function extractRawScript(
-  content: string,
-  prefix: string,
-): string {
+export function extractRawScript(content: string, prefix: string): string {
   if (!content.startsWith(prefix)) {
     return content.trim();
   }

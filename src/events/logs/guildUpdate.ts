@@ -25,9 +25,7 @@ export default new Event({
     if (oldGuild.afkChannelId !== newGuild.afkChannelId) {
       fields.push({
         name: "AFK channel",
-        value: oldGuild.afkChannelId
-          ? `<#${oldGuild.afkChannelId}>`
-          : "*none*",
+        value: oldGuild.afkChannelId ? `<#${oldGuild.afkChannelId}>` : "*none*",
       });
     }
 
@@ -45,7 +43,10 @@ export default new Event({
       });
     }
 
-    if (oldGuild.defaultMessageNotifications !== newGuild.defaultMessageNotifications) {
+    if (
+      oldGuild.defaultMessageNotifications !==
+      newGuild.defaultMessageNotifications
+    ) {
       fields.push({
         name: "Default notifications",
         value: `${oldGuild.defaultMessageNotifications} → ${newGuild.defaultMessageNotifications}`,

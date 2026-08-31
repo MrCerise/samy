@@ -1,5 +1,3 @@
-
-
 export enum TokenKind {
   LBrace = "LBrace",
   RBrace = "RBrace",

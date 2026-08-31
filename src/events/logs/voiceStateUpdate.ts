@@ -20,9 +20,7 @@ export default new Event({
     if (oldChannel?.id !== newChannel?.id) {
       fields.push({
         name: "Channel",
-        value: oldChannel
-          ? oldChannel.toString()
-          : "*Not in voice*",
+        value: oldChannel ? oldChannel.toString() : "*Not in voice*",
       });
     }
 

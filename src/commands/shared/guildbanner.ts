@@ -1,7 +1,14 @@
 import type { Guild } from "discord.js";
 
 import type Client from "@/classes/client";
-import { ActionRow, Buttons, Container, Media, Separator, Text } from "@/ui/components";
+import {
+  ActionRow,
+  Buttons,
+  Container,
+  Media,
+  Separator,
+  Text,
+} from "@/ui/components";
 import errorUI from "@/ui/error";
 
 export function GuildBanner(client: Client, guild: Guild) {
@@ -13,9 +20,7 @@ export function GuildBanner(client: Client, guild: Guild) {
 
   return new Container()
     .text(
-      Text(
-        client.i18n.t("commands.guildbanner.title", { name: guild.name }),
-      ),
+      Text(client.i18n.t("commands.guildbanner.title", { name: guild.name })),
     )
     .media(Media(bannerURL))
     .separator(Separator())
