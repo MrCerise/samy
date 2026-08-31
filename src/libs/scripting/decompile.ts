@@ -140,9 +140,10 @@ function decompileCv2Component(
     case ComponentType.Button:
       return decompileButton(item);
     default:
-      throw new Error(
-        `Cannot decompile unsupported component type ${item.type}.`,
-      );
+      // Unsupported component types (e.g. select menus/dropdowns) cannot be
+      // represented in the script language — skip them silently so the rest
+      // of the CV2 can still be copied.
+      return [];
   }
 }
 
@@ -184,16 +185,17 @@ function decompileSection(component: AnyComponent): string[] {
 }
 
 function decompileButton(component: AnyComponent): string[] {
+  // Non-button components inside action rows (e.g. select menus) cannot be
+  // represented in the script language — skip them silently.
   if (component.type !== ComponentType.Button) {
-    throw new Error(
-      `Cannot decompile unsupported action row component type ${component.type}.`,
-    );
+    return [];
   }
 
+  // Non-link buttons (customId-based) cannot be represented in the script
+  // language since scripts only support URL buttons — skip them silently
+  // so the rest of the CV2 can still be copied.
   if (component.style !== ButtonStyle.Link) {
-    throw new Error(
-      "Cannot decompile non-link buttons because scripts only support URL buttons.",
-    );
+    return [];
   }
 
   return [
@@ -201,7 +203,9 @@ function decompileButton(component: AnyComponent): string[] {
       "button",
       requiredString(component.label, "button label"),
       requiredString(component.url, "button url"),
-      component.disabled ? "disabled" : undefined,
+      // Copied buttons are always disabled so the decompiled script reads as
+      // a non-interactive copy of the original message.
+      "disabled",
     ),
   ];
 }
