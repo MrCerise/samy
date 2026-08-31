@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "icons": "bun scripts/icons/index.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.4.0",
