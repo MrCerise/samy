@@ -1,5 +1,7 @@
 import type { Guild } from "discord.js";
 
+import { icons } from "@/utils/icons";
+
 import type Client from "@/classes/client";
 import {
   ActionRow,
@@ -38,5 +40,5 @@ export function JumboResult(client: Client, raw: string, guild?: Guild | null) {
       );
   }
 
-  return errorUI(client.i18n.t("commands.jumbo.not_found"));
+  return errorUI(icons.image + " " + client.i18n.t("commands.jumbo.not_found"));
 }
