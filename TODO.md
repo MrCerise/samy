@@ -193,7 +193,7 @@ A roadmap for Samy's development.
 ## Logging
 
 - [ ] Moderation logs
-- [x] Full event logging system (channels, guild, images, members, messages, moderation, roles, voice)
+- [x] Full event logging system (channels, guild, images, members, messages, moderation, roles, voice) TO REWORK
 - [x] One-command "log everything to one channel" setup (`logs setup`/`logs add all`)
 - [x] Per-log-type ignore list for users/channels
 - [x] Manual test log emitter
