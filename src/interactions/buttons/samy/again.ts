@@ -25,8 +25,8 @@ export default new ButtonHandler({
       : true;
 
     const sendEphemeral =
-      originalWasEphemeral || isOriginalInvoker || !canUseCommands;
-
+      originalWasEphemeral || !isOriginalInvoker || !canUseCommands;
+    console.log(originalWasEphemeral, isOriginalInvoker, canUseCommands);
     const container = await SamyResult(
       client,
       interaction.user.id,
