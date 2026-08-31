@@ -300,6 +300,18 @@
     "footer_timezone": "\n-# {timezone} · {time} · {date}",
     "fetch_error": "An error occurred while fetching user info."
   },
+  "autorole": {
+    "added": "Added {role} to the autorole list.",
+    "removed": "Removed {role} from the autorole list.",
+    "already_exists": "{role} is already in the autorole list.",
+    "not_found": "{role} is not in the autorole list.",
+    "none": "No autoroles are configured.",
+    "list": "Autoroles ({count})\n\n{roles}",
+    "cleared": "Cleared {count} autorole(s).",
+    "managed": "Managed roles cannot be used as autoroles.",
+    "hierarchy": "I can't assign that role because it's equal to or higher than my highest role.",
+    "user_hierarchy": "You can't add a role that is equal to or higher than your highest role."
+  },
   "avatar": {
     "title": "{user}'s Avatar",
     "fetch_error": "An error occurred while fetching the user's avatar."

@@ -66,6 +66,7 @@ model Guild {
   markovChain            MarkovChain?
   markovSettings         MarkovSettings?
   markovChannels         MarkovChannel[]
+  autoroles              Autorole[]
 }
 
 model GuildBan {
@@ -432,4 +433,19 @@ model MarkovChannel {
   @@unique([guildId, channelId])
   @@index([guildId])
   @@index([channelId])
+}
+
+model Autorole {
+  id String @id @default(cuid())
+
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  roleId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, roleId])
+  @@index([guildId])
+  @@index([roleId])
 }
