@@ -60,10 +60,10 @@ model Guild {
   logIgnores             LogIgnore[]
   commandAliases         CommandAlias[]
   commandRestrictions    CommandRestriction[]
-   channelCommandSettings ChannelCommandSetting[]
-   memberCommandSettings  MemberCommandSetting[]
-   fakePermissions        FakePermission[]
- }
+  channelCommandSettings ChannelCommandSetting[]
+  memberCommandSettings  MemberCommandSetting[]
+  fakePermissions        FakePermission[]
+}
 
 model GuildBan {
   id String @id @default(cuid())
@@ -373,4 +373,10 @@ model FakePermission {
   @@unique([guildId, roleId, permission])
   @@index([guildId])
   @@index([roleId])
+}
+
+model SamyImage {
+  id        String   @id @default(cuid())
+  url       String   @db.Text
+  createdAt DateTime @default(now())
 }

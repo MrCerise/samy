@@ -1,28 +1,58 @@
 import prisma from "@/libs/prisma";
 
-const ensuredGuilds = new Set<string>();
-const ensuredUsers = new Set<string>();
+const ensuredUsers = new Map<string, Promise<void>>();
+const ensuredGuilds = new Map<string, Promise<void>>();
 
-export async function ensureGuild(guildId: string): Promise<void> {
-  if (ensuredGuilds.has(guildId)) return;
+export function ensureGuild(guildId: string): Promise<void> {
+  const existing = ensuredGuilds.get(guildId);
 
-  await prisma.guild.upsert({
-    where: { id: guildId },
-    create: { id: guildId },
-    update: {},
-  });
+  if (existing) {
+    return existing;
+  }
 
-  ensuredGuilds.add(guildId);
+  const promise = prisma.guild
+    .upsert({
+      where: {
+        id: guildId,
+      },
+      update: {},
+      create: {
+        id: guildId,
+      },
+    })
+    .then(() => undefined)
+    .finally(() => {
+      ensuredGuilds.delete(guildId);
+    });
+
+  ensuredGuilds.set(guildId, promise);
+
+  return promise;
 }
 
-export async function ensureUser(userId: string): Promise<void> {
-  if (ensuredUsers.has(userId)) return;
+export function ensureUser(userId: string): Promise<void> {
+  const existing = ensuredUsers.get(userId);
 
-  await prisma.user.upsert({
-    where: { id: userId },
-    create: { id: userId },
-    update: {},
-  });
+  if (existing) {
+    return existing;
+  }
 
-  ensuredUsers.add(userId);
+  const promise = prisma.user
+    .upsert({
+      where: {
+        id: userId,
+      },
+      update: {},
+      create: {
+        id: userId,
+      },
+    })
+    .then(() => undefined)
+    .finally(() => {
+      ensuredUsers.delete(userId);
+    });
+
+  ensuredUsers.set(userId, promise);
+
+  return promise;
 }

@@ -1,7 +1,6 @@
 import Event from "@/classes/Event";
 import { buildLogEntry } from "@/ui/logs";
 import { sendLog } from "@/utils/logs/dispatch";
-import { ensureGuild } from "@/utils/guild";
 
 export default new Event({
   name: "guildCreate",
