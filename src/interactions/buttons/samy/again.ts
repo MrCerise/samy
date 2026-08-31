@@ -25,9 +25,7 @@ export default new ButtonHandler({
       : true;
 
     const sendEphemeral =
-      originalWasEphemeral ||
-      (!botInGuild && !isOriginalInvoker) ||
-      !canUseCommands;
+      originalWasEphemeral || isOriginalInvoker || !canUseCommands;
 
     const container = await SamyResult(
       client,
