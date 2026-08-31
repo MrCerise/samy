@@ -5,6 +5,7 @@ import type { BaseInteractionOptions } from "./Shared";
 export interface ButtonHandlerOptions extends BaseInteractionOptions {
   namespace: string;
   action: string;
+  invokerOnly?: boolean;
 
   execute: (
     client: Client,
@@ -27,6 +28,10 @@ export class ButtonHandler {
 
   get action() {
     return this.options.action;
+  }
+
+  get invokerOnly() {
+    return this.options.invokerOnly ?? true;
   }
 
   get cooldown() {

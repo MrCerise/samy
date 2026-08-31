@@ -33,7 +33,7 @@ export default new Event({
           interactionLocale: interaction.locale,
         },
         async () => {
-          if (interaction.user.id !== invokerId) {
+          if (handler.invokerOnly && interaction.user.id !== invokerId) {
             await interaction.reply({
               flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
               components: [errorUI(client.i18n.t("errors.not_your_menu"))],
