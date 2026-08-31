@@ -13,6 +13,8 @@ export default new ButtonHandler({
       MessageFlags.Ephemeral,
     );
 
+    const isDMContext = !interaction.inGuild();
+
     const botInGuild = interaction.guildId
       ? !!client.guilds.cache.get(interaction.guildId)?.members.me
       : false;
@@ -25,8 +27,16 @@ export default new ButtonHandler({
       : true;
 
     const sendEphemeral =
-      originalWasEphemeral || !isOriginalInvoker || !canUseCommands;
-    console.log(originalWasEphemeral, isOriginalInvoker, canUseCommands);
+      originalWasEphemeral ||
+      (!isDMContext && (!isOriginalInvoker || !canUseCommands));
+
+    console.log(
+      originalWasEphemeral,
+      isDMContext,
+      isOriginalInvoker,
+      canUseCommands,
+    );
+
     const container = await SamyResult(
       client,
       interaction.user.id,
