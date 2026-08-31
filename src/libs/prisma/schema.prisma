@@ -42,6 +42,8 @@ model Guild {
 
   prefix String?
 
+  markovEnabled Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -63,6 +65,7 @@ model Guild {
   channelCommandSettings ChannelCommandSetting[]
   memberCommandSettings  MemberCommandSetting[]
   fakePermissions        FakePermission[]
+  markovChain            MarkovChain?
 }
 
 model GuildBan {
@@ -379,4 +382,17 @@ model SamyImage {
   id        String   @id @default(cuid())
   url       String   @db.Text
   createdAt DateTime @default(now())
+}
+
+model MarkovChain {
+  id      String @id @default(cuid())
+
+  guildId String @unique
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  data         String @db.Text()
+  messageCount Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
