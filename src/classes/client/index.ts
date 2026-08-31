@@ -46,6 +46,9 @@ export default class Client extends Discord.Client {
   public i18n = new I18n(prisma);
   public guildPrefixes = new Discord.Collection<string, string | null>();
   public userPrefixes = new Discord.Collection<string, string | null>();
+  public markovEnabled = new Discord.Collection<string, boolean>();
+  public markovChains = new Discord.Collection<string, string>();
+  public markovDirty = new Set<string>();
   public aliases = new Discord.Collection<string, CommandAlias[]>();
   public restrictions = new Discord.Collection<string, CommandRestriction[]>();
   public commandSettings = new Discord.Collection<string, boolean>();

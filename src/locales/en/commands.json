@@ -618,5 +618,15 @@
     "title": "{user}'s Server Banner",
     "none": "{user} doesn't have a server-specific banner in this server.",
     "fetch_error": "An error occurred while fetching the server banner."
+  },
+  "markov": {
+    "result": "{sentence}",
+    "no_chain": "There's no Markov chain data for this server yet. Chat a bit (with learning enabled) and try again.",
+    "seed_not_found": "The word `{seed}` isn't in this server's Markov chain.",
+    "enabled": "Markov chain learning is now **enabled** for this server.",
+    "disabled": "Markov chain learning is now **disabled** for this server.",
+    "already_enabled": "Markov chain learning is already enabled for this server.",
+    "already_disabled": "Markov chain learning is already disabled for this server.",
+    "reset_done": "This server's Markov chain data has been **reset**."
   }
 }
