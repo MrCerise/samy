@@ -1,55 +1,91 @@
 import type Client from "@/classes/client";
+import { ensureGuild } from "@/utils/guild";
 
 const START = "__START__";
 const END = "__END__";
 
-const START_KEY = `${START} ${START}`;
-
-const URL_REGEX = /(?:https?:\/\/|\bwww\.)\S+/gi;
 const MENTION_REGEX = /<@!?&?\d+>|@everyone|@here/gi;
 const PUNCT_ONLY_REGEX = /^[\p{P}\p{S}\s]+$/u;
 
 type ChainMap = Record<string, Record<string, number>>;
 
-/**
- * True if the guild has Markov learning enabled, caching the result on the
- * client (mirrors the getGuildPrefix cache pattern in utils/settings.ts).
- */
-export async function isMarkovEnabled(
-  guildId: string,
-  client: Client,
-): Promise<boolean> {
-  const cached = client.markovEnabled.get(guildId);
-  if (cached !== undefined) return cached;
-
-  const guild = await client.prisma.guild.findUnique({
-    where: { id: guildId },
-    select: { markovEnabled: true },
-  });
-
-  const value = guild?.markovEnabled ?? false;
-
-  client.markovEnabled.set(guildId, value);
-
-  return value;
+export interface MarkovSettings {
+  enabled: boolean;
+  mentionEnabled: boolean;
+  randomEnabled: boolean;
+  randomFrequency: number;
+  randomCooldown: number;
+  chainOrder: number;
+  minOutputLength: number;
+  maxOutputLength: number;
 }
 
-/**
- * Enable/disable Markov learning for a guild. Persists via upsert (same as
- * prefix.ts) and keeps the in-memory cache in sync.
- */
-export async function setMarkovEnabled(
+const DEFAULT_SETTINGS: MarkovSettings = {
+  enabled: false,
+  mentionEnabled: true,
+  randomEnabled: false,
+  randomFrequency: 200,
+  randomCooldown: 300,
+  chainOrder: 2,
+  minOutputLength: 3,
+  maxOutputLength: 25,
+};
+
+function clampOrder(order: number): number {
+  return Math.min(Math.max(Math.trunc(order), 1), 4);
+}
+
+export async function getMarkovSettings(
   guildId: string,
-  enabled: boolean,
   client: Client,
-): Promise<void> {
-  await client.prisma.guild.upsert({
-    where: { id: guildId },
-    create: { id: guildId, markovEnabled: enabled },
-    update: { markovEnabled: enabled },
+): Promise<MarkovSettings> {
+  const cached = client.markovSettings.get(guildId);
+  if (cached) return cached;
+
+  const row = await client.prisma.markovSettings.findUnique({
+    where: { guildId },
   });
 
-  client.markovEnabled.set(guildId, enabled);
+  const settings: MarkovSettings = row
+    ? {
+        enabled: row.enabled,
+        mentionEnabled: row.mentionEnabled,
+        randomEnabled: row.randomEnabled,
+        randomFrequency: row.randomFrequency,
+        randomCooldown: row.randomCooldown,
+        chainOrder: clampOrder(row.chainOrder),
+        minOutputLength: row.minOutputLength,
+        maxOutputLength: row.maxOutputLength,
+      }
+    : { ...DEFAULT_SETTINGS };
+
+  client.markovSettings.set(guildId, settings);
+  return settings;
+}
+
+export type MarkovSettingsPatch = Partial<{
+  enabled: boolean;
+  mentionEnabled: boolean;
+  randomEnabled: boolean;
+  randomFrequency: number;
+  randomCooldown: number;
+  chainOrder: number;
+  minOutputLength: number;
+  maxOutputLength: number;
+}>;
+
+export async function updateMarkovSettings(
+  guildId: string,
+  client: Client,
+  patch: MarkovSettingsPatch,
+): Promise<void> {
+  await client.prisma.markovSettings.upsert({
+    where: { guildId },
+    create: { guildId, ...DEFAULT_SETTINGS, ...patch },
+    update: patch,
+  });
+
+  client.markovSettings.delete(guildId);
 }
 
 function parseChain(data: string): ChainMap {
@@ -60,10 +96,6 @@ function parseChain(data: string): ChainMap {
   }
 }
 
-/**
- * Read a guild's chain, populating the in-memory cache on first access.
- * Returns null when nothing has been learned yet.
- */
 export async function getChain(
   client: Client,
   guildId: string,
@@ -88,7 +120,6 @@ export async function getChain(
 function tokenize(content: string): string[] {
   return content
     .toLowerCase()
-    .replace(URL_REGEX, " ")
     .replace(MENTION_REGEX, " ")
     .split(/\s+/)
     .filter((token) => token.length > 0 && !PUNCT_ONLY_REGEX.test(token));
@@ -99,38 +130,32 @@ function recordTransition(chain: ChainMap, key: string, next: string) {
   transitions[next] = (transitions[next] ?? 0) + 1;
 }
 
-/**
- * Feed a message's content into the guild's in-memory chain and mark it
- * dirty so it is persisted on the next flush.
- */
+function startStateKey(order: number): string {
+  return Array(order).fill(START).join(" ");
+}
+
 export async function learnMarkov(
   client: Client,
   guildId: string,
   content: string,
+  order: number,
 ): Promise<void> {
   const tokens = tokenize(content);
 
   if (tokens.length === 0) return;
 
   const chain = (await getChain(client, guildId)) ?? {};
+  const sequence = [...Array(order).fill(START), ...tokens, END];
 
-  const sequence = [START, START, ...tokens, END];
-
-  for (let i = 0; i < sequence.length - 2; i++) {
-    recordTransition(
-      chain,
-      `${sequence[i]} ${sequence[i + 1]}`,
-      sequence[i + 2]!,
-    );
+  for (let i = 0; i < sequence.length - order; i++) {
+    const key = sequence.slice(i, i + order).join(" ");
+    recordTransition(chain, key, sequence[i + order]!);
   }
 
   client.markovChains.set(guildId, JSON.stringify(chain));
   client.markovDirty.add(guildId);
 }
 
-/**
- * Persist every dirty guild's chain to Postgres in a single upsert each.
- */
 export async function flushDirtyChains(client: Client): Promise<void> {
   const dirty = [...client.markovDirty];
 
@@ -158,10 +183,6 @@ export async function flushDirtyChains(client: Client): Promise<void> {
 
 let flushStarted = false;
 
-/**
- * Start the 30s background flush. Idempotent — safe to call from every
- * learned message.
- */
 export function startMarkovFlush(client: Client): void {
   if (flushStarted) return;
 
@@ -172,9 +193,6 @@ export function startMarkovFlush(client: Client): void {
   }, 30_000);
 }
 
-/**
- * Delete a guild's chain from both Postgres and the cache.
- */
 export async function clearChain(
   client: Client,
   guildId: string,
@@ -201,50 +219,149 @@ function pickWeighted(transitions: Record<string, number>): string | null {
   return entries[0]?.[0] ?? null;
 }
 
-function randomSeedKey(chain: ChainMap): string | null {
-  const seeds = Object.keys(chain).filter(
-    (key) => key.startsWith(START) && key !== START_KEY,
-  );
-
-  if (seeds.length === 0) return null;
-
-  return seeds[Math.floor(Math.random() * seeds.length)]!;
-}
-
-/**
- * Generate a sentence by walking the guild's chain. Returns null when the
- * guild has no chain or the requested seed word is unknown.
- */
-export function generateMarkov(
-  chain: ChainMap,
-  seed?: string,
-  maxWords = 25,
-): string | null {
-  const startKey =
-    seed !== undefined
-      ? `${START} ${seed.toLowerCase()}`
-      : randomSeedKey(chain);
-
-  if (!startKey || !chain[startKey]) return null;
-
+function walk(chain: ChainMap, startKey: string, maxWords: number): string[] {
   const words: string[] = [];
-
-  let prev = startKey;
+  let state = startKey;
 
   while (words.length < maxWords) {
-    const next = pickWeighted(chain[prev] ?? {});
+    const next = pickWeighted(chain[state] ?? {});
 
     if (next === null || next === END) break;
 
     words.push(next);
 
-    const last = prev.split(" ")[1]!;
-    prev = `${last} ${next}`;
+    const parts = state.split(" ");
+    parts.shift();
+    parts.push(next);
+    state = parts.join(" ");
   }
 
-  if (words.length === 0) return null;
+  return words;
+}
 
-  const sentence = words.join(" ");
+export function generateMarkov(
+  chain: ChainMap,
+  order: number,
+  seed?: string,
+  minWords = 1,
+  maxWords = 25,
+): string | null {
+  const startKey =
+    seed !== undefined
+      ? [...Array(Math.max(order - 1, 0)).fill(START), seed.toLowerCase()].join(
+          " ",
+        )
+      : startStateKey(order);
 
-  return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+  if (!chain[startKey]) return null;
+
+  const target = Math.min(minWords, maxWords);
+  let best: string[] = [];
+
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const words = walk(chain, startKey, maxWords);
+    if (words.length > best.length) best = words;
+    if (words.length >= target) {
+      best = words;
+      break;
+    }
+  }
+
+  if (best.length === 0) return null;
+
+  const outputWords = seed !== undefined ? [seed.toLowerCase(), ...best] : best;
+  let sentence = outputWords.join(" ");
+
+  sentence = sentence.replace(/https\\?:\/\//gi, "https://");
+  sentence = sentence.replace(/http\\?:\/\//gi, "http://");
+
+  if (!/^https?:\/\//i.test(sentence)) {
+    sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
+  }
+
+  return sentence;
+}
+
+export async function getMarkovChannels(
+  guildId: string,
+  client: Client,
+): Promise<Set<string>> {
+  const cached = client.markovChannels.get(guildId);
+  if (cached !== undefined) return cached;
+
+  const rows = await client.prisma.markovChannel.findMany({
+    where: { guildId },
+    select: { channelId: true },
+  });
+
+  const channels = new Set(rows.map((row) => row.channelId));
+  client.markovChannels.set(guildId, channels);
+  return channels;
+}
+
+export async function isMarkovChannelWhitelisted(
+  guildId: string,
+  channelId: string,
+  parentId: string | null | undefined,
+  client: Client,
+): Promise<boolean> {
+  const channels = await getMarkovChannels(guildId, client);
+
+  if (channels.has(channelId)) return true;
+
+  if (parentId && channels.has(parentId)) return true;
+
+  return false;
+}
+
+export async function addMarkovChannel(
+  guildId: string,
+  channelId: string,
+  client: Client,
+): Promise<boolean> {
+  await ensureGuild(guildId);
+
+  const existing = await client.prisma.markovChannel.findUnique({
+    where: {
+      guildId_channelId: { guildId, channelId },
+    },
+    select: { channelId: true },
+  });
+
+  if (existing) return false;
+
+  await client.prisma.markovChannel.create({
+    data: { guildId, channelId },
+  });
+
+  const channels = await getMarkovChannels(guildId, client);
+  channels.add(channelId);
+
+  return true;
+}
+
+export async function removeMarkovChannel(
+  guildId: string,
+  channelId: string,
+  client: Client,
+): Promise<boolean> {
+  const result = await client.prisma.markovChannel.deleteMany({
+    where: { guildId, channelId },
+  });
+
+  if (result.count > 0) {
+    const channels = await getMarkovChannels(guildId, client);
+    channels.delete(channelId);
+    return true;
+  }
+
+  return false;
+}
+
+export async function listMarkovChannels(
+  guildId: string,
+  client: Client,
+): Promise<string[]> {
+  const channels = await getMarkovChannels(guildId, client);
+  return [...channels];
 }

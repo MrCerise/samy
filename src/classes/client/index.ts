@@ -18,6 +18,7 @@ import ClientLastFM from "./LastFm";
 import prisma from "@/libs/prisma";
 import { I18n } from "@/libs/i18n";
 import type { AfkUser } from "@/types/afkUsers";
+import type { MarkovSettings } from "@/utils/markov";
 import type {
   CommandAlias,
   CommandRestriction,
@@ -46,9 +47,11 @@ export default class Client extends Discord.Client {
   public i18n = new I18n(prisma);
   public guildPrefixes = new Discord.Collection<string, string | null>();
   public userPrefixes = new Discord.Collection<string, string | null>();
-  public markovEnabled = new Discord.Collection<string, boolean>();
   public markovChains = new Discord.Collection<string, string>();
   public markovDirty = new Set<string>();
+  public markovSettings = new Discord.Collection<string, MarkovSettings>();
+  public markovChannels = new Discord.Collection<string, Set<string>>(); // guildId -> whitelist of channelIds
+  public markovLastRandom = new Discord.Collection<string, number>(); // guildId -> ms timestamp
   public aliases = new Discord.Collection<string, CommandAlias[]>();
   public restrictions = new Discord.Collection<string, CommandRestriction[]>();
   public commandSettings = new Discord.Collection<string, boolean>();
@@ -61,6 +64,7 @@ export default class Client extends Discord.Client {
     MemberCommandSetting[]
   >();
   public fakePermissions = new Discord.Collection<string, FakePermission[]>();
+
   constructor(public readonly logger = new Logger()) {
     super({
       allowedMentions: {

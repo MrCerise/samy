@@ -464,7 +464,7 @@
   "logs": {
     "guild_only": "This command can only be used in a server.",
     "channel_not_found": "Please provide a valid channel, thread, or forum post.",
-    "forum_parent_error": "You can't log directly to a forum or media channel — mention a post inside it instead, or a regular text channel.",
+    "forum_parent_error": "You can't log directly to a forum or media channel. Mention a post inside it instead, or a regular text channel.",
     "invalid_channel_type": "That channel type can't be used for logging.",
     "invalid_category": "That's not a valid log category. Choose one of: {categories}",
     "add": {
@@ -563,7 +563,6 @@
     "restricted_commands": "Restricted Commands:\n{commands}",
     "no_disabled": "No disabled commands in this channel.",
     "no_special": "No special permissions or restrictions.",
-    "owner_bypass": "Bot owner — all permissions bypassed.",
     "member_not_found": "Member not found.",
     "role_not_found": "Role not found.",
     "channel_not_found": "Channel not found."
@@ -621,12 +620,35 @@
   },
   "markov": {
     "result": "{sentence}",
-    "no_chain": "There's no Markov chain data for this server yet. Chat a bit (with learning enabled) and try again.",
+    "no_chain": "There's no Markov chain data for this server yet. Markov only learns from whitelisted channels. Add channels with `markov channel add <channel>` and chat a bit with learning enabled, then try again.",
     "seed_not_found": "The word `{seed}` isn't in this server's Markov chain.",
-    "enabled": "Markov chain learning is now **enabled** for this server.",
+    "enabled": "Markov chain learning is now **enabled** for this server. Markov only learns from whitelisted channels. Add some with `markov channel add <channel>`.",
     "disabled": "Markov chain learning is now **disabled** for this server.",
     "already_enabled": "Markov chain learning is already enabled for this server.",
     "already_disabled": "Markov chain learning is already disabled for this server.",
-    "reset_done": "This server's Markov chain data has been **reset**."
+    "reset_done": "This server's Markov chain data has been **reset**.",
+    "reset_confirm": "This will delete all Markov chain data for this server. Are you sure?",
+    "order_confirm": "This will reset the Markov chain and set the chain order to **{order}**. Are you sure?",
+    "confirm": "Confirm",
+    "cancelled": "The Markov chain operation was cancelled.",
+    "timeout": "The confirmation timed out after 30 seconds.",
+    "failed": "Something went wrong while updating the Markov chain.",
+    "mention_usage": "Usage: `markov mention <on|off>`",
+    "mention_on": "Mention replies are now **enabled**.",
+    "mention_off": "Mention replies are now **disabled**.",
+    "random_usage": "Usage: `markov random <on|off> [frequency] [cooldown]`",
+    "random_on": "Random messages are now **enabled**.",
+    "random_off": "Random messages are now **disabled**.",
+    "order_invalid": "Chain order must be a number between 1 and 4.",
+    "order_success": "Chain order set to **{order}**. The learned chain was reset and will rebuild from new messages in whitelisted channels.",
+    "length_usage": "Usage: `markov length <min> <max>` (1 ≤ min ≤ max ≤ 100).",
+    "length_success": "Output length set to **{min}-{max}** words.",
+    "channel_not_found": "No channel found matching that input.",
+    "channel_add": "Added **{channel}** to the Markov learning whitelist.",
+    "channel_add_already": "**{channel}** is already in the Markov learning whitelist.",
+    "channel_remove": "Removed **{channel}** from the Markov learning whitelist.",
+    "channel_remove_not_found": "**{channel}** is not in the Markov learning whitelist.",
+    "channel_list_none": "No channels are whitelisted for Markov learning. Markov will not learn from messages until you add channels with `markov channel add <channel>`.",
+    "channel_list_title": "Markov learning whitelist ({count}):\n{channels}"
   }
 }
